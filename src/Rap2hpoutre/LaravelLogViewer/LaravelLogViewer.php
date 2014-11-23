@@ -29,6 +29,25 @@ class LaravelLogViewer
             unset($trash);
         }
 
+        $levels_classes = [
+            'debug' => 'info',
+            'info' => 'info',
+            'notice' => 'info',
+            'warning' => 'warning',
+            'error' => 'danger',
+            'critical' => 'danger',
+            'alert' => 'danger',
+        ];
+        $levels_imgs = [
+            'debug' => 'info',
+            'info' => 'info',
+            'notice' => 'info',
+            'warning' => 'warning',
+            'error' => 'warning',
+            'critical' => 'warning',
+            'alert' => 'warning',
+        ];
+
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $ll) {
@@ -38,8 +57,11 @@ class LaravelLogViewer
 
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
 
+
                         $log[] = array(
                             'level' => $ll,
+                            'level_class' => $levels_classes[$ll],
+                            'level_img' => $levels_imgs[$ll],
                             'date' => $current[1],
                             'text' => $current[2],
                             'in_file' => isset($current[3]) ? $current[3] : null,
