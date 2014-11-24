@@ -34,6 +34,11 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
           <p class="text-muted"><i>by Rap2h</i></p>
+          <div class="list-group">
+            @foreach($files as $file)
+              <a href="{{{ Route::getCurrentRoute()->getPath() }}}?l={{{ Crypt::encrypt($file) }}}" class="list-group-item">{{$file}}</a>
+            @endforeach
+          </div>
         </div>
         <div class="col-sm-9 col-md-10">
           <table class="table table-striped">
