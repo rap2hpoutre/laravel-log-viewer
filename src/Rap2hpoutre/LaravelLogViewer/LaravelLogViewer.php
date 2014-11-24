@@ -7,6 +7,16 @@ use ReflectionClass;
 
 class LaravelLogViewer
 {
+
+    private static $file;
+
+    public static function setFile($file)
+    {
+        if (File::exists(storage_path() . '/logs/' . $file)) {
+            self::$file = storage_path() . '/logs/' . $file;
+        }
+    }
+
     public static function all()
     {
         $log = array();
@@ -16,9 +26,14 @@ class LaravelLogViewer
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
 
-        $log_file = storage_path() . '/logs/laravel.log';
+        if (self::$file) {
+            $file = File::get(self::$file);
+        } else {
+            $log_file = self::getFiles();
+            $file = File::get($log_file[0]);
+        }
 
-        $file = File::get($log_file);
+
 
         preg_match_all($pattern, $file, $headings);
 
@@ -65,7 +80,7 @@ class LaravelLogViewer
                             'date' => $current[1],
                             'text' => $current[2],
                             'in_file' => isset($current[3]) ? $current[3] : null,
-                            'stack' => $log_data[$i]
+                            'stack' => $log_data[$i],
                         );
                     }
                 }
@@ -74,5 +89,17 @@ class LaravelLogViewer
 
         $log = array_reverse($log);
         return $log;
+    }
+
+    public static function getFiles($basename = false)
+    {
+        $files = glob(storage_path() . '/logs/*');
+        $files = array_reverse($files);
+        if ($basename && is_array($files)) {
+            foreach ($files as $k => $file) {
+                $files[$k] = basename($file);
+            }
+        }
+        return $files;
     }
 }
