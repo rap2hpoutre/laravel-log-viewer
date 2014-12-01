@@ -36,7 +36,7 @@
           <p class="text-muted"><i>by Rap2h</i></p>
           <div class="list-group">
             @foreach($files as $file)
-              <a href="{{{ Route::getCurrentRoute()->getPath() }}}?l={{{ Crypt::encrypt($file) }}}" class="list-group-item">{{$file}}</a>
+              <a href="/{{{ Route::getCurrentRoute()->getPath() }}}?l={{{ Crypt::encrypt($file) }}}" class="list-group-item">{{$file}}</a>
             @endforeach
           </div>
         </div>
