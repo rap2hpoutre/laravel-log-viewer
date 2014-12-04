@@ -1,82 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel log viewer</title>
+<?php
+namespace Rap2hpoutre\LaravelLogViewer;
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
+use Illuminate\Support\Facades\File;
+use Psr\Log\LogLevel;
+use ReflectionClass;
+
+/**
+ * Class LaravelLogViewer
+ * @package Rap2hpoutre\LaravelLogViewer
+ */
+class LaravelLogViewer
+{
+
+    /**
+     * @var current file
+     */
+    private static $file;
+
+    /**
+     * @param $file
+     */
+    public static function setFile($file)
+    {
+        if (File::exists(storage_path() . '/logs/' . $file)) {
+            self::$file = storage_path() . '/logs/' . $file;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public static function all()
+    {
+        $log = array();
+
+        $class = new ReflectionClass(new LogLevel);
+        $log_levels = $class->getConstants();
+
+        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
+
+        if (self::$file) {
+            $file = File::get(self::$file);
+        } else {
+            $log_file = self::getFiles();
+            $file = File::get($log_file[0]);
+        }
+
+        preg_match_all($pattern, $file, $headings);
+
+        $log_data = preg_split($pattern, $file);
+
+        if ($log_data[0] < 1) {
+            $trash = array_shift($log_data);
+            unset($trash);
+        }
+
+        $levels_classes = [
+            'debug' => 'info',
+            'info' => 'info',
+            'notice' => 'info',
+            'warning' => 'warning',
+            'error' => 'danger',
+            'critical' => 'danger',
+            'alert' => 'danger',
+        ];
+        $levels_imgs = [
+            'debug' => 'info',
+            'info' => 'info',
+            'notice' => 'info',
+            'warning' => 'warning',
+            'error' => 'warning',
+            'critical' => 'warning',
+            'alert' => 'warning',
+        ];
+
+        foreach ($headings as $h) {
+            for ($i=0, $j = count($h); $i < $j; $i++) {
+                foreach ($log_levels as $ll) {
+                    if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
+
+                        $level = strtoupper($ll);
+
+                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
 
 
+                        $log[] = array(
+                            'level' => $ll,
+                            'level_class' => $levels_classes[$ll],
+                            'level_img' => $levels_imgs[$ll],
+                            'date' => $current[1],
+                            'text' => $current[2],
+                            'in_file' => isset($current[3]) ? $current[3] : null,
+                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
+                        );
+                    }
+                }
+            }
+        }
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <style>
-      body {
-        padding: 25px;
-      }
-      h1 {
-        font-size: 1.5em;
-        margin-top: 0px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container-fluid"">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
-          <p class="text-muted"><i>by Rap2h</i></p>
-          <div class="list-group">
-            @foreach($files as $file)
-              <a href="/{{{ Route::getCurrentRoute()->getPath() }}}?l={{{ Crypt::encrypt($file) }}}" class="list-group-item">{{$file}}</a>
-            @endforeach
-          </div>
-        </div>
-        <div class="col-sm-9 col-md-10">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Level</th>
-                <th>Date</th>
-                <th>Content</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach($logs as $log)
-                <tr>
-                  <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
-                  <td>{{{$log['date']}}}</td>
-                  <td>
-                    {{{$log['text']}}}
-                    @if (isset($log['in_file']))
-                      <br />{{{$log['in_file']}}}
-                    @endif
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-    <script>
-      $(document).ready(function(){
-        $('table').DataTable({
-          "order": [ 1, 'desc' ]
-        });
-      });
-    </script>
-  </body>
-</html>
+        $log = array_reverse($log);
+        return $log;
+    }
+
+    /**
+     * @param bool $basename
+     * @return array
+     */
+    public static function getFiles($basename = false)
+    {
+        $files = glob(storage_path() . '/logs/*');
+        $files = array_reverse($files);
+        if ($basename && is_array($files)) {
+            foreach ($files as $k => $file) {
+                $files[$k] = basename($file);
+            }
+        }
+        return $files;
+    }
+}
