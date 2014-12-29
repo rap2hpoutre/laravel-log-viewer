@@ -57,7 +57,7 @@
                 <tr>
                   <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
                   <td>{{{$log['date']}}}</td>
-                  <td>
+                  <td style="word-break: break-all;">
                   @if ($log['stack'])
                     <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
                   @endif
