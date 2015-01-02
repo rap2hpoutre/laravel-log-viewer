@@ -13,7 +13,7 @@ class LaravelLogViewer
 {
 
     /**
-     * @var current file
+     * @var  file
      */
     private static $file;
 
@@ -28,6 +28,14 @@ class LaravelLogViewer
     }
 
     /**
+     * @return file
+     */
+    public static function getFileName()
+    {
+        return basename(self::$file);
+    }
+
+    /**
      * @return array
      */
     public static function all()
@@ -39,12 +47,13 @@ class LaravelLogViewer
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
 
-        if (self::$file) {
-            $file = File::get(self::$file);
-        } else {
+
+        if (!self::$file) {
             $log_file = self::getFiles();
-            $file = File::get($log_file[0]);
+            self::$file = $log_file[0];
         }
+
+        $file = File::get(self::$file);
 
         preg_match_all($pattern, $file, $headings);
 

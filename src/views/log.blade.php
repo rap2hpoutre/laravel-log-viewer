@@ -35,6 +35,11 @@
       .text {
         word-break: break-all;
       }
+      a.llv-active {
+        z-index: 2;
+        background-color: #f5f5f5;
+        border-color: #777;
+      }
     </style>
   </head>
   <body>
@@ -45,11 +50,13 @@
           <p class="text-muted"><i>by Rap2h</i></p>
           <div class="list-group">
             @foreach($files as $file)
-              <a href="/{{{ Route::getCurrentRoute()->getPath() }}}?l={{{ Crypt::encrypt($file) }}}" class="list-group-item">{{$file}}</a>
+              <a href="{{{ Request::url() }}}/?l={{{ Crypt::encrypt($file) }}}" class="list-group-item @if ($current_file == $file) llv-active @endif">
+                {{$file}}
+              </a>
             @endforeach
           </div>
         </div>
-        <div class="col-sm-9 col-md-10">
+        <div class="col-sm-9 col-md-10 table-container">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -72,7 +79,7 @@
                       <br />{{{$log['in_file']}}}
                     @endif
                     @if ($log['stack'])
-                      <div class="stack" id="stack{{{$key}}}" style="display: none;">{{nl2br($log['stack']);}}</div>
+                      <div class="stack" id="stack{{{$key}}}" style="display: none;">{{ nl2br(e($log['stack'])) }}</div>
                     @endif
                   </td>
                 </tr>
@@ -91,7 +98,7 @@
         $('table').DataTable({
           "order": [ 1, 'desc' ]
         });
-        $('.expand').click(function(){
+        $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
         });
 
