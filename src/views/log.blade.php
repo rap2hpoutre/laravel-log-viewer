@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="col-sm-9 col-md-10 table-container">
-          <table class="table table-striped">
+          <table id="table-log" class="table table-striped">
             <thead>
               <tr>
                 <th>Level</th>
@@ -95,7 +95,7 @@
     <script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script>
       $(document).ready(function(){
-        $('table').DataTable({
+        $('#table-log').DataTable({
           "order": [ 1, 'desc' ]
         });
         $('.table-container').on('click', '.expand', function(){
