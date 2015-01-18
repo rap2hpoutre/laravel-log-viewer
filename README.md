@@ -1,5 +1,8 @@
 Laravel 4.2 log viewer
 ======================
+
+[![Latest Stable Version](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/v/stable.svg)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) [![Monthly Downloads](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/d/monthly.png)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer)
+
 TL;DR
 -----
 The best (IMO) Log Viewer for Laravel 4.2. **Install with composer, create a route to `LogViewerController`**. No public assets, no vendor routes, works with and/or without log rotate. Inspired by Micheal Mand's [Laravel 4 log viewer](https://github.com/mikemand/logviewer) (works only with laravel 4.1)
