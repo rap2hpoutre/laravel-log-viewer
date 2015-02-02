@@ -28,7 +28,7 @@ class LaravelLogViewer
     }
 
     /**
-     * @return file
+     * @return string
      */
     public static function getFileName()
     {
