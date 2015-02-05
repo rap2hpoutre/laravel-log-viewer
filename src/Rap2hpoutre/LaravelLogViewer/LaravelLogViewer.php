@@ -13,7 +13,7 @@ class LaravelLogViewer
 {
 
     /**
-     * @var  file
+     * @var string file
      */
     private static $file;
 
