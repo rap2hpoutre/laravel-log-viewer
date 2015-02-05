@@ -18,7 +18,7 @@ class LaravelLogViewer
     private static $file;
 
     /**
-     * @param $file
+     * @param string $file
      */
     public static function setFile($file)
     {
@@ -82,26 +82,29 @@ class LaravelLogViewer
             'critical' => 'warning',
             'alert' => 'warning',
         ];
-
-        foreach ($headings as $h) {
-            for ($i=0, $j = count($h); $i < $j; $i++) {
-                foreach ($log_levels as $ll) {
-                    if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
-
-                        $level = strtoupper($ll);
-
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
-
-
-                        $log[] = array(
-                            'level' => $ll,
-                            'level_class' => $levels_classes[$ll],
-                            'level_img' => $levels_imgs[$ll],
-                            'date' => $current[1],
-                            'text' => $current[2],
-                            'in_file' => isset($current[3]) ? $current[3] : null,
-                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
-                        );
+        
+        
+        if (is_array($headings)) {
+            foreach ($headings as $h) {
+                for ($i=0, $j = count($h); $i < $j; $i++) {
+                    foreach ($log_levels as $ll) {
+                        if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
+    
+                            $level = strtoupper($ll);
+    
+                            preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
+    
+    
+                            $log[] = array(
+                                'level' => $ll,
+                                'level_class' => $levels_classes[$ll],
+                                'level_img' => $levels_imgs[$ll],
+                                'date' => $current[1],
+                                'text' => $current[2],
+                                'in_file' => isset($current[3]) ? $current[3] : null,
+                                'stack' => preg_replace("/^\n*/", '', $log_data[$i])
+                            );
+                        }
                     }
                 }
             }
