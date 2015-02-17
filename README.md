@@ -23,7 +23,7 @@ Update via composer
 
 `composer update`
 
-Add a route in `app/route.php` (or choose another route): 
+Add a route in `app/Http/route.php` (or choose another route): 
 ```php 
 Route::get('logs', 'Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ``` 
