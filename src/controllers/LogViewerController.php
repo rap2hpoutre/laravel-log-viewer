@@ -3,7 +3,7 @@ namespace Rap2hpoutre\LaravelLogViewer;
 
 use Illuminate\Support\Facades\View;
 
-class LogViewerController extends \BaseController
+class LogViewerController extends \Illuminate\Routing\Controller
 {
 
     public function index()
