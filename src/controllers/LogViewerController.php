@@ -9,7 +9,7 @@ class LogViewerController extends \Illuminate\Routing\Controller
     public function index()
     {
         if (\Input::get('l')) {
-            LaravelLogViewer::setFile(\Crypt::decrypt(\Input::get('l')));
+            LaravelLogViewer::setFile(base64_decode(\Input::get('l')));
         }
 
         $logs = LaravelLogViewer::all();
