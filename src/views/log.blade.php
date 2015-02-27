@@ -79,7 +79,7 @@
                       <br />{{{$log['in_file']}}}
                     @endif
                     @if ($log['stack'])
-                      <div class="stack" id="stack{{{$key}}}" style="display: none;">{{ nl2br(e($log['stack'])) }}</div>
+                      <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre;">{{ trim($log['stack']) }}</div>
                     @endif
                   </td>
                 </tr>
