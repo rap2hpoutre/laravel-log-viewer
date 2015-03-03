@@ -50,6 +50,9 @@ class LaravelLogViewer
 
         if (!self::$file) {
             $log_file = self::getFiles();
+            if (count($log_file) < 1) {
+                return 'No error files available.';
+            }
             self::$file = $log_file[0];
         }
 

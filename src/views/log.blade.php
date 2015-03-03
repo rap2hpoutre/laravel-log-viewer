@@ -50,9 +50,14 @@
           <p class="text-muted"><i>by Rap2h</i></p>
           <div class="list-group">
             @foreach($files as $file)
-              <a href="?l={{ base64_encode($file) }}" class="list-group-item @if ($current_file == $file) llv-active @endif">
-                {{$file}}
-              </a>
+              <div class="list-group-item @if ($current_file == $file) llv-active @endif">
+                    <a href="?d={{ base64_encode($file) }}">
+                        X
+                    </a>
+                    <a href="?l={{ base64_encode($file) }}" >
+                    {{$file}}
+                  </a>
+                </div>
             @endforeach
           </div>
         </div>
@@ -66,24 +71,28 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($logs as $key => $log)
-                <tr>
-                  <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
-                  <td class="date">{{{$log['date']}}}</td>
-                  <td class="text">
-                  @if ($log['stack'])
-                    <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
-                  @endif
-                    {{{$log['text']}}}
-                    @if (isset($log['in_file']))
-                      <br />{{{$log['in_file']}}}
-                    @endif
+              @if(!is_array($logs))
+                <div class="alert alert-danger">{!! $logs !!}</div>
+              @else
+                @foreach($logs as $key => $log)
+                  <tr>
+                    <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+                    <td class="date">{{{$log['date']}}}</td>
+                    <td class="text">
                     @if ($log['stack'])
-                      <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre;">{{ trim($log['stack']) }}</div>
+                      <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
                     @endif
-                  </td>
-                </tr>
-              @endforeach
+                      {{{$log['text']}}}
+                      @if (isset($log['in_file']))
+                        <br />{{{$log['in_file']}}}
+                      @endif
+                      @if ($log['stack'])
+                        <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre;">{{ trim($log['stack']) }}</div>
+                      @endif
+                    </td>
+                  </tr>
+                @endforeach
+              @endif
             </tbody>
           </table>
         </div>
