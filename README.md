@@ -1,7 +1,7 @@
 Laravel 5 log viewer
 ======================
 
-[![Latest Stable Version](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/v/stable.svg)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) [![Monthly Downloads](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/d/monthly.png)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer)
+[![Latest Stable Version](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/v/stable.svg)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) [![Monthly Downloads](https://poser.pugx.org/rap2hpoutre/laravel-log-viewer/d/monthly.png)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/?branch=master) 
 
 TL;DR
 -----
