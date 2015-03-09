@@ -25,7 +25,7 @@ Update via composer
 
 Add a route in `app/Http/route.php` (or choose another route): 
 ```php 
-Route::get('logs', 'Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ``` 
 
 Go to `http://myapp/logs` or some other route
