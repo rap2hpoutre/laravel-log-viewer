@@ -23,6 +23,10 @@ Update via composer
 
 `composer update`
 
+Add Service Provider to `config/app.php`
+
+`'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',`
+
 Add a route in `app/Http/route.php` (or choose another route): 
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
