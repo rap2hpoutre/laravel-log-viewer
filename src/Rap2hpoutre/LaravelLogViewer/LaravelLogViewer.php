@@ -50,6 +50,9 @@ class LaravelLogViewer
 
         if (!self::$file) {
             $log_file = self::getFiles();
+            if(!count($log_file)) {
+                return [];
+            }
             self::$file = $log_file[0];
         }
 
