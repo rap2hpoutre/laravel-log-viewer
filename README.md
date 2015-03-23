@@ -17,7 +17,7 @@ Install
 -------
 Install via composer
 
-`composer require rap2hpoutre/laravel-log-viewer:0.1.*`
+`composer require rap2hpoutre/laravel-log-viewer:0.2.*`
 
 Add Service Provider to `config/app.php`
 
