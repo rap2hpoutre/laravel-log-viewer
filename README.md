@@ -19,10 +19,6 @@ Install via composer
 
 `composer require rap2hpoutre/laravel-log-viewer:0.1.*`
 
-Update via composer
-
-`composer update`
-
 Add Service Provider to `config/app.php`
 
 `'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',`
