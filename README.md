@@ -16,12 +16,14 @@ Small log viewer for laravel. Looks like this:
 Install
 -------
 Install via composer
-
-`composer require rap2hpoutre/laravel-log-viewer`
+```
+composer require rap2hpoutre/laravel-log-viewer
+```
 
 Add Service Provider to `config/app.php` in `providers` section
-
-`'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',`
+```php
+'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
+```
 
 Add a route in `app/Http/routes.php` (or choose another route): 
 ```php 
