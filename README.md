@@ -19,11 +19,11 @@ Install via composer
 
 `composer require rap2hpoutre/laravel-log-viewer`
 
-Add Service Provider to `config/app.php`
+Add Service Provider to `config/app.php` in `providers` section
 
 `'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',`
 
-Add a route in `app/Http/route.php` (or choose another route): 
+Add a route in `app/Http/routes.php` (or choose another route): 
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ``` 
