@@ -36,7 +36,14 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+        //register package commands
+        $this->app['laravel-log-viewer::commands.publish'] = $this->app->share(function($app)
+        {
+            return new Console\PublishCommand;
+        });
+        $this->commands(
+            'laravel-log-viewer::commands.publish'
+        );
 	}
 
 	/**

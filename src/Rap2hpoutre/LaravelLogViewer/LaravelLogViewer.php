@@ -4,6 +4,7 @@ namespace Rap2hpoutre\LaravelLogViewer;
 use Illuminate\Support\Facades\File;
 use Psr\Log\LogLevel;
 use ReflectionClass;
+use Composer\Installer\PackageEvent;
 
 /**
  * Class LaravelLogViewer
@@ -26,7 +27,7 @@ class LaravelLogViewer
             self::$file = storage_path() . '/logs/' . $file;
         }
     }
-
+    
     /**
      * @return string
      */

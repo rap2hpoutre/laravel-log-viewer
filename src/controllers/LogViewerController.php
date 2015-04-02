@@ -8,6 +8,11 @@ class LogViewerController extends \Illuminate\Routing\Controller
 
     public function index()
     {
+        if(\Input::get('access_key') !== \Config::get('laravel-log-viewer::config.access_key'))
+        {
+            return \Response::make('Access key missing or invalid', 403);
+        }
+        
         if (\Input::get('l')) {
             LaravelLogViewer::setFile(base64_decode(\Input::get('l')));
         }
