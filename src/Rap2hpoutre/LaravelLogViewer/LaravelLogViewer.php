@@ -102,8 +102,8 @@ class LaravelLogViewer
                                 'level' => $ll,
                                 'level_class' => $levels_classes[$ll],
                                 'level_img' => $levels_imgs[$ll],
-                                'date' => $current[1],
-                                'text' => $current[2],
+                                'date' => isset($current[1]) ? $current[1] : null,
+                                'text' => isset($current[2]) ? $current[2] : null,
                                 'in_file' => isset($current[3]) ? $current[3] : null,
                                 'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                             );
