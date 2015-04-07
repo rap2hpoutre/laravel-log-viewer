@@ -42,8 +42,7 @@ class LaravelLogViewer
     {
         $log = array();
 
-        $class = new ReflectionClass(new LogLevel);
-        $log_levels = $class->getConstants();
+        $log_levels = self::getLogLevels();
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
 
@@ -51,11 +50,12 @@ class LaravelLogViewer
 
         preg_match_all($pattern, $file, $headings);
 
+        if (!is_array($headings)) return $log;
+
         $log_data = preg_split($pattern, $file);
 
         if ($log_data[0] < 1) {
-            $trash = array_shift($log_data);
-            unset($trash);
+            array_shift($log_data);
         }
 
         $levels_classes = [
@@ -76,28 +76,23 @@ class LaravelLogViewer
             'critical' => 'warning',
             'alert' => 'warning',
         ];
-        
-        
-        if (is_array($headings)) {
-            foreach ($headings as $h) {
-                for ($i=0, $j = count($h); $i < $j; $i++) {
-                    foreach ($log_levels as $ll) {
-                        if (strpos(strtolower($h[$i]), strtolower('.'.$ll))) {
-    
-                            $level = strtoupper($ll);
-    
-                            preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
 
-                            $log[] = array(
-                                'level' => $ll,
-                                'level_class' => $levels_classes[$ll],
-                                'level_img' => $levels_imgs[$ll],
-                                'date' => isset($current[1]) ? $current[1] : null,
-                                'text' => isset($current[2]) ? $current[2] : null,
-                                'in_file' => isset($current[3]) ? $current[3] : null,
-                                'stack' => preg_replace("/^\n*/", '', $log_data[$i])
-                            );
-                        }
+        foreach ($headings as $h) {
+            for ($i=0, $j = count($h); $i < $j; $i++) {
+                foreach ($log_levels as $level_key => $level_value) {
+                    if (strpos(strtolower($h[$i]), '.' . $level_value)) {
+
+                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level_key . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
+
+                        $log[] = array(
+                            'level' => $level_value,
+                            'level_class' => $levels_classes[$level_value],
+                            'level_img' => $levels_imgs[$level_value],
+                            'date' => isset($current[1]) ? $current[1] : null,
+                            'text' => isset($current[2]) ? $current[2] : null,
+                            'in_file' => isset($current[3]) ? $current[3] : null,
+                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
+                        );
                     }
                 }
             }
@@ -136,5 +131,14 @@ class LaravelLogViewer
         }
 
         return File::get(self::$file);
+    }
+
+    /**
+     * @return array
+     */
+    private static function getLogLevels()
+    {
+        $class = new ReflectionClass(new LogLevel);
+        return $class->getConstants();
     }
 }
