@@ -17,6 +17,28 @@ class LaravelLogViewer
      */
     private static $file;
 
+    private static $levels_classes = [
+        'debug' => 'info',
+        'info' => 'info',
+        'notice' => 'info',
+        'warning' => 'warning',
+        'error' => 'danger',
+        'critical' => 'danger',
+        'alert' => 'danger',
+    ];
+
+    private static $levels_imgs = [
+        'debug' => 'info',
+        'info' => 'info',
+        'notice' => 'info',
+        'warning' => 'warning',
+        'error' => 'warning',
+        'critical' => 'warning',
+        'alert' => 'warning',
+    ];
+
+
+
     /**
      * @param string $file
      */
@@ -58,25 +80,6 @@ class LaravelLogViewer
             array_shift($log_data);
         }
 
-        $levels_classes = [
-            'debug' => 'info',
-            'info' => 'info',
-            'notice' => 'info',
-            'warning' => 'warning',
-            'error' => 'danger',
-            'critical' => 'danger',
-            'alert' => 'danger',
-        ];
-        $levels_imgs = [
-            'debug' => 'info',
-            'info' => 'info',
-            'notice' => 'info',
-            'warning' => 'warning',
-            'error' => 'warning',
-            'critical' => 'warning',
-            'alert' => 'warning',
-        ];
-
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
                 foreach ($log_levels as $level_key => $level_value) {
@@ -84,12 +87,14 @@ class LaravelLogViewer
 
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level_key . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
 
+                        if (!isset($current[2])) continue;
+
                         $log[] = array(
                             'level' => $level_value,
-                            'level_class' => $levels_classes[$level_value],
-                            'level_img' => $levels_imgs[$level_value],
-                            'date' => isset($current[1]) ? $current[1] : null,
-                            'text' => isset($current[2]) ? $current[2] : null,
+                            'level_class' => self::$levels_classes[$level_value],
+                            'level_img' => self::$levels_imgs[$level_value],
+                            'date' => $current[1],
+                            'text' => $current[2],
                             'in_file' => isset($current[3]) ? $current[3] : null,
                             'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                         );
