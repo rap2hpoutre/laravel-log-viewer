@@ -96,7 +96,8 @@
     <script>
       $(document).ready(function(){
         $('#table-log').DataTable({
-          "order": [ 1, 'desc' ]
+          "order"  : [ 1, 'desc' ],
+          "paging" : false
         });
         $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
