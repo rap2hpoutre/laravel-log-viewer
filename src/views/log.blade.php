@@ -103,7 +103,7 @@
           },
           "stateLoadCallback": function (settings) {
             var data = JSON.parse(window.localStorage.getItem("datatable"));
-            data.start = 0;
+            if (data) data.start = 0;
             return data;
           }
         });
