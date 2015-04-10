@@ -96,12 +96,20 @@
     <script>
       $(document).ready(function(){
         $('#table-log').DataTable({
-          "order": [ 1, 'desc' ]
+          "order": [ 1, 'desc' ],
+          "stateSave": true,
+          "stateSaveCallback": function (settings, data) {
+            window.localStorage.setItem("datatable", JSON.stringify(data));
+          },
+          "stateLoadCallback": function (settings) {
+            var data = JSON.parse(window.localStorage.getItem("datatable"));
+            data.start = 0;
+            return data;
+          }
         });
         $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
         });
-
       });
     </script>
   </body>
