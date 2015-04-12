@@ -67,8 +67,16 @@ class LaravelLogViewer
         $log_levels = self::getLogLevels();
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
+        
+        if (!self::$file) {
+            $log_file = self::getFiles();
+            if(!count($log_file)) {
+                return [];
+            }
+            self::$file = $log_file[0];
+        }
 
-        $file = self::getCurrentFile();
+        $file = File::get(self::$file);
 
         preg_match_all($pattern, $file, $headings);
 
@@ -120,22 +128,6 @@ class LaravelLogViewer
             }
         }
         return $files;
-    }
-
-    /**
-     * @return array
-     */
-    private static function getCurrentFile()
-    {
-        if (!self::$file) {
-            $log_file = self::getFiles();
-            if(!count($log_file)) {
-                return [];
-            }
-            self::$file = $log_file[0];
-        }
-
-        return File::get(self::$file);
     }
 
     /**
