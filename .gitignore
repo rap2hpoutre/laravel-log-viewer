@@ -1,6 +1,2 @@
 /vendor
-composer.phar
 composer.lock
-laravel
-.DS_Store
-.idea
