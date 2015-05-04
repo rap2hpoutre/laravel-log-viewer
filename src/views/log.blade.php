@@ -94,9 +94,11 @@
     <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script>
-      $(document).ready(function(){
-        $('#table-log').DataTable({
-          "order": [ 1, 'desc' ],
+      var offset = {{ count($logs) }} || 0;
+      var updateUrl = window.location.href;
+      $(document).ready(function () {
+        var dataTable = $('#table-log').DataTable({
+          "order": [1, 'desc'],
           "stateSave": true,
           "stateSaveCallback": function (settings, data) {
             window.localStorage.setItem("datatable", JSON.stringify(data));
@@ -105,11 +107,59 @@
             var data = JSON.parse(window.localStorage.getItem("datatable"));
             if (data) data.start = 0;
             return data;
+          },
+          "columns": [
+            {"data": "level"},
+            {"data": "date"},
+            {"data": "text"}
+          ],
+          "createdRow": function (row, data, index) {
+            // If it has no 'key' property, this row was 'hard-baked' into the html
+            if (!data.hasOwnProperty('key')) {
+              return;
+            }
+
+            var html = '<span class="glyphicon glyphicon-' + data.level_class + '-sign" aria-hidden="true"></span> &nbsp;' + data.level;
+            var td = $('td', row).eq(0); // first column td
+            td.addClass('text-' + data.level_class); // .text-danger
+            td.html(html);
+
+            $('td', row).eq(1).addClass('date');
+            td = $('td', row).eq(2).addClass('text');
+            td.empty();
+
+            var stack = '';
+            if (data.hasOwnProperty('stack') && data.stack.length > 0) {
+              stack = '<a class="pull-right expand btn btn-default btn-xs" data-display="stack' + data.key + '"><span class="glyphicon glyphicon-search"></span></a>';
+            }
+            td.append(stack);
+            td.append(data.text);
+            if (data.hasOwnProperty('in_file') && data.in_file) {
+              td.append('<br />' + data.in_file);
+            }
+            if (data.hasOwnProperty('stack') && data.stack.length > 0) {
+              stack = '<div class="stack" id="stack' + data.key + '" style="display: none; white-space: pre-wrap;">' + data.stack + '</div>';
+              td.append(stack);
+            }
           }
         });
-        $('.table-container').on('click', '.expand', function(){
+        $('.table-container').on('click', '.expand', function () {
           $('#' + $(this).data('display')).toggle();
         });
+
+        var updateLogs = function (data) {
+          if (data.length <= 0)
+            return;
+          $.each(data, function (i, log) {
+            offset++;
+            dataTable.row.add(log);
+          });
+          dataTable.draw(false);
+        };
+
+        setInterval(function () {
+          $.get(updateUrl, {'n' : offset},  updateLogs);
+        }, 2500);
       });
     </script>
   </body>
