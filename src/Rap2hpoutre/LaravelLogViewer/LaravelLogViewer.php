@@ -66,8 +66,8 @@ class LaravelLogViewer
 
         $log_levels = self::getLogLevels();
 
-        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
-        
+        $pattern = '/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/m';
+
         if (!self::$file) {
             $log_file = self::getFiles();
             if(!count($log_file)) {
