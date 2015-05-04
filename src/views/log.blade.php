@@ -79,7 +79,7 @@
                       <br />{{{$log['in_file']}}}
                     @endif
                     @if ($log['stack'])
-                      <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{ trim($log['stack']) }}</div>
+                      <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}</div>
                     @endif
                   </td>
                 </tr>
