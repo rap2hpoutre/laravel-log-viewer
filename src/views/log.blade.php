@@ -114,6 +114,11 @@
             {"data": "text"}
           ],
           "createdRow": function (row, data, index) {
+            // If it has no 'key' property, this row was 'hard-baked' into the html
+            if (!data.hasOwnProperty('key')) {
+              return;
+            }
+
             var html = '<span class="glyphicon glyphicon-' + data.level_class + '-sign" aria-hidden="true"></span> &nbsp;' + data.level;
             var td = $('td', row).eq(0); // first column td
             td.addClass('text-' + data.level_class); // .text-danger
