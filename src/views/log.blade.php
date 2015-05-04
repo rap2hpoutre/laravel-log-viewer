@@ -114,7 +114,6 @@
             {"data": "text"}
           ],
           "createdRow": function (row, data, index) {
-            console.log(data);
             var html = '<span class="glyphicon glyphicon-' + data.level_class + '-sign" aria-hidden="true"></span> &nbsp;' + data.level;
             var td = $('td', row).eq(0); // first column td
             td.addClass('text-' + data.level_class); // .text-danger
