@@ -3,7 +3,7 @@ Laravel 5 log viewer
 
 [![Packagist](https://img.shields.io/packagist/v/rap2hpoutre/laravel-log-viewer.svg)]()
 [![Packagist](https://img.shields.io/packagist/l/rap2hpoutre/laravel-log-viewer.svg)](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) [![Packagist](https://img.shields.io/packagist/dm/rap2hpoutre/laravel-log-viewer.svg)]() [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rap2hpoutre/laravel-log-viewer/build-status/master)
-[![SensioLabs Insight](https://img.shields.io/sensiolabs/i/2974f007-ff84-41a7-8954-7cda41ca5f84.svg)](https://insight.sensiolabs.com/projects/2974f007-ff84-41a7-8954-7cda41ca5f84)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/2974f007-ff84-41a7-8954-7cda41ca5f84/mini.png)](https://insight.sensiolabs.com/projects/2974f007-ff84-41a7-8954-7cda41ca5f84)
 
 TL;DR
 -----
