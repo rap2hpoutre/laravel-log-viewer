@@ -25,6 +25,8 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
 		if (method_exists($this, 'loadViewsFrom')) {
 			$this->loadViewsFrom(__DIR__.'/../../views', 'laravel-log-viewer');
 		}
+        
+        include __DIR__.'/../../routes.php';
 	}
 
 	/**
@@ -34,7 +36,14 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+        //register package commands
+        $this->app['laravel-log-viewer::commands.publish'] = $this->app->share(function($app)
+        {
+            return new Console\PublishCommand;
+        });
+        $this->commands(
+            'laravel-log-viewer::commands.publish'
+        );
 	}
 
 	/**
