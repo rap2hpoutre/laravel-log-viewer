@@ -40,9 +40,6 @@
         background-color: #f5f5f5;
         border-color: #777;
       }
-      .text-muted >i > a {
-        color: #777;
-      }
     </style>
   </head>
   <body>
@@ -50,7 +47,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
-          <p class="text-muted"><i>by <a href="http://twitter.com/raphael_h_" target="_blank">Rap2h</a></i></p>
+          <p class="text-muted"><i>by Rap2h</i></p>
           <div class="list-group">
             @foreach($files as $file)
               <a href="?l={{ base64_encode($file) }}" class="list-group-item @if ($current_file == $file) llv-active @endif">
