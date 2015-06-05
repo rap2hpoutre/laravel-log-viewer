@@ -40,6 +40,9 @@
         background-color: #f5f5f5;
         border-color: #777;
       }
+      .text-muted >i > a {
+        color: #777;
+      }
     </style>
   </head>
   <body>
@@ -47,7 +50,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
-          <p class="text-muted"><i>by Rap2h</i></p>
+          <p class="text-muted"><i>by <a href="http://twitter.com/raphael_h_" target="_blank">Rap2h</a></i></p>
           <div class="list-group">
             @foreach($files as $file)
               <a href="?l={{ base64_encode($file) }}" class="list-group-item @if ($current_file == $file) llv-active @endif">
@@ -57,6 +60,11 @@
           </div>
         </div>
         <div class="col-sm-9 col-md-10 table-container">
+          @if ($logs === null)
+            <div>
+              Log file >50M, please download it.
+            </div>
+          @else
           <table id="table-log" class="table table-striped">
             <thead>
               <tr>
@@ -71,9 +79,9 @@
                   <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
                   <td class="date">{{{$log['date']}}}</td>
                   <td class="text">
-                  @if ($log['stack'])
-                    <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
-                  @endif
+                    @if ($log['stack'])
+                      <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
+                    @endif
                     {{{$log['text']}}}
                     @if (isset($log['in_file']))
                       <br />{{{$log['in_file']}}}
@@ -86,6 +94,10 @@
               @endforeach
             </tbody>
           </table>
+          @endif
+          <div>
+            <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span> Download file</a>
+          </div>
         </div>
       </div>
     </div>

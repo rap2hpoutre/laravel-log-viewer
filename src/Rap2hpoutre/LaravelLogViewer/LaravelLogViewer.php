@@ -37,7 +37,7 @@ class LaravelLogViewer
         'alert' => 'warning',
     ];
 
-
+    const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
 
     /**
      * @param string $file
@@ -75,6 +75,8 @@ class LaravelLogViewer
             }
             self::$file = $log_file[0];
         }
+
+        if (File::size(self::$file) > self::MAX_FILE_SIZE) return null;
 
         $file = File::get(self::$file);
 

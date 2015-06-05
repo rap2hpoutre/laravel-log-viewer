@@ -12,6 +12,10 @@ class LogViewerController extends \Illuminate\Routing\Controller
             LaravelLogViewer::setFile(base64_decode(\Input::get('l')));
         }
 
+        if (\Input::get('dl')) {
+            return \Response::download(storage_path() . '/logs/' . base64_decode(\Input::get('dl')));
+        }
+
         $logs = LaravelLogViewer::all();
 
         return View::make('laravel-log-viewer::log', [
