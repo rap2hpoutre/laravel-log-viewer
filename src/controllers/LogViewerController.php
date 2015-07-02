@@ -1,6 +1,8 @@
 <?php
 namespace Rap2hpoutre\LaravelLogViewer;
 
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\View;
 
 class LogViewerController extends \Illuminate\Routing\Controller
@@ -15,6 +17,15 @@ class LogViewerController extends \Illuminate\Routing\Controller
         if (\Input::get('dl')) {
             return \Response::download(storage_path() . '/logs/' . base64_decode(\Input::get('dl')));
         }
+
+		if (\Input::get('del')) {
+			$file = storage_path() . '/logs/' . base64_decode(\Input::get('del'));
+			if (file_exists($file)) unlink($file);
+
+			$url = parse_url(\Request::getRequestUri(), PHP_URL_HOST) . parse_url(\Request::getRequestUri(), PHP_URL_PATH);
+
+			return \Redirect::to($url);
+		}
 
         $logs = LaravelLogViewer::all();
 
