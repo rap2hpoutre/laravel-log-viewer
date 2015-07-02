@@ -50,9 +50,13 @@
           <p class="text-muted"><i>by Rap2h</i></p>
           <div class="list-group">
             @foreach($files as $file)
-              <a href="?l={{ base64_encode($file) }}" class="list-group-item @if ($current_file == $file) llv-active @endif">
-                {{$file}}
-              </a>
+              <li class="list-group-item @if ($current_file == $file) llv-active @endif">
+                <a href="?l={{ base64_encode($file) }}" class="">
+                 {{$file}}
+                </a>
+                  <a href="?del={{ base64_encode($file) }}" class="pull-right text-danger delete-log"> <span class="glyphicon glyphicon-trash"></span>
+                  </a>
+              </li>
             @endforeach
           </div>
         </div>
@@ -119,6 +123,18 @@
         $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
         });
+          $('.delete-log').click(function(event) {
+              event.preventDefault();
+              var r=confirm("Are you sure you want to delete?");
+              if (r==true)   {
+                  window.location = $(this).attr('href');
+              }
+
+          });
+
+          var url = window.location.href;
+          if(url.indexOf("#?del") != -1)
+              document.location.hash = ""; //window.location.href = url.split('?')[0];
       });
     </script>
   </body>
