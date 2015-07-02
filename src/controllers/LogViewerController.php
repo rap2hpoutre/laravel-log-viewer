@@ -20,7 +20,15 @@ class LogViewerController extends \Illuminate\Routing\Controller
 
 		if (\Input::get('del')) {
 			$file = storage_path() . '/logs/' . base64_decode(\Input::get('del'));
-			if (file_exists($file)) unlink($file);
+
+			try
+			{
+				if (file_exists($file))	unlink($file);
+			}
+			catch (\Exception $ex)
+			{
+				// DO NOTHING
+			}
 
 			$url = parse_url(\Request::getRequestUri(), PHP_URL_HOST) . parse_url(\Request::getRequestUri(), PHP_URL_PATH);
 
