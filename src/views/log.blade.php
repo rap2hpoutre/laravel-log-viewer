@@ -94,6 +94,8 @@
           @endif
           <div>
             <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span> Download file</a>
+            -
+            <a id="delete-log" href="?del={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-trash"></span> Delete file</a>
           </div>
         </div>
       </div>
@@ -118,6 +120,9 @@
         });
         $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
+        });
+        $('#delete-log').click(function(){
+          return confirm('Are you sure?');
         });
       });
     </script>

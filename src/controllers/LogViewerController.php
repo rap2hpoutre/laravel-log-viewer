@@ -14,6 +14,9 @@ class LogViewerController extends \Illuminate\Routing\Controller
 
         if (\Input::get('dl')) {
             return \Response::download(storage_path() . '/logs/' . base64_decode(\Input::get('dl')));
+        } elseif (\Input::has('del')) {
+            \File::delete(storage_path() . '/logs/' . base64_decode(\Input::get('del')));
+            return \Redirect::to(\Request::url());
         }
 
         $logs = LaravelLogViewer::all();
