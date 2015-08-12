@@ -24,7 +24,7 @@ composer require rap2hpoutre/laravel-log-viewer
 
 Add Service Provider to `config/app.php` in `providers` section
 ```php
-'Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider',
+Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 ```
 
 Add a route in `app/Http/routes.php` (or choose another route): 
