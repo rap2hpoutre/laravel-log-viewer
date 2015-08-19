@@ -124,12 +124,13 @@ class LaravelLogViewer
     {
         $files = glob(storage_path() . '/logs/*');
         $files = array_reverse($files);
+        $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
             foreach ($files as $k => $file) {
                 $files[$k] = basename($file);
             }
         }
-        return $files;
+        return array_values($files);
     }
 
     /**
