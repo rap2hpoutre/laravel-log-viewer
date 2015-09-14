@@ -71,24 +71,20 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($logs as $key => $log)
-                <tr>
-                  <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
-                  <td class="date">{{{$log['date']}}}</td>
-                  <td class="text">
-                    @if ($log['stack'])
-                      <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>
-                    @endif
-                    {{{$log['text']}}}
-                    @if (isset($log['in_file']))
-                      <br />{{{$log['in_file']}}}
-                    @endif
-                    @if ($log['stack'])
-                      <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}</div>
-                    @endif
-                  </td>
-                </tr>
-              @endforeach
+{{-- Remove extra space and try to preserve the readability of the source view, sorry if not --}}
+@foreach($logs as $key => $log)
+<tr>
+  <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+  <td class="date">{{{$log['date']}}}</td>
+  <td class="text">
+    @if ($log['stack']) <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>@endif
+    {{{$log['text']}}}
+    @if (isset($log['in_file'])) <br />{{{$log['in_file']}}}@endif
+    @if ($log['stack']) <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}</div>@endif
+  </td>
+</tr>
+@endforeach
+{{-- Back to normal indentation --}}
             </tbody>
           </table>
           @endif
