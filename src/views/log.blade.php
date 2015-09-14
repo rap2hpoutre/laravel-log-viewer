@@ -71,7 +71,7 @@
               </tr>
             </thead>
             <tbody>
-{{-- Remove extra space and try to preserve the readability of the source view, sorry if not --}}
+
 @foreach($logs as $key => $log)
 <tr>
   <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
@@ -84,7 +84,7 @@
   </td>
 </tr>
 @endforeach
-{{-- Back to normal indentation --}}
+
             </tbody>
           </table>
           @endif
