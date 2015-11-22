@@ -46,8 +46,17 @@ class LaravelLogViewer
      */
     public static function setFile($file)
     {
-        if (File::exists(storage_path() . '/logs/' . $file)) {
-            self::$file = storage_path() . '/logs/' . $file;
+        // if absolute path is given
+        if (File::exists($file)) {
+            self::$file = $file;
+
+        // or check if file with given filename is in storage/logs folder
+        } else {
+            $file = storage_path() . '/logs/' . $file;
+
+            if (File::exists($file)) {
+                self::$file = $file;
+            }
         }
     }
 
@@ -69,7 +78,7 @@ class LaravelLogViewer
         $log_levels = self::getLogLevels();
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
-        
+
         if (!self::$file) {
             $log_file = self::getFiles();
             if(!count($log_file)) {
