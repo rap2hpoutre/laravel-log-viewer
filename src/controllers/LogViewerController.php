@@ -21,7 +21,7 @@ class LogViewerController extends Controller
 
         if (request()->input('dl')) {
             return Response::download(storage_path() . '/logs/' . base64_decode(request()->input('dl')));
-        } elseif (Input::has('del')) {
+        } elseif (request()->has('del')) {
             File::delete(storage_path() . '/logs/' . base64_decode(request()->input('del')));
             return Redirect::to(Request::url());
         }
