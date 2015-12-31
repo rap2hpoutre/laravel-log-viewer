@@ -134,10 +134,22 @@ class LaravelLogViewer
     public static function getFiles($basename = false)
     {
         $files = glob(storage_path() . '/logs/*');
+        $dir_files = array();
+        foreach ($files as $key=>$file) {
+            $tmp_array = array();
+            if (is_dir($file)) {
+                $tmp_array = glob($file.'/*.log');
+                unset($files[$key]);
+            }
+            $dir_files = array_merge($dir_files, $tmp_array);
+        }
+        $files = array_merge($dir_files, $files);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
             foreach ($files as $k => $file) {
+                $start = strrpos($file, 'logs/') + 5;
+                $file = substr($file, $start);
                 $files[$k] = basename($file);
             }
         }
