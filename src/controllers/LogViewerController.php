@@ -16,13 +16,13 @@ class LogViewerController extends Controller
     public function index()
     {
 
-        if (Input::get('l')) {
+        if (Request::input('l')) {
             LaravelLogViewer::setFile(base64_decode(Request::input('l')));
         }
 
-        if (Input::get('dl')) {
+        if (Request::input('dl')) {
             return Response::download(LaravelLogViewer::pathToLogFile(base64_decode(Request::input('dl'))));
-        } elseif (Input::has('del')) {
+        } elseif (Request::has('del')) {
             File::delete(LaravelLogViewer::pathToLogFile(base64_decode(Request::input('del'))));
             return Redirect::to(Request::url());
         }
