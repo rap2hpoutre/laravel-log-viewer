@@ -46,18 +46,27 @@ class LaravelLogViewer
      */
     public static function setFile($file)
     {
-        // if absolute path is given
+        $file = self::pathToLogFile($file);
+
         if (File::exists($file)) {
             self::$file = $file;
-
-        // or check if file with given filename is in storage/logs folder
-        } else {
-            $file = storage_path() . '/logs/' . $file;
-
-            if (File::exists($file)) {
-                self::$file = $file;
-            }
         }
+    }
+
+    public static function pathToLogFile($file)
+    {
+        $logsPath = storage_path('logs');
+
+        if (! File::exists($file)) { // try the absolute path
+            $file = $logsPath . '/' . $file;
+        }
+
+        // check if requested file is really in the logs directory
+        if (dirname($file) !== $logsPath) {
+            throw new \Exception('No such log file');
+        }
+
+        return $file;
     }
 
     /**
