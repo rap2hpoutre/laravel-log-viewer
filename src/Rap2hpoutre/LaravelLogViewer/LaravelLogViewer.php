@@ -39,6 +39,8 @@ class LaravelLogViewer
         'emergency' => 'warning',
     ];
 
+    private static $ignoredFileNames;
+
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
 
     /**
@@ -145,6 +147,13 @@ class LaravelLogViewer
         $files = glob(storage_path() . '/logs/*');
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
+
+        $files = array_filter($files, function ($var) {
+            $ignore = ! self::isIgnoredFileName($var);
+
+            return $ignore;
+        });
+
         if ($basename && is_array($files)) {
             foreach ($files as $k => $file) {
                 $files[$k] = basename($file);
@@ -160,5 +169,31 @@ class LaravelLogViewer
     {
         $class = new ReflectionClass(new LogLevel);
         return $class->getConstants();
+    }
+
+    private static function getIgnoredFileNames()
+    {
+        if (! is_array(self::$ignoredFileNames)) {
+            self::$ignoredFileNames = config('logviewer.ignore');
+        }
+
+        return self::$ignoredFileNames;
+    }
+
+    private static function isIgnoredFileName($filePath)
+    {
+        $ignoredFileNames = self::getIgnoredFileNames();
+
+        foreach ($ignoredFileNames as $fileName) {
+            if (str_is($fileName, $filePath)) {
+                return true;
+            }
+
+            if (str_contains($filePath, $fileName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
