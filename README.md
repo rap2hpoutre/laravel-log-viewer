@@ -32,4 +32,17 @@ Add a route in `app/Http/routes.php` (or choose another route):
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ``` 
 
-Go to `http://myapp/logs` or some other route
+Publish config:
+```
+php artisan vendor:publish --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider" --tag="config"
+```
+
+In `logviewer.php` you can define file names or file masks to ignore in the viewer:
+```php
+    'ignore' => [
+        'hugelogfile.log',
+        '*laravel-2015-*.log',
+    ]
+```
+
+Visit the defined route.
