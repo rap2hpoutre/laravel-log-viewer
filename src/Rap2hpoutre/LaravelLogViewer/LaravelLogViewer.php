@@ -121,11 +121,14 @@ class LaravelLogViewer
 
                         if (!isset($current[2])) continue;
 
+						$log_date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $current[1]);
+						$log_date->timezone(config('app.timezone'));
+						
                         $log[] = array(
                             'level' => $level_value,
                             'level_class' => self::$levels_classes[$level_value],
                             'level_img' => self::$levels_imgs[$level_value],
-                            'date' => $current[1],
+                            'date' => $log_date,
                             'text' => $current[2],
                             'in_file' => isset($current[3]) ? $current[3] : null,
                             'stack' => preg_replace("/^\n*/", '', $log_data[$i])
