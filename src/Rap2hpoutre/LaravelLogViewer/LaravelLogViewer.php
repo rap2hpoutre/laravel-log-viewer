@@ -117,7 +117,7 @@ class LaravelLogViewer
                 foreach ($log_levels as $level_key => $level_value) {
                     if (strpos(strtolower($h[$i]), '.' . $level_value)) {
 
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.' . $level_key . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
+                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?\.'.$level_key.': (.*?)( in .*?)? (\[.?\])? (\{.*\})?$/', $h[$i], $current);
 
                         if (!isset($current[2])) continue;
 
@@ -128,6 +128,8 @@ class LaravelLogViewer
                             'date' => $current[1],
                             'text' => $current[2],
                             'in_file' => isset($current[3]) ? $current[3] : null,
+							'context' => isset($current[4]) ? $current[4] : null,
+                            'extra' => isset($current[5]) ? $current[5] : null,
                             'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                         );
                     }
