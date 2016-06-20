@@ -33,3 +33,19 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ``` 
 
 Go to `http://myapp/logs` or some other route
+
+Config
+------
+Create the (optional) file below to customize certain view settings.
+**app/config/laravel-log-viewer.php**
+```php
+<?php
+return [
+    'view' => [
+        'layout' => 'layouts.app', // Defaults to: 'laravel-log-viewer::layout'. Path to the view file that serves as the log view container.
+        'log' => 'myapp.log.index', // Defaults to: 'laravel-log-viewer::log'. Create your own view which is used by the LogViewerController.
+        'container-fluid' => false, // Defaults to: true. Set the top level bootstrap class to 'container' (false) instead of  'container-fluid' (true).
+        'yieldName' => 'body', // Defaults to: 'content'. Define a custom yield variable to be used in the @yield('content') directive.
+    ]
+];
+```
