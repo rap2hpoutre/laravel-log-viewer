@@ -72,7 +72,7 @@
         }
       });
       jq('.table-container').on('click', '.expand', function(){
-        $('#' + $(this).data('display')).toggle();
+        jq('#' + jq(this).data('display')).toggle();
       });
       jq('#delete-log').click(function(){
         return confirm('Are you sure?');
