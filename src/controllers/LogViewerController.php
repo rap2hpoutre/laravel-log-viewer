@@ -32,10 +32,10 @@ class LogViewerController extends Controller
 
         $logs = LaravelLogViewer::all();
 
-        return View::make(self::cfgHas('view.log') ? self::cfg('view.log') : 'laravel-log-viewer::log', [
-            'layout' => self::cfgHas('view.layout') ? self::cfg('view.layout') : 'laravel-log-viewer::layout',
-            'yieldName' => self::cfgHas('view.yieldName') ? self::cfg('view.yieldName') : 'content',
-            'container_fluid' => self::cfgHas('view.container-fluid') ? self::cfg('view.container-fluid') : true,
+        return View::make(self::cfg('view.log', 'laravel-log-viewer::log'), [
+            'layout' => self::cfg('view.layout', 'laravel-log-viewer::layout'),
+            'yieldName' => self::cfg('view.yieldName', 'content'),
+            'container_fluid' => self::cfg('view.container-fluid', true),
             'logs' => $logs,
             'files' => LaravelLogViewer::getFiles(true),
             'current_file' => LaravelLogViewer::getFileName()
@@ -45,20 +45,11 @@ class LogViewerController extends Controller
     /**
      * Retrieve a configuration value for the log viewer.
      * @param $key
+     * @param $default
      * @return mixed
      */
-    private static function cfg($key)
+    private static function cfg($key, $default = null)
     {
-        return config()->get(self::$configFile . '.' . $key);
-    }
-
-    /**
-     * Check if a configuration value for the log viewer exists.
-     * @param $key
-     * @return mixed
-     */
-    private static function cfgHas($key)
-    {
-        return config()->has(self::$configFile . '.' . $key);
+        return config()->get(self::$configFile . '.' . $key, $default);
     }
 }
