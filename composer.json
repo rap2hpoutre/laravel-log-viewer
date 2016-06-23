@@ -2,7 +2,7 @@
     "name": "rap2hpoutre/laravel-log-viewer",
     "description": "A Laravel log reader",
     "license": "MIT",
-    "keywords": ["log", "log-reader", "log-viewer", "logging"],
+    "keywords": ["log", "log-reader", "log-viewer", "logging", "laravel", "lumen"],
     "authors": [
         {
             "name": "rap2hpoutre",
