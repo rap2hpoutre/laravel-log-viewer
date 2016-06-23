@@ -32,6 +32,10 @@ Add a route in `app/Http/routes.php` (or choose another route):
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ```
 
+Go to `http://myapp/logs` or some other route
+
+Note for Lumen users
+--------------------
 For use with Lumen, explicitly set the namespace in `app/Http/routes.php`:
 ```php
 $app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($app) {
@@ -43,5 +47,3 @@ And add the following in `app/bootstrap.php`:
 ```php
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
 ```
-
-Go to `http://myapp/logs` or some other route
