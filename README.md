@@ -30,6 +30,18 @@ Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 Add a route in `app/Http/routes.php` (or choose another route): 
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-``` 
+```
+
+For use with Lumen, explicitly set the namespace in `app/Http/routes.php`:
+```php
+$app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($app) {
+    $app->get('logs', 'LogViewerController@index');
+});
+```
+
+And add the following in `app/bootstrap.php`:
+```php
+$app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
+```
 
 Go to `http://myapp/logs` or some other route
