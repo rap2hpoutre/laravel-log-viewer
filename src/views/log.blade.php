@@ -80,7 +80,13 @@
     @if ($log['stack']) <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>@endif
     {{{$log['text']}}}
     @if (isset($log['in_file'])) <br />{{{$log['in_file']}}}@endif
-    @if ($log['stack']) <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}</div>@endif
+    @if ($log['stack'] || $log['extra'])
+	  <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
+		
+		<br/>
+		<pre style="white-space: pre-wrap;">{{{ trim($log['extra']) }}}</pre>
+	  </div>
+	@endif
   </td>
 </tr>
 @endforeach
