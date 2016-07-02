@@ -66,6 +66,7 @@
             <thead>
               <tr>
                 <th>Level</th>
+                <th>Context</th>
                 <th>Date</th>
                 <th>Content</th>
               </tr>
@@ -75,6 +76,7 @@
 @foreach($logs as $key => $log)
 <tr>
   <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+  <td class="text">{{$log['context']}}</td>
   <td class="date">{{{$log['date']}}}</td>
   <td class="text">
     @if ($log['stack']) <a class="pull-right expand btn btn-default btn-xs" data-display="stack{{{$key}}}"><span class="glyphicon glyphicon-search"></span></a>@endif
