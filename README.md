@@ -15,7 +15,7 @@ Small log viewer for laravel. Looks like this:
 
 ![capture d ecran 2014-12-01 a 10 37 18](https://cloud.githubusercontent.com/assets/1575946/5243642/8a00b83a-7946-11e4-8bad-5c705f328bcc.png)
 
-Install (laravel)
+Install (Laravel)
 -----------------
 Install via composer
 ```
@@ -34,7 +34,7 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Go to `http://myapp/logs` or some other route
 
-Install (lumen)
+Install (Lumen)
 ---------------
 
 Install via composer
@@ -42,7 +42,12 @@ Install via composer
 composer require rap2hpoutre/laravel-log-viewer
 ```
 
-Add the following in `app/bootstrap.php`:
+Enable facades by uncommenting this line in `bootstrap/app.php`:
+```php
+$app->withFacades();
+```
+
+Add the following in `bootstrap/app.php`:
 ```php
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
 ```
