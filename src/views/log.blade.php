@@ -139,7 +139,7 @@
           $('#' + $(this).data('display')).toggle();
         });
         $('#delete-log').click(function(){
-          return confirm({{trans('laravel-log-viewer::texts.delete_confirm_message')}});
+          return confirm("{{trans('laravel-log-viewer::texts.delete_confirm_message')}}");
         });
       });
     </script>
