@@ -9,9 +9,12 @@ TL;DR
 -----
 The best (IMO) Log Viewer for Laravel 5 (compatible with 4.2 too) and Lumen. **Install with composer, create a route to `LogViewerController`**. No public assets, no vendor routes, works with and/or without log rotate. Inspired by Micheal Mand's [Laravel 4 log viewer](https://github.com/mikemand/logviewer) (works only with laravel 4.1)
 
+* Supported locales : en, bg
+* Customizable view
+
 What ?
 ------
-Small log viewer for laravel. Looks like this:
+ Small log viewer for laravel. Looks like this:
 
 ![capture d ecran 2014-12-01 a 10 37 18](https://cloud.githubusercontent.com/assets/1575946/5243642/8a00b83a-7946-11e4-8bad-5c705f328bcc.png)
 
@@ -30,6 +33,12 @@ Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 Add a route in `app/Http/routes.php` (or choose another route): 
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+```
+
+Publish config, lang and view files
+```
+php artisan vendor:publish
+
 ```
 
 Go to `http://myapp/logs` or some other route
@@ -58,3 +67,15 @@ $app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($a
     $app->get('logs', 'LogViewerController@index');
 });
 ```
+
+Publish config, lang and view files
+```
+php artisan vendor:publish
+
+```
+
+Contributors
+-----------------
+
+* All contibutors from GitHub. (issues / PR)
+* [@petyots](https://github.com/petyots) added multi language support.
