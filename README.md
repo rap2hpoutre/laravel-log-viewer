@@ -27,7 +27,7 @@ Add Service Provider to `config/app.php` in `providers` section
 Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 ```
 
-Add a route in your web routes file: (or choose another route): 
+Add a route in your web routes file:
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ```
