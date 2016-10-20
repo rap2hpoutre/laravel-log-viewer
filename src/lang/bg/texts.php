@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dan
- * Date: 25.9.2016 г.
- * Time: 16:29 ч.
- */
 
 return array(
     'title' => 'Laravel Log Viewer', //Title of the Page
