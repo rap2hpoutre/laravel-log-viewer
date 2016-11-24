@@ -27,7 +27,7 @@ class LogViewerController extends BaseController
             return Response::download(LaravelLogViewer::pathToLogFile(base64_decode(Request::input('dl'))));
         } elseif (Request::has('del')) {
             File::delete(LaravelLogViewer::pathToLogFile(base64_decode(Request::input('del'))));
-            return Redirect::to(Request::url());
+            return $this->redirect(Request::url());
         }
 
         $logs = LaravelLogViewer::all();
@@ -37,5 +37,14 @@ class LogViewerController extends BaseController
             'files' => LaravelLogViewer::getFiles(true),
             'current_file' => LaravelLogViewer::getFileName()
         ]);
+    }
+
+    private function redirect($to)
+    {
+        if (function_exists('redirect')) {
+            return redirect($to);
+        }
+
+        return Redirect::to($to);
     }
 }
