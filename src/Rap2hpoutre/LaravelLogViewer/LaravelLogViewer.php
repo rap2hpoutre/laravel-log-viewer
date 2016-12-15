@@ -1,7 +1,6 @@
 <?php
 namespace Rap2hpoutre\LaravelLogViewer;
 
-use Illuminate\Support\Facades\File;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -48,7 +47,7 @@ class LaravelLogViewer
     {
         $file = self::pathToLogFile($file);
 
-        if (File::exists($file)) {
+        if (app('files')->exists($file)) {
             self::$file = $file;
         }
     }
@@ -57,7 +56,7 @@ class LaravelLogViewer
     {
         $logsPath = storage_path('logs');
 
-        if (File::exists($file)) { // try the absolute path
+        if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
 
@@ -98,9 +97,9 @@ class LaravelLogViewer
             self::$file = $log_file[0];
         }
 
-        if (File::size(self::$file) > self::MAX_FILE_SIZE) return null;
+        if (app('files')->size(self::$file) > self::MAX_FILE_SIZE) return null;
 
-        $file = File::get(self::$file);
+        $file = app('files')->get(self::$file);
 
         preg_match_all($pattern, $file, $headings);
 

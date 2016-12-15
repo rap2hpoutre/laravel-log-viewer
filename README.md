@@ -42,11 +42,6 @@ Install via composer
 composer require rap2hpoutre/laravel-log-viewer
 ```
 
-Enable facades by uncommenting this line in `bootstrap/app.php`:
-```php
-$app->withFacades();
-```
-
 Add the following in `bootstrap/app.php`:
 ```php
 $app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
