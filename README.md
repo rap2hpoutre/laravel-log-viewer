@@ -44,7 +44,7 @@ composer require rap2hpoutre/laravel-log-viewer
 
 Add the following in `bootstrap/app.php`:
 ```php
-$app->register(Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
+$app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
 ```
 
 Explicitly set the namespace in `app/Http/routes.php`:
