@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel log viewer</title>
+    <title>{{trans('laravel-log-viewer::texts.title')}}</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -46,9 +46,12 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
-          <p class="text-muted"><i>by Rap2h</i></p>
-          <div class="list-group">
+            <a href="{{redirect()->back()}}" class="btn btn-primary" role="button">{{trans('laravel-log-viewer::texts.back')}}</a><br/>
+          <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{trans('laravel-log-viewer::texts.title')}}</h1>
+            @if(config('laravel-log-viewer.author'))
+            <p class="text-muted"><i>by Rap2h</i></p>
+            @endif
+            <div class="list-group">
             @foreach($files as $file)
               <a href="?l={{ base64_encode($file) }}" class="list-group-item @if ($current_file == $file) llv-active @endif">
                 {{$file}}
@@ -59,16 +62,16 @@
         <div class="col-sm-9 col-md-10 table-container">
           @if ($logs === null)
             <div>
-              Log file >50M, please download it.
+                {{trans('laravel-log-viewer::log_file_maximum_limit_message')}}
             </div>
           @else
           <table id="table-log" class="table table-striped">
             <thead>
               <tr>
-                <th>Level</th>
-                <th>Context</th>
-                <th>Date</th>
-                <th>Content</th>
+                <th>{{trans('laravel-log-viewer::texts.level')}}</th>
+                <th>{{trans('laravel-log-viewer::texts.context')}}</th>
+                <th>{{trans('laravel-log-viewer::texts.date')}}</th>
+                <th>{{trans('laravel-log-viewer::texts.content')}}</th>
               </tr>
             </thead>
             <tbody>
@@ -91,9 +94,9 @@
           </table>
           @endif
           <div>
-            <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span> Download file</a>
+            <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span> {{trans('laravel-log-viewer::texts.download_file')}}</a>
             -
-            <a id="delete-log" href="?del={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-trash"></span> Delete file</a>
+            <a id="delete-log" href="?del={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-trash"></span> {{trans('laravel-log-viewer::texts.delete_file')}}</a>
           </div>
         </div>
       </div>
@@ -105,6 +108,22 @@
     <script>
       $(document).ready(function(){
         $('#table-log').DataTable({
+            "language": {
+                "lengthMenu": '{{trans('laravel-log-viewer::texts.table.lengthMenu')}}',
+                "zeroRecords": '{{trans('laravel-log-viewer::texts.table.zeroRecords')}}',
+                "info": '{{trans('laravel-log-viewer::texts.table.info')}}',
+                "infoEmpty": '{{trans('laravel-log-viewer::texts.table.infoEmpty')}}',
+                "infoFiltered": "{{trans('laravel-log-viewer::texts.table.infoFiltered')}}",
+                "loadingRecords": "{{trans('laravel-log-viewer::texts.table.loadingRecords')}}",
+                "processing":     "{{trans('laravel-log-viewer::texts.table.processing')}}",
+                "search":         "{{trans('laravel-log-viewer::texts.table.search')}}",
+                "paginate": {
+                    "first":      "{{trans('laravel-log-viewer::texts.table.first')}}",
+                    "last":       "{{trans('laravel-log-viewer::texts.table.last')}}",
+                    "next":       "{{trans('laravel-log-viewer::texts.table.next')}}",
+                    "previous":   "{{trans('laravel-log-viewer::texts.table.previous')}}"
+                }
+            },
           "order": [ 1, 'desc' ],
           "stateSave": true,
           "stateSaveCallback": function (settings, data) {
@@ -120,7 +139,7 @@
           $('#' + $(this).data('display')).toggle();
         });
         $('#delete-log').click(function(){
-          return confirm('Are you sure?');
+          return confirm("{{trans('laravel-log-viewer::texts.delete_confirm_message')}}");
         });
       });
     </script>
