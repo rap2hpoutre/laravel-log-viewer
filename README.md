@@ -53,3 +53,9 @@ $app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($a
     $app->get('logs', 'LogViewerController@index');
 });
 ```
+
+Troubleshooting
+---------------
+
+If you got a `InvalidArgumentException in FileViewFinder.php` error, it may be a problem with config caching. Double check installation, then run `php artisan config:clear`.
+
