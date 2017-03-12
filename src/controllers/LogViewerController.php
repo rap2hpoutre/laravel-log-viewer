@@ -32,6 +32,7 @@ class LogViewerController extends BaseController
             foreach(LaravelLogViewer::getFiles(true) as $file){
                 app('files')->delete(LaravelLogViewer::pathToLogFile($file));
             }
+            return $this->redirect($this->request->url());
         }
 
         return app('view')->make('laravel-log-viewer::log', [
