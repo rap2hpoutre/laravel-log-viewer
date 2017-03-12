@@ -125,7 +125,7 @@
         $('.table-container').on('click', '.expand', function(){
           $('#' + $(this).data('display')).toggle();
         });
-        $('#delete-log').click(function(){
+        $('#delete-log, #delete-all-log').click(function(){
           return confirm('Are you sure?');
         });
       });
