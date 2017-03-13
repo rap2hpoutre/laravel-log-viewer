@@ -28,7 +28,7 @@ class LogViewerController extends BaseController
         } elseif ($this->request->has('del')) {
             app('files')->delete(LaravelLogViewer::pathToLogFile(base64_decode($this->request->input('del'))));
             return $this->redirect($this->request->url());
-        } elseif ($this->request->has('delall')){
+        } elseif ($this->request->has('delall')) {
             foreach(LaravelLogViewer::getFiles(true) as $file){
                 app('files')->delete(LaravelLogViewer::pathToLogFile($file));
             }
