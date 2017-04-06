@@ -34,10 +34,12 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Go to `http://myapp/logs` or some other route
 
-**Optionally** publish `log.blade.php` into `/resources/views/vendor/laravel-log-viewer/` for easy customization:
+**Optionally** publish `log.blade.php` into `/resources/views/vendor/laravel-log-viewer/` for view customization:
 
 ```
-php artisan vendor:publish --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider" --tag=views
+php artisan vendor:publish \
+  --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider" \
+  --tag=views
 ``` 
 
 Install (Lumen)
