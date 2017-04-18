@@ -71,6 +71,11 @@ class LaravelLogViewer
         }
     }
 
+    /**
+     * @param $file
+     * @return string
+     * @throws \Exception
+     */
     public static function pathToLogFile($file)
     {
         $logsPath = storage_path('logs');
