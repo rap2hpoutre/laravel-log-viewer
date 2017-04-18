@@ -25,6 +25,7 @@ class LaravelLogViewer
         'critical' => 'danger',
         'alert' => 'danger',
         'emergency' => 'danger',
+        'processed' => 'info',
     ];
 
     private static $levels_imgs = [
@@ -36,7 +37,25 @@ class LaravelLogViewer
         'critical' => 'warning',
         'alert' => 'warning',
         'emergency' => 'warning',
+        'processed' => 'info'
     ];
+
+    /**
+     * Log levels that are used
+     * @var array
+     */
+    private static $log_levels = [
+        'emergency',
+        'alert',
+        'critical',
+        'error',
+        'warning',
+        'notice',
+        'info',
+        'debug',
+        'processed'
+    ];
+
 
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
 
@@ -85,8 +104,6 @@ class LaravelLogViewer
     {
         $log = array();
 
-        $log_levels = self::getLogLevels();
-
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
 
         if (!self::$file) {
@@ -113,18 +130,17 @@ class LaravelLogViewer
 
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
-                foreach ($log_levels as $level_key => $level_value) {
-                    if (strpos(strtolower($h[$i]), '.' . $level_value)) {
+                foreach (self::$log_levels as $level) {
+                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\].*?(\w+)\.' . $level_key . ': (.*?)( in .*?:[0-9]+)?$/', $h[$i], $current);
-
+                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
                         if (!isset($current[3])) continue;
 
                         $log[] = array(
                             'context' => $current[2],
-                            'level' => $level_value,
-                            'level_class' => self::$levels_classes[$level_value],
-                            'level_img' => self::$levels_imgs[$level_value],
+                            'level' => $level,
+                            'level_class' => self::$levels_classes[$level],
+                            'level_img' => self::$levels_imgs[$level],
                             'date' => $current[1],
                             'text' => $current[3],
                             'in_file' => isset($current[4]) ? $current[4] : null,
@@ -153,14 +169,5 @@ class LaravelLogViewer
             }
         }
         return array_values($files);
-    }
-
-    /**
-     * @return array
-     */
-    private static function getLogLevels()
-    {
-        $class = new ReflectionClass(new LogLevel);
-        return $class->getConstants();
     }
 }
