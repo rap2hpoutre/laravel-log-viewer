@@ -74,7 +74,7 @@
             <tbody>
 
 @foreach($logs as $key => $log)
-<tr>
+<tr data-display="stack{{{$key}}}">
   <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign" aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
   <td class="text">{{$log['context']}}</td>
   <td class="date">{{{$log['date']}}}</td>
@@ -110,6 +110,9 @@
     <script src="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script>
       $(document).ready(function(){
+        $('tr').on('click', function () {
+            $('#' + $(this).data('display')).toggle();
+        });
         $('#table-log').DataTable({
           "order": [ 1, 'desc' ],
           "stateSave": true,
