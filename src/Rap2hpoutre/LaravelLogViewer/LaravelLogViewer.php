@@ -2,7 +2,6 @@
 namespace Rap2hpoutre\LaravelLogViewer;
 
 use Psr\Log\LogLevel;
-use ReflectionClass;
 
 /**
  * Class LaravelLogViewer
@@ -10,7 +9,6 @@ use ReflectionClass;
  */
 class LaravelLogViewer
 {
-
     /**
      * @var string file
      */
@@ -56,7 +54,6 @@ class LaravelLogViewer
         'processed'
     ];
 
-
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
 
     /**
@@ -72,7 +69,7 @@ class LaravelLogViewer
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @return string
      * @throws \Exception
      */
@@ -165,7 +162,7 @@ class LaravelLogViewer
      */
     public static function getFiles($basename = false)
     {
-        $files = glob(storage_path() . '/logs/*');
+        $files = glob(storage_path() . '/logs/*.log');
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
