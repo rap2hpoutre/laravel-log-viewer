@@ -132,7 +132,7 @@ class LaravelLogViewer
 
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
-                foreach (self::$log_levels as $level) {
+                foreach (self::GetLogLevel() as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
@@ -171,5 +171,12 @@ class LaravelLogViewer
             }
         }
         return array_values($files);
+    }
+
+    public static function GetLogLevel(){
+        if(app('config')->has('rap_loglevel')){
+            return app('config')->get('rap_loglevel');
+        }
+        return self::$log_levels;
     }
 }
