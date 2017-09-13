@@ -1,24 +1,35 @@
 <?php
 namespace Rap2hpoutre\LaravelLogViewer;
 
+use Illuminate\Support\Facades\Log;
+use Config;
+
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
-    class BaseController extends \Illuminate\Routing\Controller {}
-} else if (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
-    class BaseController extends \Laravel\Lumen\Routing\Controller {}
+    class BaseController extends \Illuminate\Routing\Controller
+    {
+    }
+} elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
+    class BaseController extends \Laravel\Lumen\Routing\Controller
+    {
+    }
 }
 
 class LogViewerController extends BaseController
 {
     protected $request;
 
-    public function __construct ()
+    public function __construct()
     {
         $this->request = app('request');
+        $log_level = app('config')['app']['log_viewer_show'];
+        if (strlen($log_level)>0) {
+            $log_level=explode(',', $log_level);
+            LaravelLogViewer::setLogLevel($log_level);
+        }
     }
 
     public function index()
     {
-
         if ($this->request->input('l')) {
             LaravelLogViewer::setFile(base64_decode($this->request->input('l')));
         }
@@ -29,7 +40,7 @@ class LogViewerController extends BaseController
             app('files')->delete(LaravelLogViewer::pathToLogFile(base64_decode($this->request->input('del'))));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
-            foreach(LaravelLogViewer::getFiles(true) as $file){
+            foreach (LaravelLogViewer::getFiles(true) as $file) {
                 app('files')->delete(LaravelLogViewer::pathToLogFile($file));
             }
             return $this->redirect($this->request->url());

@@ -2,6 +2,7 @@
 namespace Rap2hpoutre\LaravelLogViewer;
 
 use Psr\Log\LogLevel;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class LaravelLogViewer
@@ -110,33 +111,38 @@ class LaravelLogViewer
 
         if (!self::$file) {
             $log_file = self::getFiles();
-            if(!count($log_file)) {
+            if (!count($log_file)) {
                 return [];
             }
             self::$file = $log_file[0];
         }
 
-        if (app('files')->size(self::$file) > self::MAX_FILE_SIZE) return null;
+        if (app('files')->size(self::$file) > self::MAX_FILE_SIZE) {
+            return null;
+        }
 
         $file = app('files')->get(self::$file);
 
         preg_match_all($pattern, $file, $headings);
 
-        if (!is_array($headings)) return $log;
+        if (!is_array($headings)) {
+            return $log;
+        }
 
         $log_data = preg_split($pattern, $file);
 
         if ($log_data[0] < 1) {
             array_shift($log_data);
         }
-
+        
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
                 foreach (self::$log_levels as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
-                        if (!isset($current[3])) continue;
+                        if (!isset($current[3])) {
+                            continue;
+                        }
 
                         $log[] = array(
                             'context' => $current[2],
@@ -171,5 +177,20 @@ class LaravelLogViewer
             }
         }
         return array_values($files);
+    }
+
+
+    /**
+     * SetLogLevel function
+     *
+     * @param array $loglevel
+     * @return void
+     */
+    public static function setLogLevel($loglevel)
+    {
+        if (is_array($loglevel)&&count($loglevel)>0) {
+            self::$log_levels=$loglevel;
+            Log::debug('设置自定义配置成功!');
+        }
     }
 }
