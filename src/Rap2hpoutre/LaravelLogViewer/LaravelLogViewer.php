@@ -80,7 +80,7 @@ class LaravelLogViewer
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
-        
+
         $file = $logsPath . '/' . $file;
 
         // check if requested file is really in the logs directory
@@ -106,7 +106,7 @@ class LaravelLogViewer
     {
         $log = array();
 
-        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/';
+        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
 
         if (!self::$file) {
             $log_file = self::getFiles();
@@ -135,17 +135,17 @@ class LaravelLogViewer
                 foreach (self::$log_levels as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
-                        if (!isset($current[3])) continue;
+                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
+                        if (!isset($current[4])) continue;
 
                         $log[] = array(
-                            'context' => $current[2],
+                            'context' => $current[3],
                             'level' => $level,
                             'level_class' => self::$levels_classes[$level],
                             'level_img' => self::$levels_imgs[$level],
                             'date' => $current[1],
-                            'text' => $current[3],
-                            'in_file' => isset($current[4]) ? $current[4] : null,
+                            'text' => $current[4],
+                            'in_file' => isset($current[5]) ? $current[5] : null,
                             'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                         );
                     }
