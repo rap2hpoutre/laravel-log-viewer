@@ -55,7 +55,7 @@
       <p class="text-muted"><i>by Rap2h</i></p>
       <div class="list-group">
         @foreach($files as $file)
-          <a href="?l={{ base64_encode($file) }}"
+          <a href="{{$uri}}&l={{ base64_encode($file)}}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">
             {{$file}}
           </a>
