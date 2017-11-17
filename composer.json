@@ -1,17 +1,17 @@
 {
     "name": "rap2hpoutre/laravel-log-viewer",
     "description": "A Laravel log reader",
-    "licence": "MIT",
-    "keywords": ["log", "log-reader", "log-viewer", "logging"],
+    "license": "MIT",
+    "keywords": ["log", "log-reader", "log-viewer", "logging", "laravel", "lumen"],
     "authors": [
         {
             "name": "rap2hpoutre",
-            "email": "raphael@ornikar.com"
+            "email": "raphaelht@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*"
+        "illuminate/support": "4.2.*|5.*"
     },
     "autoload": {
         "classmap": [
@@ -19,6 +19,13 @@
         ],
         "psr-0": {
             "Rap2hpoutre\\LaravelLogViewer\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewerServiceProvider"
+            ]
         }
     },
     "minimum-stability": "stable"
