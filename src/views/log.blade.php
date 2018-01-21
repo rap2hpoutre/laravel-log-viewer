@@ -11,13 +11,13 @@
     <link rel="stylesheet"
           href="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
 
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <style>
         body {
             padding: 25px;
@@ -33,7 +33,7 @@
         }
 
         .date {
-            min-width: 140px;
+            min-width: 75px;
         }
 
         .text {
@@ -48,7 +48,6 @@
     </style>
 </head>
 <body>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
@@ -63,7 +62,6 @@
                 @endforeach
             </div>
         </div>
-
         <div class="col-sm-9 col-md-10 table-container">
             @if ($logs === null)
                 <div>
@@ -93,9 +91,8 @@
 
                     @foreach($logs as $key => $log)
                         <tr data-display="stack{{{$key}}}">
-                            <td class="text-{{{$log['level_class']}}}"><span
-                                        class="glyphicon glyphicon-{{{$log['level_img']}}}-sign"
-                                        aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+                            <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign"
+                                                                             aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
                             <td class="text">{{$log['context']}}</td>
                             <td class="date">{{{$log['date']}}}</td>
                             <td class="text">
@@ -117,35 +114,29 @@
             @endif
             <div>
                 @if($current_file)
-                    <a href="?dl={{ base64_encode($current_file) }}"><span
-                                class="glyphicon glyphicon-download-alt"></span>
+                    <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span>
                         Download file</a>
                     -
                     <a id="delete-log" href="?del={{ base64_encode($current_file) }}"><span
                                 class="glyphicon glyphicon-trash"></span> Delete file</a>
                     @if(count($files) > 1)
                         -
-                        <a id="delete-all-log" href="?delall=true"><span class="glyphicon glyphicon-trash"></span>
-                            Delete all files</a>
+                        <a id="delete-all-log" href="?delall=true"><span class="glyphicon glyphicon-trash"></span> Delete all files</a>
                     @endif
                 @endif
             </div>
         </div>
     </div>
 </div>
-
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-
 <script>
     $(document).ready(function () {
-
         $('.table-container tr').on('click', function () {
             $('#' + $(this).data('display')).toggle();
         });
-
         var table = $('#table-log').DataTable({
             "order": [1, 'desc'],
             "stateSave": true,
@@ -154,13 +145,10 @@
             },
             "stateLoadCallback": function (settings) {
                 var data = JSON.parse(window.localStorage.getItem("datatable"));
-
                 if (data) data.start = 0;
-
                 return data;
             }
         });
-
         $('#delete-log, #delete-all-log').click(function () {
             return confirm('Are you sure?');
         });
@@ -168,7 +156,6 @@
         ///////////////////////////////////////////////////////////////
         // filter columns
         var dates = [];
-
         $("#table-log tfoot th:not(:last)").each(function (i) {
             var select = $('<select style="width: 100%;"><option value=""></option></select>')
                 .appendTo($(this).empty())
@@ -177,10 +164,8 @@
                         .search($(this).val(), true, false)
                         .draw();
                 });
-
             table.column(i).data().unique().sort().each(function (d, j) {
                 var val = d;
-
                 // remove html in case of first/type column
                 if (i === 0) {
                     val = $.trim($('<div>').html(d).text());
@@ -188,29 +173,23 @@
                 // remove time in case of date column
                 else if (i === 2) {
                     val = d.split(' ')[0];
-
                     if (jQuery.inArray(val, dates) !== -1) {
                         // continue
                         return true;
                     }
-
                     dates.push(val);
-
                     // we will populate date column later with dates in descending order
                     return true;
                 }
-
                 select.append('<option value="' + val + '">' + val + '</option>')
             });
         });
-
         // populate dates select box
         $(dates).sort(function (a, b) {
             return a > b ? -1 : a < b ? 1 : 0;
         }).each(function (i, v) {
             $('#table-log tfoot select:eq(2)').append('<option value="' + v + '">' + v + '</option>')
         });
-
         // put filters on header
         $('#table-log tfoot').css('display', 'table-header-group');
         ///////////////////////////////////////////////////////////////
