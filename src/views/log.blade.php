@@ -45,6 +45,10 @@
       background-color: #f5f5f5;
       border-color: #777;
     }
+
+    .list-group-item {
+      word-wrap: break-word;
+    }
   </style>
 </head>
 <body>
