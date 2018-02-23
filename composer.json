@@ -3,6 +3,7 @@
     "description": "A Laravel log reader",
     "license": "MIT",
     "keywords": ["log", "log-reader", "log-viewer", "logging", "laravel", "lumen"],
+    "type": "laravel-package",
     "authors": [
         {
             "name": "rap2hpoutre",
