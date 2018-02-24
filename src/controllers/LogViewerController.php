@@ -35,6 +35,14 @@ class LogViewerController extends BaseController
             return $this->redirect($this->request->url());
         }
 
+        if ($this->request->wantsJson()) {
+            return [
+                'logs' => LaravelLogViewer::all(),
+                'files' => LaravelLogViewer::getFiles(true),
+                'current_file' => LaravelLogViewer::getFileName()
+            ];
+        }
+
         return app('view')->make('laravel-log-viewer::log', [
             'logs' => LaravelLogViewer::all(),
             'files' => LaravelLogViewer::getFiles(true),
