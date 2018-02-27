@@ -24,6 +24,7 @@ class LaravelLogViewer
         'alert' => 'danger',
         'emergency' => 'danger',
         'processed' => 'info',
+        'failed' => 'warning',
     ];
 
     private static $levels_imgs = [
@@ -35,7 +36,8 @@ class LaravelLogViewer
         'critical' => 'warning',
         'alert' => 'warning',
         'emergency' => 'warning',
-        'processed' => 'info'
+        'processed' => 'info',
+        'failed' => 'warning'
     ];
 
     /**
@@ -51,7 +53,8 @@ class LaravelLogViewer
         'notice',
         'info',
         'debug',
-        'processed'
+        'processed',
+        'failed' => 'warning'
     ];
 
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
