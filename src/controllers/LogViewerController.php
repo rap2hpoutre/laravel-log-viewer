@@ -42,7 +42,7 @@ class LogViewerController extends BaseController
         ];
 
         if ($this->request->wantsJson()) {
-            return $data
+            return $data;
         }
 
         return app('view')->make('laravel-log-viewer::log', $data);
