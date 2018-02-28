@@ -26,13 +26,19 @@
       margin-top: 0;
     }
 
-    #table-log, .sidebar, .btn {
-      font-size: 0.85rem;
+    #table-log {
+        font-size: 0.85rem;
     }
 
     .sidebar {
+        font-size: 0.85rem;
         line-height: 1;
     }
+
+    .btn {
+        font-size: 0.7rem;
+    }
+
 
     .stack {
       font-size: 0.85em;
@@ -96,9 +102,9 @@
               <td class="text">{{$log['context']}}</td>
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack']) <a class="float-right expand btn btn-outline-dark btn-xs mb-2 ml-2"
+                @if ($log['stack']) <button type="button" class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
                                        data-display="stack{{{$key}}}"><span
-                      class="fa fa-search"></span></a>@endif
+                      class="fa fa-search"></span></button>@endif
                 {{{$log['text']}}}
                 @if (isset($log['in_file'])) <br/>{{{$log['in_file']}}}@endif
                 @if ($log['stack'])
