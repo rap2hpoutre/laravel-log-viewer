@@ -27,15 +27,15 @@ class LaravelLogViewer
     ];
 
     private static $levels_imgs = [
-        'debug' => 'info',
-        'info' => 'info',
-        'notice' => 'info',
-        'warning' => 'warning',
-        'error' => 'warning',
-        'critical' => 'warning',
-        'alert' => 'warning',
-        'emergency' => 'warning',
-        'processed' => 'info'
+        'debug' => 'info-circle',
+        'info' => 'info-circle',
+        'notice' => 'info-circle',
+        'warning' => 'exclamation-triangle',
+        'error' => 'exclamation-triangle',
+        'critical' => 'exclamation-triangle',
+        'alert' => 'exclamation-triangle',
+        'emergency' => 'exclamation-triangle',
+        'processed' => 'info-circle'
     ];
 
     /**
