@@ -20,13 +20,13 @@ class LogViewerController extends BaseController
     {
 
         if ($this->request->input('l')) {
-            LaravelLogViewer::setFile(base64_decode($this->request->input('l')));
+            LaravelLogViewer::setFile(\Crypt::decrypt($this->request->input('l')));
         }
 
         if ($this->request->input('dl')) {
-            return $this->download(LaravelLogViewer::pathToLogFile(base64_decode($this->request->input('dl'))));
+            return $this->download(LaravelLogViewer::pathToLogFile(\Crypt::decrypt($this->request->input('dl'))));
         } elseif ($this->request->has('del')) {
-            app('files')->delete(LaravelLogViewer::pathToLogFile(base64_decode($this->request->input('del'))));
+            app('files')->delete(LaravelLogViewer::pathToLogFile(\Crypt::decrypt($this->request->input('del'))));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
             foreach(LaravelLogViewer::getFiles(true) as $file){
@@ -34,12 +34,18 @@ class LogViewerController extends BaseController
             }
             return $this->redirect($this->request->url());
         }
-
-        return app('view')->make('laravel-log-viewer::log', [
+        
+        $data = [
             'logs' => LaravelLogViewer::all(),
             'files' => LaravelLogViewer::getFiles(true),
             'current_file' => LaravelLogViewer::getFileName()
-        ]);
+        ];
+
+        if ($this->request->wantsJson()) {
+            return $data;
+        }
+
+        return app('view')->make('laravel-log-viewer::log', $data);
     }
 
     private function redirect($to)

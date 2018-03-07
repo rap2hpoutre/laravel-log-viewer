@@ -30,6 +30,10 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
 		    $this->publishes([
 		       	__DIR__.'/../../views' => base_path('/resources/views/vendor/laravel-log-viewer'),
 		    ], 'views');
+		    $this->publishes([
+		        __DIR__.'/../../config/logviewer.php' => config_path('logviewer.php'),
+		    ]);
+
 		}
 	}
 

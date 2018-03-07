@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Laravel log viewer</title>
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
 
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -28,6 +26,20 @@
       margin-top: 0;
     }
 
+    #table-log {
+        font-size: 0.85rem;
+    }
+
+    .sidebar {
+        font-size: 0.85rem;
+        line-height: 1;
+    }
+
+    .btn {
+        font-size: 0.7rem;
+    }
+
+
     .stack {
       font-size: 0.85em;
     }
@@ -45,24 +57,28 @@
       background-color: #f5f5f5;
       border-color: #777;
     }
+
+    .list-group-item {
+      word-wrap: break-word;
+    }
   </style>
 </head>
 <body>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      <h1><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Laravel Log Viewer</h1>
+    <div class="col sidebar mb-3">
+      <h1><i class="fa fa-calendar" aria-hidden="true"></i> Laravel Log Viewer</h1>
       <p class="text-muted"><i>by Rap2h</i></p>
       <div class="list-group">
         @foreach($files as $file)
-          <a href="?l={{ base64_encode($file) }}"
+          <a href="?l={{ \Crypt::encrypt($file) }}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">
             {{$file}}
           </a>
         @endforeach
       </div>
     </div>
-    <div class="col-sm-9 col-md-10 table-container">
+    <div class="col-10 table-container">
       @if ($logs === null)
         <div>
           Log file >50M, please download it.
@@ -81,14 +97,14 @@
 
           @foreach($logs as $key => $log)
             <tr data-display="stack{{{$key}}}">
-              <td class="text-{{{$log['level_class']}}}"><span class="glyphicon glyphicon-{{{$log['level_img']}}}-sign"
+              <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
                                                                aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
               <td class="text">{{$log['context']}}</td>
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack']) <a class="pull-right expand btn btn-default btn-xs"
+                @if ($log['stack']) <button type="button" class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
                                        data-display="stack{{{$key}}}"><span
-                      class="glyphicon glyphicon-search"></span></a>@endif
+                      class="fa fa-search"></span></button>@endif
                 {{{$log['text']}}}
                 @if (isset($log['in_file'])) <br/>{{{$log['in_file']}}}@endif
                 @if ($log['stack'])
@@ -102,26 +118,30 @@
           </tbody>
         </table>
       @endif
-      <div>
+      <div class="p-3">
         @if($current_file)
-          <a href="?dl={{ base64_encode($current_file) }}"><span class="glyphicon glyphicon-download-alt"></span>
+          <a href="?dl={{ \Crypt::encrypt($current_file) }}"><span class="fa fa-download"></span>
             Download file</a>
           -
-          <a id="delete-log" href="?del={{ base64_encode($current_file) }}"><span
-                class="glyphicon glyphicon-trash"></span> Delete file</a>
+          <a id="delete-log" href="?del={{ \Crypt::encrypt($current_file) }}"><span
+                class="fa fa-trash"></span> Delete file</a>
           @if(count($files) > 1)
             -
-            <a id="delete-all-log" href="?delall=true"><span class="glyphicon glyphicon-trash"></span> Delete all files</a>
+            <a id="delete-all-log" href="?delall=true"><span class="fa fa-trash"></span> Delete all files</a>
           @endif
         @endif
       </div>
     </div>
   </div>
 </div>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<!-- jQuery for Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- FontAwesome -->
+<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(document).ready(function () {
     $('.table-container tr').on('click', function () {
