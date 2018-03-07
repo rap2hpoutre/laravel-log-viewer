@@ -54,7 +54,7 @@ class LaravelLogViewer
         'info',
         'debug',
         'processed',
-        'failed' => 'warning'
+        'failed'
     ];
 
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
