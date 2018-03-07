@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'pattern' => env('LOGVIEWER_PATTERN', '*.log');
+    'pattern' => env('LOGVIEWER_PATTERN', '*.log'),
 ];
