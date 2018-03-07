@@ -37,7 +37,7 @@ class LaravelLogViewer
         'alert' => 'exclamation-triangle',
         'emergency' => 'exclamation-triangle',
         'processed' => 'info-circle',
-        'failed' => 'warning'
+        'failed' => 'exclamation-triangle'
     ];
 
     /**
