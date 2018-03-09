@@ -93,6 +93,16 @@
             <th>Content</th>
           </tr>
           </thead>
+          
+          <tfoot>
+          <tr>
+              <th>Level</th>
+              <th>Context</th>
+              <th>Date</th>
+              <th>&nbsp;</th>
+          </tr>
+          </tfoot>
+          
           <tbody>
 
           @foreach($logs as $key => $log)
@@ -147,7 +157,7 @@
     $('.table-container tr').on('click', function () {
       $('#' + $(this).data('display')).toggle();
     });
-    $('#table-log').DataTable({
+    var table = $('#table-log').DataTable({
       "order": [1, 'desc'],
       "stateSave": true,
       "stateSaveCallback": function (settings, data) {
@@ -162,6 +172,51 @@
     $('#delete-log, #delete-all-log').click(function () {
       return confirm('Are you sure?');
     });
+    
+    ///////////////////////////////////////////////////////////////
+    // filter columns
+    ///////////////////////////////////////////////////////////////
+    var dates = [];
+    $("#table-log tfoot th:not(:last)").each(function (i) {
+        var select = $('<select style="width: 100%;"><option value=""></option></select>')
+            .appendTo($(this).empty())
+            .on('change', function () {
+                table.column(i)
+                    .search($(this).val(), true, false)
+                    .draw();
+            });
+        table.column(i).data().unique().sort().each(function (d, j) {
+            var val = d;
+            // remove html in case of first/type column
+            if (i === 0) {
+                val = $.trim($('<div>').html(d).text());
+            }
+            // remove time in case of date column
+            else if (i === 2) {
+                val = d.split(' ')[0];
+                if (jQuery.inArray(val, dates) !== -1) {
+                    // continue
+                    return true;
+                }
+                dates.push(val);
+                // we will populate date column later with dates in descending order
+                return true;
+            }
+            select.append('<option value="' + val + '">' + val + '</option>')
+        });
+    });
+    
+    // populate dates select box
+    $(dates).sort(function (a, b) {
+        return a > b ? -1 : a < b ? 1 : 0;
+    }).each(function (i, v) {
+        $('#table-log tfoot select:eq(2)').append('<option value="' + v + '">' + v + '</option>')
+    });
+    
+    // put filters on header
+    $('#table-log tfoot').css('display', 'table-header-group');
+    ///////////////////////////////////////////////////////////////
+        
   });
 </script>
 </body>
