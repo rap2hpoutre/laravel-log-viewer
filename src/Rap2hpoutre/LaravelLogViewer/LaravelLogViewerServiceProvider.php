@@ -31,7 +31,7 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
                    __DIR__.'/../../views' => base_path('/resources/views/vendor/laravel-log-viewer'),
             ], 'views');
             $this->publishes([
-                __DIR__.'/../../config/logviewer.php' => config_path('logviewer.php'),
+                __DIR__.'/../../config/logviewer.php' => $this->config_path('logviewer.php'),
             ]);
 
         }
@@ -55,6 +55,17 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
     public function provides()
     {
         return array();
+    }
+    
+    /**
+     * Get the configuration path.
+     *
+     * @param  string $path
+     * @return string
+     */
+    private function config_path($path = '')
+    {
+        return function_exists('config_path') ? config_path($path) : app()->basePath() . DIRECTORY_SEPARATOR . 'config' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
 }
