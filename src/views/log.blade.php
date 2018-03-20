@@ -148,7 +148,7 @@
       $('#' + $(this).data('display')).toggle();
     });
     $('#table-log').DataTable({
-      "order": [1, 'desc'],
+      "order": [2, 'desc'],
       "stateSave": true,
       "stateSaveCallback": function (settings, data) {
         window.localStorage.setItem("datatable", JSON.stringify(data));
