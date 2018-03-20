@@ -71,7 +71,7 @@
       <p class="text-muted"><i>by Rap2h</i></p>
       <div class="list-group">
         @foreach($files as $file)
-          <a href="?l={{ \Crypt::encrypt($file) }}"
+          <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">
             {{$file}}
           </a>
@@ -120,7 +120,7 @@
       @endif
       <div class="p-3">
         @if($current_file)
-          <a href="?dl={{ \Crypt::encrypt($current_file) }}"><span class="fa fa-download"></span>
+          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span class="fa fa-download"></span>
             Download file</a>
           -
           <a id="delete-log" href="?del={{ \Crypt::encrypt($current_file) }}"><span

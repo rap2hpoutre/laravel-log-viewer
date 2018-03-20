@@ -1,5 +1,6 @@
 <?php
 namespace Rap2hpoutre\LaravelLogViewer;
+use Illuminate\Support\Facades\Crypt;
 
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
     class BaseController extends \Illuminate\Routing\Controller {}
@@ -20,13 +21,13 @@ class LogViewerController extends BaseController
     {
 
         if ($this->request->input('l')) {
-            LaravelLogViewer::setFile(\Crypt::decrypt($this->request->input('l')));
+            LaravelLogViewer::setFile(Crypt::decrypt($this->request->input('l')));
         }
 
         if ($this->request->input('dl')) {
-            return $this->download(LaravelLogViewer::pathToLogFile(\Crypt::decrypt($this->request->input('dl'))));
+            return $this->download(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('dl'))));
         } elseif ($this->request->has('del')) {
-            app('files')->delete(LaravelLogViewer::pathToLogFile(\Crypt::decrypt($this->request->input('del'))));
+            app('files')->delete(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('del'))));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
             foreach(LaravelLogViewer::getFiles(true) as $file){
