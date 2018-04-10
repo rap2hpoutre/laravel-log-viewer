@@ -148,6 +148,10 @@
       $('.table-container tr').on('click', function () {
         $('#' + $(this).data('display')).toggle();
       });
+    @else
+      $('.table-container').on('click', '.expand', function () {
+        $('#' + $(this).data('display')).toggle();
+      });
     @endif
     $('#table-log').DataTable({
       "order": [2, 'desc'],
