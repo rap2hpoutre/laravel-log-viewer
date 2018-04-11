@@ -59,7 +59,7 @@
     }
 
     .list-group-item {
-      word-wrap: break-all;
+      word-break: break-all;
     }
   </style>
 </head>
