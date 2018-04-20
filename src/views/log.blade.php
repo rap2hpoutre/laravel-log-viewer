@@ -59,7 +59,7 @@
     }
 
     .list-group-item {
-      word-wrap: break-word;
+      word-break: break-all;
     }
   </style>
 </head>
@@ -144,9 +144,15 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(document).ready(function () {
-    $('.table-container tr').on('click', function () {
-      $('#' + $(this).data('display')).toggle();
-    });
+    @if(config('logviewer.tr_clickable', true) === true)
+      $('.table-container tr').on('click', function () {
+        $('#' + $(this).data('display')).toggle();
+      });
+    @else
+      $('.table-container').on('click', '.expand', function () {
+        $('#' + $(this).data('display')).toggle();
+      });
+    @endif
     $('#table-log').DataTable({
       "order": [2, 'desc'],
       "stateSave": true,
