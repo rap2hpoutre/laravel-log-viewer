@@ -17,9 +17,9 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
   <style>
-    body {
+    /** body {
       padding: 25px;
-    }
+    } */
 
     h1 {
       font-size: 1.5em;
@@ -57,6 +57,19 @@
       background-color: #f5f5f5;
       border-color: #777;
     }
+    .navbar-nav li {
+        margin-right: 10px;
+    }
+    .navbar-nav li a {
+        color: #ccc;
+    }
+    .navbar-nav li a.active {
+        color: #fff;
+    }
+
+    .log-contents {
+        padding-top: 15px;
+    }
 
     .list-group-item {
       word-wrap: break-word;
@@ -64,21 +77,41 @@
   </style>
 </head>
 <body>
-<div class="container-fluid">
+    <nav class="bg-primary text-light d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow">
+        <div class="mr-md-auto">
+            <a class="navbar-brand text-light" href="https://github.com/rap2hpoutre/laravel-log-viewer">Laravel Log Viewer <i class="text-dark">by Rap2h</i></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="" id="navbarNavDropdown">
+            <div class="form-group mb-0 d-flex">
+                <div class="mt-2 mr-2 font-weight-bold">
+                    Log: 
+                </div>
+                <select class="form-control" id="lognav">
+                    @foreach($files as $file)
+                        <option value="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}" @if ($current_file == $file) selected @endif>
+                            {{$file}}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            {{-- <ul class="navbar-nav">
+                    @foreach($files as $file)
+                    <li>
+                    <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
+                        class="@if ($current_file == $file) active @endif">
+                        {{$file}}
+                    </a>
+                    </li>
+                    @endforeach
+            </ul> --}}
+        </div>
+    </nav>
+<div class="container-fluid log-contents">
   <div class="row">
-    <div class="col sidebar mb-3">
-      <h1><i class="fa fa-calendar" aria-hidden="true"></i> Laravel Log Viewer</h1>
-      <p class="text-muted"><i>by Rap2h</i></p>
-      <div class="list-group">
-        @foreach($files as $file)
-          <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
-             class="list-group-item @if ($current_file == $file) llv-active @endif">
-            {{$file}}
-          </a>
-        @endforeach
-      </div>
-    </div>
-    <div class="col-10 table-container">
+    <div class="col-12 table-container">
       @if ($logs === null)
         <div>
           Log file >50M, please download it.
@@ -133,6 +166,13 @@
       </div>
     </div>
   </div>
+    <footer class="pt-3 my-md-5 pt-md-3 border-top">
+            <div class="row">
+                <div class="col-12 col-md">
+                    <small class="d-block mb-3 text-muted">Laravel Log Viewer by Rap2h | <a href="https://github.com/rap2hpoutre/laravel-log-viewer">Github</a> | <a href="https://github.com/rap2hpoutre/laravel-log-viewer/issues">Issues</a></small>
+                </div>
+            </div>
+    </footer>
 </div>
 <!-- jQuery for Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -146,6 +186,9 @@
   $(document).ready(function () {
     $('.table-container tr').on('click', function () {
       $('#' + $(this).data('display')).toggle();
+    });
+    $('#lognav').change(function () {
+        window.location.replace(window.location.pathname + $(this).val());
     });
     $('#table-log').DataTable({
       "order": [2, 'desc'],
