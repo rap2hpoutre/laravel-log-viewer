@@ -165,7 +165,8 @@ class LaravelLogViewer
      */
     public static function getFiles($basename = false)
     {
-        $files = glob(storage_path() . '/logs/' . (function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log'));
+        $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
+        $files = glob(storage_path() . '/logs/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
