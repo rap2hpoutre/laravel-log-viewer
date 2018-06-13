@@ -63,7 +63,7 @@
     .navbar-nav li a {
         color: #ccc;
     }
-    .navbar-nav li a.active {
+    .navbar-nav li.active a {
         color: #fff;
     }
 
@@ -77,38 +77,24 @@
   </style>
 </head>
 <body>
-    <nav class="bg-primary text-light d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom box-shadow">
-        <div class="mr-md-auto">
-            <a class="navbar-brand text-light" href="https://github.com/rap2hpoutre/laravel-log-viewer">Laravel Log Viewer <i class="text-dark">by Rap2h</i></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-        <div class="" id="navbarNavDropdown">
-            <div class="form-group mb-0 d-flex">
-                <div class="mt-2 mr-2 font-weight-bold">
-                    Log: 
-                </div>
-                <select class="form-control" id="lognav">
-                    @foreach($files as $file)
-                        <option value="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}" @if ($current_file == $file) selected @endif>
-                            {{$file}}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            {{-- <ul class="navbar-nav">
-                    @foreach($files as $file)
-                    <li>
-                    <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
-                        class="@if ($current_file == $file) active @endif">
+
+<nav class="bg-primary text-light navbar-dark navbar navbar-expand-lg">
+    <a class="navbar-brand text-light" href="https://github.com/rap2hpoutre/laravel-log-viewer">Laravel Log Viewer</a>
+    <button class="border-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            @foreach($files as $file)
+                <li class="nav-item @if ($current_file == $file) active @endif">
+                    <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}" class="nav-link">
                         {{$file}}
                     </a>
-                    </li>
-                    @endforeach
-            </ul> --}}
-        </div>
-    </nav>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</nav>
 <div class="container-fluid log-contents">
   <div class="row">
     <div class="col-12 table-container">
