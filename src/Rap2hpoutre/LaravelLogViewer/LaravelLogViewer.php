@@ -125,7 +125,26 @@ class LaravelLogViewer
 
         preg_match_all($pattern, $file, $headings);
 
-        if (!is_array($headings)) return $log;
+        // If log file format appears to be non-standard, just read in each line's content.
+        if (!is_array($headings)) {
+            
+            $lines = explode(PHP_EOL, $file);
+
+            foreach($lines as $line) {
+                $log[] = [
+                    'context' => '',
+                    'level' => '',
+                    'level_class' => '',
+                    'level_img' => '',
+                    'date' => '',
+                    'text' => $line,
+                    'in_file' => null,
+                    'stack' => '',
+                ];
+            }
+
+            return array_reverse($log);
+        }
 
         $log_data = preg_split($pattern, $file);
 
