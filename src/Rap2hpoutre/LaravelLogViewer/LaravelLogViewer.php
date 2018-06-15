@@ -163,17 +163,41 @@ class LaravelLogViewer
      * @param bool $basename
      * @return array
      */
-    public static function getFiles($basename = false)
+    public static function getFiles()
+    {
+        $folders = [storage_path() . '/logs'];
+        if (function_exists('config')) {
+            dd(config('logviewer'));
+            $folders = array_merge($folders, config('logviewer.folders'));
+        }
+        $files = [];
+        foreach ($folders as $folder) {
+            $files = array_merge($files, self::getFilesByFolder($folder));
+        }
+        return $files;
+    }
+
+    /**
+     * Retrieve all files that match the specific pattern.
+     * @param string $folder
+     * @return array
+     */
+    private static function getFilesByFolder($folder)
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/logs/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
+        $folder_path = substr($folder, -1, 1) === '/' ? substr($folder, 0, strlen($folder) - 1) : $folder;
+
+        if (!is_dir($folder_path)) {
+            return [];
+        }
+
+        $files = glob($folder_path . '/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
-        if ($basename && is_array($files)) {
-            foreach ($files as $k => $file) {
-                $files[$k] = basename($file);
-            }
+
+        if (is_array($files)) {
+            return $files;
         }
-        return array_values($files);
+        return [];
     }
 }

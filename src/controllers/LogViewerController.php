@@ -30,7 +30,7 @@ class LogViewerController extends BaseController
             app('files')->delete(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('del'))));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
-            foreach(LaravelLogViewer::getFiles(true) as $file){
+            foreach(LaravelLogViewer::getFiles() as $file){
                 app('files')->delete(LaravelLogViewer::pathToLogFile($file));
             }
             return $this->redirect($this->request->url());
@@ -38,7 +38,7 @@ class LogViewerController extends BaseController
         
         $data = [
             'logs' => LaravelLogViewer::all(),
-            'files' => LaravelLogViewer::getFiles(true),
+            'files' => LaravelLogViewer::getFiles(),
             'current_file' => LaravelLogViewer::getFileName()
         ];
 
