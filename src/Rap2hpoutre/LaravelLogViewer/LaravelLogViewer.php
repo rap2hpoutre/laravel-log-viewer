@@ -163,13 +163,13 @@ class LaravelLogViewer
             $lines = explode(PHP_EOL, $file);
             $log = [];
 
-            foreach($lines as $line) {
+            foreach($lines as $key => $line) {
                 $log[] = [
                     'context' => '',
                     'level' => '',
                     'level_class' => '',
                     'level_img' => '',
-                    'date' => '',
+                    'date' => $key+1,
                     'text' => $line,
                     'in_file' => null,
                     'stack' => '',
