@@ -167,7 +167,6 @@ class LaravelLogViewer
     {
         $folders = [storage_path() . '/logs'];
         if (function_exists('config')) {
-            dd(config('logviewer'));
             $folders = array_merge($folders, config('logviewer.folders'));
         }
         $files = [];
