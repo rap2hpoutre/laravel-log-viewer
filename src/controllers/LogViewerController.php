@@ -64,6 +64,9 @@ class LogViewerController extends BaseController
         return app('redirect')->to($to);
     }
 
+    /**
+     * @param string $data
+     */
     private function download($data)
     {
         if (function_exists('response')) {
