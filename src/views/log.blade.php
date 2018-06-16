@@ -84,12 +84,16 @@
           Log file >50M, please download it.
         </div>
       @else
-        <table id="table-log" class="table table-striped">
+        <table id="table-log" class="table table-striped" data-ordering-index="{{ $standardFormat ? 2 : 0 }}">
           <thead>
           <tr>
-            <th>Level</th>
-            <th>Context</th>
-            <th>Date</th>
+            @if ($standardFormat)
+              <th>Level</th>
+              <th>Context</th>
+              <th>Date</th>
+            @else
+              <th>Line number</th>
+            @endif
             <th>Content</th>
           </tr>
           </thead>
@@ -97,9 +101,11 @@
 
           @foreach($logs as $key => $log)
             <tr data-display="stack{{{$key}}}">
-              <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
-                                                               aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
-              <td class="text">{{$log['context']}}</td>
+              @if ($standardFormat)
+                <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
+                                                                aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+                <td class="text">{{$log['context']}}</td>
+              @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
                 @if ($log['stack']) <button type="button" class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
@@ -148,7 +154,7 @@
       $('#' + $(this).data('display')).toggle();
     });
     $('#table-log').DataTable({
-      "order": [2, 'desc'],
+      "order": [$('#table-log').data('orderingIndex'), 'desc'],
       "stateSave": true,
       "stateSaveCallback": function (settings, data) {
         window.localStorage.setItem("datatable", JSON.stringify(data));

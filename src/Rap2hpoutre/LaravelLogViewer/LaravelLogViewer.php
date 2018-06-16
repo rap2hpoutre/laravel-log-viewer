@@ -125,7 +125,9 @@ class LaravelLogViewer
 
         preg_match_all($pattern, $file, $headings);
 
-        if (!is_array($headings)) return $log;
+        if (!is_array($headings)) {
+            return $log;
+        }
 
         $log_data = preg_split($pattern, $file);
 
@@ -153,6 +155,25 @@ class LaravelLogViewer
                         );
                     }
                 }
+            }
+        }
+
+        if (!$log) {
+
+            $lines = explode(PHP_EOL, $file);
+            $log = [];
+
+            foreach($lines as $key => $line) {
+                $log[] = [
+                    'context' => '',
+                    'level' => '',
+                    'level_class' => '',
+                    'level_img' => '',
+                    'date' => $key+1,
+                    'text' => $line,
+                    'in_file' => null,
+                    'stack' => '',
+                ];
             }
         }
 

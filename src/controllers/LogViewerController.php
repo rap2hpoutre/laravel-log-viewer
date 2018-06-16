@@ -39,11 +39,17 @@ class LogViewerController extends BaseController
         $data = [
             'logs' => LaravelLogViewer::all(),
             'files' => LaravelLogViewer::getFiles(true),
-            'current_file' => LaravelLogViewer::getFileName()
+            'current_file' => LaravelLogViewer::getFileName(),
+            'standardFormat' => true,
         ];
 
         if ($this->request->wantsJson()) {
             return $data;
+        }
+
+        $firstLog = reset($data['logs']);
+        if (!$firstLog['context'] && !$firstLog['level']) {
+            $data['standardFormat'] = false;
         }
 
         return app('view')->make('laravel-log-viewer::log', $data);
