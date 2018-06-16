@@ -158,7 +158,7 @@ class LaravelLogViewer
             }
         }
 
-        if (!$log) {
+        if (empty($log)) {
 
             $lines = explode(PHP_EOL, $file);
             $log = [];
