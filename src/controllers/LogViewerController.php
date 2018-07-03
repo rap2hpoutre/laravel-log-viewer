@@ -8,15 +8,26 @@ if (class_exists("\\Illuminate\\Routing\\Controller")) {
     class BaseController extends \Laravel\Lumen\Routing\Controller {}
 }
 
+/**
+ * Class LogViewerController
+ * @package Rap2hpoutre\LaravelLogViewer
+ */
 class LogViewerController extends BaseController
 {
     protected $request;
 
+    /**
+     * LogViewerController constructor.
+     */
     public function __construct ()
     {
         $this->request = app('request');
     }
 
+    /**
+     * @return array|mixed
+     * @throws \Exception
+     */
     public function index()
     {
 
@@ -25,12 +36,12 @@ class LogViewerController extends BaseController
         }
 
         if ($this->request->input('dl')) {
-            return $this->download(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('dl'))));
+            return $this->download($this->pathFromInput('dl'));
         } elseif ($this->request->has('clean')) {
-            app('files')->put(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('clean'))), '');
+            app('files')->put($this->pathFromInput('clean'), '');
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('del')) {
-            app('files')->delete(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('del'))));
+            app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
             foreach(LaravelLogViewer::getFiles(true) as $file){
@@ -58,6 +69,20 @@ class LogViewerController extends BaseController
         return app('view')->make('laravel-log-viewer::log', $data);
     }
 
+    /**
+     * @param $input_string
+     * @return string
+     * @throws \Exception
+     */
+    private function pathFromInput($input_string)
+    {
+        return LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input($input_string)));
+    }
+
+    /**
+     * @param $to
+     * @return mixed
+     */
     private function redirect($to)
     {
         if (function_exists('redirect')) {
@@ -69,6 +94,7 @@ class LogViewerController extends BaseController
 
     /**
      * @param string $data
+     * @return mixed
      */
     private function download($data)
     {
