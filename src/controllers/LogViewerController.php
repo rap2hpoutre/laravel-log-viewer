@@ -30,24 +30,12 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
-
         if ($this->request->input('l')) {
             LaravelLogViewer::setFile(Crypt::decrypt($this->request->input('l')));
         }
 
-        if ($this->request->input('dl')) {
-            return $this->download($this->pathFromInput('dl'));
-        } elseif ($this->request->has('clean')) {
-            app('files')->put($this->pathFromInput('clean'), '');
-            return $this->redirect($this->request->url());
-        } elseif ($this->request->has('del')) {
-            app('files')->delete($this->pathFromInput('del'));
-            return $this->redirect($this->request->url());
-        } elseif ($this->request->has('delall')) {
-            foreach(LaravelLogViewer::getFiles(true) as $file){
-                app('files')->delete(LaravelLogViewer::pathToLogFile($file));
-            }
-            return $this->redirect($this->request->url());
+        if ($early_return = $this->earlyReturn()) {
+            return $early_return;
         }
         
         $data = [
@@ -67,6 +55,29 @@ class LogViewerController extends BaseController
         }
 
         return app('view')->make('laravel-log-viewer::log', $data);
+    }
+
+    /**
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    private function earlyReturn()
+    {
+        if ($this->request->input('dl')) {
+            return $this->download($this->pathFromInput('dl'));
+        } elseif ($this->request->has('clean')) {
+            app('files')->put($this->pathFromInput('clean'), '');
+            return $this->redirect($this->request->url());
+        } elseif ($this->request->has('del')) {
+            app('files')->delete($this->pathFromInput('del'));
+            return $this->redirect($this->request->url());
+        } elseif ($this->request->has('delall')) {
+            foreach(LaravelLogViewer::getFiles(true) as $file){
+                app('files')->delete(LaravelLogViewer::pathToLogFile($file));
+            }
+            return $this->redirect($this->request->url());
+        }
+        return false;
     }
 
     /**
