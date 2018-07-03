@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Crypt;
 
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
     class BaseController extends \Illuminate\Routing\Controller {}
-} else if (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
+} elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
     class BaseController extends \Laravel\Lumen\Routing\Controller {}
 }
 
