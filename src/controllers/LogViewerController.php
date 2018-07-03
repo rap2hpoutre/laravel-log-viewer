@@ -81,7 +81,7 @@ class LogViewerController extends BaseController
     }
 
     /**
-     * @param $input_string
+     * @param string $input_string
      * @return string
      * @throws \Exception
      */
