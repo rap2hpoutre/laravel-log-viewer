@@ -38,8 +38,7 @@
     .btn {
         font-size: 0.7rem;
     }
-
-
+    
     .stack {
       font-size: 0.85em;
     }
@@ -126,17 +125,22 @@
       @endif
       <div class="p-3">
         @if($current_file)
-          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span class="fa fa-download"></span>
-            Download file</a>
+          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+            <span class="fa fa-download"></span> Download file
+          </a>
           -
-          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span
-                      class="glyphicon glyphicon-refresh"></span> Clean file</a>
+          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+            <span class="fa fa-sync"></span> Clean file
+          </a>
           -
-          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span
-                class="fa fa-trash"></span> Delete file</a>
+          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+            <span class="fa fa-trash"></span> Delete file
+          </a>
           @if(count($files) > 1)
             -
-            <a id="delete-all-log" href="?delall=true"><span class="fa fa-trash"></span> Delete all files</a>
+            <a id="delete-all-log" href="?delall=true">
+              <span class="fa fa-trash-alt"></span> Delete all files
+            </a>
           @endif
         @endif
       </div>
