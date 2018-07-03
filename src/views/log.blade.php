@@ -129,6 +129,9 @@
           <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span class="fa fa-download"></span>
             Download file</a>
           -
+          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span
+                      class="glyphicon glyphicon-refresh"></span> Clean file</a>
+          -
           <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}"><span
                 class="fa fa-trash"></span> Delete file</a>
           @if(count($files) > 1)
@@ -165,7 +168,7 @@
         return data;
       }
     });
-    $('#delete-log, #delete-all-log').click(function () {
+    $('#delete-log, #clean-log, #delete-all-log').click(function () {
       return confirm('Are you sure?');
     });
   });

@@ -26,6 +26,9 @@ class LogViewerController extends BaseController
 
         if ($this->request->input('dl')) {
             return $this->download(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('dl'))));
+        } elseif ($this->request->has('clean')) {
+            app('files')->put(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('clean'))), '');
+            return $this->redirect($this->request->url());
         } elseif ($this->request->has('del')) {
             app('files')->delete(LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input('del'))));
             return $this->redirect($this->request->url());
