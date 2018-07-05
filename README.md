@@ -27,7 +27,7 @@ Install via composer
 composer require rap2hpoutre/laravel-log-viewer
 ```
 
-Add Service Provider to `config/app.php` in `providers` section
+Add Service Provider to `config/app.php` in `providers` section **(required only for Laravel 5.4-)**
 ```php
 Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 ```
