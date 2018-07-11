@@ -50,7 +50,7 @@ class LogViewerController extends BaseController
         }
 
         $firstLog = reset($data['logs']);
-        if (!$firstLog['context'] && !$firstLog['level']) {
+        if (!$firstLog['channel'] && !$firstLog['level']) {
             $data['standardFormat'] = false;
         }
 

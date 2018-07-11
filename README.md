@@ -16,7 +16,7 @@ Log Viewer for Laravel 5 (compatible with 4.2 too) and Lumen. **Install with com
 
 What ?
 ------
-Small log viewer for laravel. Looks like this:
+Small log viewer for laravel. Also supports displaying context (see "contextual information" of the [document](https://laravel.com/docs/5.6/logging#writing-log-messages)). Looks like this:
 
 ![capture d ecran 2014-12-01 a 10 37 18](https://cloud.githubusercontent.com/assets/1575946/5243642/8a00b83a-7946-11e4-8bad-5c705f328bcc.png)
 
@@ -46,6 +46,21 @@ php artisan vendor:publish \
   --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider" \
   --tag=views
 ``` 
+
+**Optionally** to enable logging and displaying of context, add the following code into your `app/logging.php`:
+
+```
+'channels' => [
+  // under the channel you use ...
+  'stack' => [
+    // add this "tap" property
+    'tap' => [Rap2hpoutre\LaravelLogViewer\JsonizeMonolog::class],
+    ...
+  ],
+  ...
+]
+...
+```
 
 Install (Lumen)
 ---------------

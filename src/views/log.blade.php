@@ -32,7 +32,7 @@
         font-size: 0.7rem;
     }
 
-    .stack {
+    .stack, .extra {
       font-size: 0.85em;
     }
 
@@ -81,7 +81,7 @@
           <tr>
             @if ($standardFormat)
               <th>Level</th>
-              <th>Context</th>
+              <th>Channel</th>
               <th>Date</th>
             @else
               <th>Line number</th>
@@ -92,23 +92,32 @@
           <tbody>
 
           @foreach($logs as $key => $log)
-            <tr data-display="stack{{{$key}}}">
+            <tr class="toggle-trigger" data-display="stack{{{$key}}}" data-display2="extra{{{$key}}}">
               @if ($standardFormat)
                 <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
                                                                 aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
-                <td class="text">{{$log['context']}}</td>
+                <td class="text">{{$log['channel']}}</td>
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack']) <button type="button" class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
+                @if (isset($log['extra']))<button type="button" class="toggle-trigger float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
+                                       data-display="extra{{{$key}}}"><span
+                      class="fa fa-sticky-note"></span></button>@endif
+                {{{$log['text']}}}
+                @if ($log['stack']) <button type="button" class="toggle-trigger float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
                                        data-display="stack{{{$key}}}"><span
                       class="fa fa-search"></span></button>@endif
-                {{{$log['text']}}}
+
                 @if (isset($log['in_file'])) <br/>{{{$log['in_file']}}}@endif
+
                 @if ($log['stack'])
                   <div class="stack" id="stack{{{$key}}}"
                        style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
                   </div>@endif
+                @if (isset($log['extra']))
+                  <div class="extra" id="extra{{{$key}}}"
+                       style="display: none; white-space: pre-wrap;">{!! str_replace(' ','&nbsp;',e($log['extra'])) !!}</div>
+                @endif
               </td>
             </tr>
           @endforeach
@@ -154,8 +163,10 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(document).ready(function () {
-    $('.table-container tr').on('click', function () {
+    $('.toggle-trigger').on('click', function () {
       $('#' + $(this).data('display')).toggle();
+      $('#' + $(this).data('display2')).toggle();
+      return false;
     });
     $('#table-log').DataTable({
       "order": [$('#table-log').data('orderingIndex'), 'desc'],
