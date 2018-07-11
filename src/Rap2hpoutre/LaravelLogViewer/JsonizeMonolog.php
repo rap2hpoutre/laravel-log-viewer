@@ -23,9 +23,8 @@ class JsonizeMonolog
                     'class' => get_class($e),
                     // TODO $e->getPrevious()
                 ];
-                $firstTrace = $e->getTrace()[0];
                 $record['message'] .= ' | ' . get_class($e) .
-                    ": {$e->getMessage()} (code: {$e->getCode()}) at {$firstTrace['file']} ({$firstTrace['line']})";
+                    ": {$e->getMessage()} (code: {$e->getCode()}) at {$e->getFile()} ({$e->getLine()})";
             }
             return $record;
         });

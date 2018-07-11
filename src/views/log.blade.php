@@ -92,7 +92,7 @@
           <tbody>
 
           @foreach($logs as $key => $log)
-            <tr class="toggle-trigger" data-display="stack{{{$key}}}" data-display2="extra{{{$key}}}">
+            <tr class="toggle-trigger" data-display="stack{{{$key}}}|extra{{{$key}}}">
               @if ($standardFormat)
                 <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
                                                                 aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
@@ -100,7 +100,7 @@
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if (isset($log['extra']))<button type="button" class="toggle-trigger float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
+                @if ($log['extra'])<button type="button" class="toggle-trigger float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
                                        data-display="extra{{{$key}}}"><span
                       class="fa fa-sticky-note"></span></button>@endif
                 {{{$log['text']}}}
@@ -114,7 +114,7 @@
                   <div class="stack" id="stack{{{$key}}}"
                        style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
                   </div>@endif
-                @if (isset($log['extra']))
+                @if ($log['extra'])
                   <div class="extra" id="extra{{{$key}}}"
                        style="display: none; white-space: pre-wrap;">{!! str_replace(' ','&nbsp;',e($log['extra'])) !!}</div>
                 @endif
@@ -164,8 +164,10 @@
 <script>
   $(document).ready(function () {
     $('.toggle-trigger').on('click', function () {
-      $('#' + $(this).data('display')).toggle();
-      $('#' + $(this).data('display2')).toggle();
+      var ids = $(this).data('display').split('|');
+      for(var i = 0; i < ids.length; ++i) {
+        $('#' + ids[i]).toggle();
+      }
       return false;
     });
     $('#table-log').DataTable({

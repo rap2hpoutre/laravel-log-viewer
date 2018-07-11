@@ -126,7 +126,7 @@ class LaravelLogViewer
         return static::tryDefault($file);
     }
 
-    private static function tryLine(&$file)
+    protected static function tryLine(&$file)
     {
         $log = [];
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
@@ -159,7 +159,8 @@ class LaravelLogViewer
                             'date' => $current[1],
                             'text' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
-                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
+                            'stack' => preg_replace("/^\n*/", '', $log_data[$i]),
+                            'extra' => null
                         );
                     }
                 }
@@ -169,46 +170,43 @@ class LaravelLogViewer
         return array_reverse($log);
     }
     
-    private static function tryJson(&$file)
+    protected static function tryJson(&$file)
     {
-        try {
-            $log = [];
-            $lines = explode("\n", $file);
+        $log = [];
+        $lines = explode("\n", $file);
 
-            if(json_decode($lines[0], true) === null) {
-                return $log;
+        foreach($lines as $line) {
+        	if($line == '') {
+        		continue;
+        	}
+            $decoded = json_decode($line, true);
+            if($decoded === null) {
+                return [];
             }
-
-            foreach($lines as $line) {
-                if($line == '') continue;
-                $decoded = json_decode($line, true);
-                $level = strtolower($decoded['level_name']);
-                $stack = null;
-                $extra = array_merge($decoded['context'] ?? [], $decoded['extra'] ?? []);
-                if(isset($decoded['context']) && isset($decoded['context']['exception'])) {
-                    $stack = $decoded['context']['exception']['trace'];
-                    unset($extra['exception']);
-                }
-                $log[] = [
-                    'channel' => $decoded['channel'],
-                    'level' => $level,
-                    'level_class' => self::$levels_classes[$level],
-                    'level_img' => self::$levels_imgs[$level],
-                    'date' => $decoded['datetime']['date'],
-                    'text' => $decoded['message'],
-                    'in_file' => null,
-                    'stack' => $stack,
-                    'extra' => json_encode($extra, JSON_PRETTY_PRINT)
-                ];
+            $level = strtolower($decoded['level_name']);
+            $stack = null;
+            $extra = array_merge($decoded['context'] ?? [], $decoded['extra'] ?? []);
+            if(isset($decoded['context']) && isset($decoded['context']['exception'])) {
+                $stack = $decoded['context']['exception']['trace'];
+                unset($extra['exception']);
             }
-
-            return array_reverse($log);
-        } catch (\Exception $e) {
-            return [];
+            $log[] = [
+                'channel' => $decoded['channel'],
+                'level' => $level,
+                'level_class' => self::$levels_classes[$level],
+                'level_img' => self::$levels_imgs[$level],
+                'date' => $decoded['datetime']['date'],
+                'text' => $decoded['message'],
+                'in_file' => null,
+                'stack' => $stack,
+                'extra' => json_encode($extra, JSON_PRETTY_PRINT)
+            ];
         }
+
+        return array_reverse($log);
     }
 
-    private static function tryDefault(&$file)
+    protected static function tryDefault(&$file)
     {
         $lines = explode(PHP_EOL, $file);
         $log = [];
@@ -223,6 +221,7 @@ class LaravelLogViewer
                 'text' => $line,
                 'in_file' => null,
                 'stack' => '',
+                'extra' => null
             ];
         }
 
