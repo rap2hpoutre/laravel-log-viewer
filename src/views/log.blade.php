@@ -53,6 +53,10 @@
     .list-group-item {
       word-wrap: break-word;
     }
+
+    .folder {
+      padding-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -62,6 +66,23 @@
       <h1><i class="fa fa-calendar" aria-hidden="true"></i> Laravel Log Viewer</h1>
       <p class="text-muted"><i>by Rap2h</i></p>
       <div class="list-group">
+        @foreach($folders as $folder)
+          <div class="list-group-item">
+            <a href="?f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}">
+              <span class="fa fa-folder"></span> {{$folder}}
+            </a>
+            @if ($current_folder == $folder)
+              <div class="list-group folder">
+                @foreach($folder_files as $file)
+                  <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}&f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}"
+                    class="list-group-item @if ($current_file == $file) llv-active @endif">
+                    {{$file}}
+                  </a>
+                @endforeach
+              </div>
+            @endif
+          </div>
+        @endforeach
         @foreach($files as $file)
           <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">

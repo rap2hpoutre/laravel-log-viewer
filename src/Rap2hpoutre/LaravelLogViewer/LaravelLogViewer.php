@@ -14,6 +14,11 @@ class LaravelLogViewer
      */
     private static $file;
 
+    /**
+     * @var string folder
+     */
+    private static $folder;
+
     private static $levels_classes = [
         'debug' => 'info',
         'info' => 'info',
@@ -60,6 +65,18 @@ class LaravelLogViewer
     const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
 
     /**
+     * @param string $folder
+     */
+    public static function setFolder($folder)
+    {
+        $logsPath = storage_path('logs') . '/' . $folder;
+
+        if (app('files')->exists($logsPath)) {
+            self::$folder = $folder;
+        }
+    }
+
+    /**
      * @param string $file
      */
     public static function setFile($file)
@@ -79,7 +96,8 @@ class LaravelLogViewer
     public static function pathToLogFile($file)
     {
         $logsPath = storage_path('logs');
-
+        $logsPath .= (self::$folder) ? '/' . self::$folder : '' ;
+    
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
@@ -92,6 +110,14 @@ class LaravelLogViewer
         }
 
         return $file;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getFolderName()
+    {
+        return self::$folder;
     }
 
     /**
@@ -112,7 +138,7 @@ class LaravelLogViewer
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
 
         if (!self::$file) {
-            $log_file = self::getFiles();
+            $log_file = (!self::$folder) ? self::getFiles() : self::getFolderFiles();
             if(!count($log_file)) {
                 return [];
             }
@@ -181,13 +207,36 @@ class LaravelLogViewer
     }
 
     /**
+     * @return array
+     */
+    public static function getFolders()
+    {
+        $folders = glob(storage_path() . '/logs/*', GLOB_ONLYDIR);
+        if (is_array($folders)) {
+            foreach ($folders as $k => $folder) {
+                $folders[$k] = basename($folder);
+            }
+        }
+        return array_values($folders);
+    }
+
+    /**
      * @param bool $basename
      * @return array
      */
-    public static function getFiles($basename = false)
+    public static function getFolderFiles($basename = false)
+    {
+        return self::getFiles($basename, self::$folder);
+    }
+
+    /**
+     * @param bool $basename
+     * @return array
+     */
+    public static function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/logs/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
+        $files = glob(storage_path() . '/logs/' . $folder . '/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
