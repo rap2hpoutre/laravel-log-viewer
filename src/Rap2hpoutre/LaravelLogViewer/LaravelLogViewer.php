@@ -1,4 +1,5 @@
 <?php
+
 namespace Rap2hpoutre\LaravelLogViewer;
 
 /**
@@ -17,50 +18,23 @@ class LaravelLogViewer
      */
     private $folder;
 
-    private $levels_classes = [
-        'debug' => 'info',
-        'info' => 'info',
-        'notice' => 'info',
-        'warning' => 'warning',
-        'error' => 'danger',
-        'critical' => 'danger',
-        'alert' => 'danger',
-        'emergency' => 'danger',
-        'processed' => 'info',
-        'failed' => 'warning',
-    ];
-
-    private $levels_imgs = [
-        'debug' => 'info-circle',
-        'info' => 'info-circle',
-        'notice' => 'info-circle',
-        'warning' => 'exclamation-triangle',
-        'error' => 'exclamation-triangle',
-        'critical' => 'exclamation-triangle',
-        'alert' => 'exclamation-triangle',
-        'emergency' => 'exclamation-triangle',
-        'processed' => 'info-circle',
-        'failed' => 'exclamation-triangle'
-    ];
+    /**
+     * Why? Uh... Sorry
+     */
+    const MAX_FILE_SIZE = 52428800;
 
     /**
-     * Log levels that are used
-     * @var array
+     * @var Level level
      */
-    private $log_levels = [
-        'emergency',
-        'alert',
-        'critical',
-        'error',
-        'warning',
-        'notice',
-        'info',
-        'debug',
-        'processed',
-        'failed'
-    ];
+    private $level;
 
-    const MAX_FILE_SIZE = 52428800; // Why? Uh... Sorry
+    /**
+     * LaravelLogViewer constructor.
+     */
+    public function __construct()
+    {
+        $this->level = new Level();
+    }
 
     /**
      * @param string $folder
@@ -95,8 +69,8 @@ class LaravelLogViewer
     public function pathToLogFile($file)
     {
         $logsPath = storage_path('logs');
-        $logsPath .= ($this->folder) ? '/' . $this->folder : '' ;
-    
+        $logsPath .= ($this->folder) ? '/' . $this->folder : '';
+
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
@@ -138,7 +112,7 @@ class LaravelLogViewer
 
         if (!$this->file) {
             $log_file = (!$this->folder) ? $this->getFiles() : $this->getFolderFiles();
-            if(!count($log_file)) {
+            if (!count($log_file)) {
                 return [];
             }
             $this->file = $log_file[0];
@@ -161,8 +135,8 @@ class LaravelLogViewer
         }
 
         foreach ($headings as $h) {
-            for ($i=0, $j = count($h); $i < $j; $i++) {
-                foreach ($this->log_levels as $level) {
+            for ($i = 0, $j = count($h); $i < $j; $i++) {
+                foreach ($this->level->all() as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
@@ -171,8 +145,8 @@ class LaravelLogViewer
                         $log[] = array(
                             'context' => $current[3],
                             'level' => $level,
-                            'level_class' => $this->levels_classes[$level],
-                            'level_img' => $this->levels_imgs[$level],
+                            'level_class' => $this->level->cssClass($level),
+                            'level_img' => $this->level->img($level),
                             'date' => $current[1],
                             'text' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
@@ -188,13 +162,13 @@ class LaravelLogViewer
             $lines = explode(PHP_EOL, $file);
             $log = [];
 
-            foreach($lines as $key => $line) {
+            foreach ($lines as $key => $line) {
                 $log[] = [
                     'context' => '',
                     'level' => '',
                     'level_class' => '',
                     'level_img' => '',
-                    'date' => $key+1,
+                    'date' => $key + 1,
                     'text' => $line,
                     'in_file' => null,
                     'stack' => '',

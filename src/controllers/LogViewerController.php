@@ -1,5 +1,7 @@
 <?php
+
 namespace Rap2hpoutre\LaravelLogViewer;
+
 use Illuminate\Support\Facades\Crypt;
 
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
@@ -26,7 +28,7 @@ class LogViewerController extends BaseController
     /**
      * LogViewerController constructor.
      */
-    public function __construct ()
+    public function __construct()
     {
         $this->log_viewer = new LaravelLogViewer();
         $this->request = app('request');
@@ -88,7 +90,7 @@ class LogViewerController extends BaseController
             app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
-            foreach($this->log_viewer->getFiles(true) as $file){
+            foreach ($this->log_viewer->getFiles(true) as $file) {
                 app('files')->delete($this->log_viewer->pathToLogFile($file));
             }
             return $this->redirect($this->request->url());
