@@ -53,6 +53,10 @@
     .list-group-item {
       word-wrap: break-word;
     }
+
+    .folder {
+      padding-top: 15px;
+    }
   </style>
 </head>
 <body>
@@ -62,6 +66,23 @@
       <h1><i class="fa fa-calendar" aria-hidden="true"></i> Laravel Log Viewer</h1>
       <p class="text-muted"><i>by Rap2h</i></p>
       <div class="list-group">
+        @foreach($folders as $folder)
+          <div class="list-group-item">
+            <a href="?f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}">
+              <span class="fa fa-folder"></span> {{$folder}}
+            </a>
+            @if ($current_folder == $folder)
+              <div class="list-group folder">
+                @foreach($folder_files as $file)
+                  <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}&f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}"
+                    class="list-group-item @if ($current_file == $file) llv-active @endif">
+                    {{$file}}
+                  </a>
+                @endforeach
+              </div>
+            @endif
+          </div>
+        @endforeach
         @foreach($files as $file)
           <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">
@@ -94,21 +115,29 @@
           @foreach($logs as $key => $log)
             <tr data-display="stack{{{$key}}}">
               @if ($standardFormat)
-                <td class="text-{{{$log['level_class']}}}"><span class="fa fa-{{{$log['level_img']}}}"
-                                                                aria-hidden="true"></span> &nbsp;{{$log['level']}}</td>
+                <td class="text-{{{$log['level_class']}}}">
+                  <span class="fa fa-{{{$log['level_img']}}}" aria-hidden="true"></span>&nbsp;&nbsp;{{$log['level']}}
+                </td>
                 <td class="text">{{$log['context']}}</td>
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack']) <button type="button" class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
-                                       data-display="stack{{{$key}}}"><span
-                      class="fa fa-search"></span></button>@endif
+                @if ($log['stack'])
+                  <button type="button"
+                          class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
+                          data-display="stack{{{$key}}}">
+                    <span class="fa fa-search"></span>
+                  </button>
+                @endif
                 {{{$log['text']}}}
-                @if (isset($log['in_file'])) <br/>{{{$log['in_file']}}}@endif
+                @if (isset($log['in_file']))
+                  <br/>{{{$log['in_file']}}}
+                @endif
                 @if ($log['stack'])
                   <div class="stack" id="stack{{{$key}}}"
                        style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
-                  </div>@endif
+                  </div>
+                @endif
               </td>
             </tr>
           @endforeach

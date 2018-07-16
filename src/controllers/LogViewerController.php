@@ -1,5 +1,7 @@
 <?php
+
 namespace Rap2hpoutre\LaravelLogViewer;
+
 use Illuminate\Support\Facades\Crypt;
 
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
@@ -14,13 +16,21 @@ if (class_exists("\\Illuminate\\Routing\\Controller")) {
  */
 class LogViewerController extends BaseController
 {
+    /**
+     * @var
+     */
     protected $request;
+    /**
+     * @var LaravelLogViewer
+     */
+    private $log_viewer;
 
     /**
      * LogViewerController constructor.
      */
-    public function __construct ()
+    public function __construct()
     {
+        $this->log_viewer = new LaravelLogViewer();
         $this->request = app('request');
     }
 
@@ -30,18 +40,26 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
+        $folderFiles = [];
+        if ($this->request->input('f')) {
+            $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
+            $folderFiles = $this->log_viewer->getFolderFiles(true);
+        }
         if ($this->request->input('l')) {
-            LaravelLogViewer::setFile(Crypt::decrypt($this->request->input('l')));
+            $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
         }
 
         if ($early_return = $this->earlyReturn()) {
             return $early_return;
         }
-        
+
         $data = [
-            'logs' => LaravelLogViewer::all(),
-            'files' => LaravelLogViewer::getFiles(true),
-            'current_file' => LaravelLogViewer::getFileName(),
+            'logs' => $this->log_viewer->all(),
+            'folders' => $this->log_viewer->getFolders(),
+            'current_folder' => $this->log_viewer->getFolderName(),
+            'folder_files' => $folderFiles,
+            'files' => $this->log_viewer->getFiles(true),
+            'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
         ];
 
@@ -72,8 +90,8 @@ class LogViewerController extends BaseController
             app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
-            foreach(LaravelLogViewer::getFiles(true) as $file){
-                app('files')->delete(LaravelLogViewer::pathToLogFile($file));
+            foreach ($this->log_viewer->getFiles(true) as $file) {
+                app('files')->delete($this->log_viewer->pathToLogFile($file));
             }
             return $this->redirect($this->request->url());
         }
@@ -87,7 +105,7 @@ class LogViewerController extends BaseController
      */
     private function pathFromInput($input_string)
     {
-        return LaravelLogViewer::pathToLogFile(Crypt::decrypt($this->request->input($input_string)));
+        return $this->log_viewer->pathToLogFile(Crypt::decrypt($this->request->input($input_string)));
     }
 
     /**
