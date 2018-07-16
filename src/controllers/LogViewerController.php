@@ -30,6 +30,11 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
+        $folderFiles = [];
+        if ($this->request->input('f')) {
+            LaravelLogViewer::setFolder(Crypt::decrypt($this->request->input('f')));
+            $folderFiles = LaravelLogViewer::getFolderFiles(true);
+        }
         if ($this->request->input('l')) {
             LaravelLogViewer::setFile(Crypt::decrypt($this->request->input('l')));
         }
@@ -37,9 +42,12 @@ class LogViewerController extends BaseController
         if ($early_return = $this->earlyReturn()) {
             return $early_return;
         }
-        
+
         $data = [
             'logs' => LaravelLogViewer::all(),
+            'folders' => LaravelLogViewer::getFolders(),
+            'current_folder' => LaravelLogViewer::getFolderName(),
+            'folder_files' => $folderFiles,
             'files' => LaravelLogViewer::getFiles(true),
             'current_file' => LaravelLogViewer::getFileName(),
             'standardFormat' => true,
