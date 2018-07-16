@@ -40,6 +40,13 @@ class LaravelLogViewer
         'failed' => 'exclamation-triangle'
     ];
 
+    private static $patterns = [
+        'all_log_data' => '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/',
+        'current_log_data_first' => '/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)',
+        'current_log_data_second' => ': (.*?)( in .*?:[0-9]+)?$/i',
+        'get_files' => '/\{.*?\,.*?\}/i',
+];
+
     /**
      * Log levels that are used
      * @var array
@@ -109,8 +116,6 @@ class LaravelLogViewer
     {
         $log = array();
 
-        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
-
         if (!self::$file) {
             $log_file = self::getFiles();
             if(!count($log_file)) {
@@ -123,13 +128,13 @@ class LaravelLogViewer
 
         $file = app('files')->get(self::$file);
 
-        preg_match_all($pattern, $file, $headings);
+        preg_match_all(self::$patterns['all'], $file, $headings);
 
         if (!is_array($headings)) {
             return $log;
         }
 
-        $log_data = preg_split($pattern, $file);
+        $log_data = preg_split(self::$patterns['all_log_data'], $file);
 
         if ($log_data[0] < 1) {
             array_shift($log_data);
@@ -140,7 +145,7 @@ class LaravelLogViewer
                 foreach (self::$log_levels as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
+                        preg_match(self::$patterns['current_log_data_first'] . $level . self::$patterns['current_log_data_second'], $h[$i], $current);
                         if (!isset($current[4])) continue;
 
                         $log[] = array(
@@ -187,7 +192,7 @@ class LaravelLogViewer
     public static function getFiles($basename = false)
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/logs/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
+        $files = glob(storage_path() . '/logs/' . $pattern, preg_match(self::$patterns['get_files'], $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
