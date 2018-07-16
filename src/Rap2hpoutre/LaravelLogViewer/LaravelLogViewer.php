@@ -1,8 +1,6 @@
 <?php
 namespace Rap2hpoutre\LaravelLogViewer;
 
-use Psr\Log\LogLevel;
-
 /**
  * Class LaravelLogViewer
  * @package Rap2hpoutre\LaravelLogViewer
@@ -12,14 +10,14 @@ class LaravelLogViewer
     /**
      * @var string file
      */
-    private static $file;
+    private $file;
 
     /**
      * @var string folder
      */
-    private static $folder;
+    private $folder;
 
-    private static $levels_classes = [
+    private $levels_classes = [
         'debug' => 'info',
         'info' => 'info',
         'notice' => 'info',
@@ -32,7 +30,7 @@ class LaravelLogViewer
         'failed' => 'warning',
     ];
 
-    private static $levels_imgs = [
+    private $levels_imgs = [
         'debug' => 'info-circle',
         'info' => 'info-circle',
         'notice' => 'info-circle',
@@ -49,7 +47,7 @@ class LaravelLogViewer
      * Log levels that are used
      * @var array
      */
-    private static $log_levels = [
+    private $log_levels = [
         'emergency',
         'alert',
         'critical',
@@ -67,24 +65,25 @@ class LaravelLogViewer
     /**
      * @param string $folder
      */
-    public static function setFolder($folder)
+    public function setFolder($folder)
     {
         $logsPath = storage_path('logs') . '/' . $folder;
 
         if (app('files')->exists($logsPath)) {
-            self::$folder = $folder;
+            $this->folder = $folder;
         }
     }
 
     /**
      * @param string $file
+     * @throws \Exception
      */
-    public static function setFile($file)
+    public function setFile($file)
     {
-        $file = self::pathToLogFile($file);
+        $file = $this->pathToLogFile($file);
 
         if (app('files')->exists($file)) {
-            self::$file = $file;
+            $this->file = $file;
         }
     }
 
@@ -93,10 +92,10 @@ class LaravelLogViewer
      * @return string
      * @throws \Exception
      */
-    public static function pathToLogFile($file)
+    public function pathToLogFile($file)
     {
         $logsPath = storage_path('logs');
-        $logsPath .= (self::$folder) ? '/' . self::$folder : '' ;
+        $logsPath .= ($this->folder) ? '/' . $this->folder : '' ;
     
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
@@ -115,39 +114,39 @@ class LaravelLogViewer
     /**
      * @return string
      */
-    public static function getFolderName()
+    public function getFolderName()
     {
-        return self::$folder;
+        return $this->folder;
     }
 
     /**
      * @return string
      */
-    public static function getFileName()
+    public function getFileName()
     {
-        return basename(self::$file);
+        return basename($this->file);
     }
 
     /**
      * @return array
      */
-    public static function all()
+    public function all()
     {
         $log = array();
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
 
-        if (!self::$file) {
-            $log_file = (!self::$folder) ? self::getFiles() : self::getFolderFiles();
+        if (!$this->file) {
+            $log_file = (!$this->folder) ? $this->getFiles() : $this->getFolderFiles();
             if(!count($log_file)) {
                 return [];
             }
-            self::$file = $log_file[0];
+            $this->file = $log_file[0];
         }
 
-        if (app('files')->size(self::$file) > self::MAX_FILE_SIZE) return null;
+        if (app('files')->size($this->file) > self::MAX_FILE_SIZE) return null;
 
-        $file = app('files')->get(self::$file);
+        $file = app('files')->get($this->file);
 
         preg_match_all($pattern, $file, $headings);
 
@@ -163,7 +162,7 @@ class LaravelLogViewer
 
         foreach ($headings as $h) {
             for ($i=0, $j = count($h); $i < $j; $i++) {
-                foreach (self::$log_levels as $level) {
+                foreach ($this->log_levels as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
                         preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
@@ -172,8 +171,8 @@ class LaravelLogViewer
                         $log[] = array(
                             'context' => $current[3],
                             'level' => $level,
-                            'level_class' => self::$levels_classes[$level],
-                            'level_img' => self::$levels_imgs[$level],
+                            'level_class' => $this->levels_classes[$level],
+                            'level_img' => $this->levels_imgs[$level],
                             'date' => $current[1],
                             'text' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
@@ -209,7 +208,7 @@ class LaravelLogViewer
     /**
      * @return array
      */
-    public static function getFolders()
+    public function getFolders()
     {
         $folders = glob(storage_path() . '/logs/*', GLOB_ONLYDIR);
         if (is_array($folders)) {
@@ -224,16 +223,17 @@ class LaravelLogViewer
      * @param bool $basename
      * @return array
      */
-    public static function getFolderFiles($basename = false)
+    public function getFolderFiles($basename = false)
     {
-        return self::getFiles($basename, self::$folder);
+        return $this->getFiles($basename, $this->folder);
     }
 
     /**
      * @param bool $basename
+     * @param string $folder
      * @return array
      */
-    public static function getFiles($basename = false, $folder = '')
+    public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
         $files = glob(storage_path() . '/logs/' . $folder . '/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
