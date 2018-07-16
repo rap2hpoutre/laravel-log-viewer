@@ -55,7 +55,7 @@
     }
 
     .folder {
-      padding-top: 5px;
+      padding-top: 15px;
     }
   </style>
 </head>
