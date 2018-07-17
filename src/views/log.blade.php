@@ -147,20 +147,20 @@
       @endif
       <div class="p-3">
         @if($current_file)
-          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
             <span class="fa fa-download"></span> Download file
           </a>
           -
-          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
             <span class="fa fa-sync"></span> Clean file
           </a>
           -
-          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}">
+          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
             <span class="fa fa-trash"></span> Delete file
           </a>
           @if(count($files) > 1)
             -
-            <a id="delete-all-log" href="?delall=true">
+            <a id="delete-all-log" href="?delall=true{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}">
               <span class="fa fa-trash-alt"></span> Delete all files
             </a>
           @endif

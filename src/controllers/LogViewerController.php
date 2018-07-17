@@ -81,6 +81,10 @@ class LogViewerController extends BaseController
      */
     private function earlyReturn()
     {
+        if ($this->request->input('f')) {
+            $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
+        }
+
         if ($this->request->input('dl')) {
             return $this->download($this->pathFromInput('dl'));
         } elseif ($this->request->has('clean')) {
@@ -90,7 +94,10 @@ class LogViewerController extends BaseController
             app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
         } elseif ($this->request->has('delall')) {
-            foreach ($this->log_viewer->getFiles(true) as $file) {
+            $files = ($this->log_viewer->getFolderName())
+                        ? $this->log_viewer->getFolderFiles(true)
+                        : $this->log_viewer->getFiles(true);
+            foreach ($files as $file) {
                 app('files')->delete($this->log_viewer->pathToLogFile($file));
             }
             return $this->redirect($this->request->url());
