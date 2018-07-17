@@ -19,6 +19,11 @@ class LaravelLogViewer
     private $folder;
 
     /**
+     * @var string storage_path
+     */
+    private $storage_path;
+
+    /**
      * Why? Uh... Sorry
      */
     const MAX_FILE_SIZE = 52428800;
@@ -40,6 +45,7 @@ class LaravelLogViewer
     {
         $this->level = new Level();
         $this->pattern = new Pattern();
+        $this->storage_path = function_exists('config') ? config('logviewer.storage_path', 'logs') : 'logs';
     }
 
     /**
@@ -47,7 +53,7 @@ class LaravelLogViewer
      */
     public function setFolder($folder)
     {
-        $logsPath = storage_path('logs') . '/' . $folder;
+        $logsPath = storage_path($this->storage_path) . '/' . $folder;
 
         if (app('files')->exists($logsPath)) {
             $this->folder = $folder;
@@ -74,7 +80,7 @@ class LaravelLogViewer
      */
     public function pathToLogFile($file)
     {
-        $logsPath = storage_path('logs');
+        $logsPath = storage_path($this->storage_path);
         $logsPath .= ($this->folder) ? '/' . $this->folder : '';
 
         if (app('files')->exists($file)) { // try the absolute path
@@ -188,7 +194,7 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = glob(storage_path() . '/logs/*', GLOB_ONLYDIR);
+        $folders = glob(storage_path() . '/'.$this->storage_path.'/*', GLOB_ONLYDIR);
         if (is_array($folders)) {
             foreach ($folders as $k => $folder) {
                 $folders[$k] = basename($folder);
@@ -214,7 +220,7 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/logs/' . $folder . '/' . $pattern, preg_match($this->pattern['files'], $pattern) ? GLOB_BRACE : 0);
+        $files = glob(storage_path() . '/'.$this->storage_path.'/' . $folder . '/' . $pattern, preg_match($this->pattern['files'], $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
