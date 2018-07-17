@@ -38,7 +38,7 @@ class Pattern
      */
     public function getPattern($pattern, $position = null)
     {
-        if ($position != null) {
+        if ($position !== null) {
             return $this->patterns[$pattern][$position];
         }
         return $this->patterns[$pattern];
