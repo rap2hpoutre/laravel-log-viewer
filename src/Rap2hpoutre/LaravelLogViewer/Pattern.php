@@ -36,13 +36,13 @@ class Pattern
      * @param null $position
      * @return string pattern
      */
-    public function getPattern($pattern,$position= null)
+    public function getPattern($pattern, $position = null)
     {
-        if($position!=null) {
+        if ($position != null) {
             return $this->patterns[$pattern][$position];
-        } else{
-            return $this->patterns[$pattern];
         }
+        return $this->patterns[$pattern];
+        
     }
 
 }
