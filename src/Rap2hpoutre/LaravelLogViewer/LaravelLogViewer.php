@@ -195,7 +195,7 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = glob(storage_path() . '/'.$this->storage_path.'/*', GLOB_ONLYDIR);
+        $folders = glob($this->storage_path.'/*', GLOB_ONLYDIR);
         if (is_array($folders)) {
             foreach ($folders as $k => $folder) {
                 $folders[$k] = basename($folder);
@@ -221,7 +221,7 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/'.$this->storage_path.'/' . $folder . '/' . $pattern, preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0);
+        $files = glob($this->storage_path.'/' . $folder . '/' . $pattern, preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
