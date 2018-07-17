@@ -29,11 +29,17 @@ class LaravelLogViewer
     private $level;
 
     /**
+     * @var Pattern pattern
+     */
+    private $pattern;
+
+    /**
      * LaravelLogViewer constructor.
      */
     public function __construct()
     {
         $this->level = new Level();
+        $this->pattern = new Pattern();
     }
 
     /**
@@ -108,8 +114,6 @@ class LaravelLogViewer
     {
         $log = array();
 
-        $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
-
         if (!$this->file) {
             $log_file = (!$this->folder) ? $this->getFiles() : $this->getFolderFiles();
             if (!count($log_file)) {
@@ -122,13 +126,13 @@ class LaravelLogViewer
 
         $file = app('files')->get($this->file);
 
-        preg_match_all($pattern, $file, $headings);
+        preg_match_all($this->pattern['logs'], $file, $headings);
 
         if (!is_array($headings)) {
             return $log;
         }
 
-        $log_data = preg_split($pattern, $file);
+        $log_data = preg_split($this->pattern['logs'], $file);
 
         if ($log_data[0] < 1) {
             array_shift($log_data);
@@ -139,7 +143,7 @@ class LaravelLogViewer
                 foreach ($this->level->all() as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)' . $level . ': (.*?)( in .*?:[0-9]+)?$/i', $h[$i], $current);
+                        preg_match($this->pattern['current_log'][0] . $level . $this->pattern['current_log'][1], $h[$i], $current);
                         if (!isset($current[4])) continue;
 
                         $log[] = array(
@@ -210,7 +214,7 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(storage_path() . '/logs/' . $folder . '/' . $pattern, preg_match('/\{.*?\,.*?\}/i', $pattern) ? GLOB_BRACE : 0);
+        $files = glob(storage_path() . '/logs/' . $folder . '/' . $pattern, preg_match($this->pattern['files'], $pattern) ? GLOB_BRACE : 0);
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
