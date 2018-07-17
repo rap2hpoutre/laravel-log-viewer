@@ -45,7 +45,9 @@ class LaravelLogViewer
     {
         $this->level = new Level();
         $this->pattern = new Pattern();
-        $this->storage_path = function_exists('config') ? config('logviewer.storage_path', 'logs') : 'logs';
+        $this->storage_path = function_exists('config') ? config('logviewer.storage_path', 'logs') : storage_path('logs');
+
+
     }
 
     /**
@@ -53,7 +55,7 @@ class LaravelLogViewer
      */
     public function setFolder($folder)
     {
-        $logsPath = storage_path($this->storage_path) . '/' . $folder;
+        $logsPath = $this->storage_path . '/' . $folder;
 
         if (app('files')->exists($logsPath)) {
             $this->folder = $folder;
@@ -80,7 +82,7 @@ class LaravelLogViewer
      */
     public function pathToLogFile($file)
     {
-        $logsPath = storage_path($this->storage_path);
+        $logsPath = $this->storage_path;
         $logsPath .= ($this->folder) ? '/' . $this->folder : '';
 
         if (app('files')->exists($file)) { // try the absolute path
