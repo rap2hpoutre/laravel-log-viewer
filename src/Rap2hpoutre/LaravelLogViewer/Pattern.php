@@ -44,5 +44,4 @@ class Pattern
         return $this->patterns[$pattern];
         
     }
-
 }
