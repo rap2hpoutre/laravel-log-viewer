@@ -193,14 +193,14 @@ class LaravelLogViewer
 
     /**
      * Create array data from log
-     * @param $i
+     * @param $index
      * @param $current
      * @param $level
      * @param $key
      * @param $line
      * @return array
      */
-    protected function getArrayLog($i, $current, $level, $key, $line)
+    protected function getArrayLog($index, $current, $level, $key, $line)
     {
         return array(
             'context' => isset($current[3]) ? $current[3] : '',
@@ -210,7 +210,7 @@ class LaravelLogViewer
             'date' => isset($current[1]) ? $current[1] : $key + 1,
             'text' => isset($current[4]) ? $current[4] : $line,
             'in_file' => isset($current[5]) ? $current[5] : null,
-            'stack' => preg_replace("/^\n*/", '', $this->log_data[$i])
+            'stack' => preg_replace("/^\n*/", '', $this->log_data[$index])
         );
     }
 
