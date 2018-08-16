@@ -177,8 +177,9 @@ class LaravelLogViewer
         return array_reverse($log);
     }
 
-    private function getLog($headings){
-        $log=[];
+    private function getLog($headings)
+    {
+        $log = [];
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($this->level->all() as $key => $level) {
