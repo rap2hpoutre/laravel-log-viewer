@@ -162,6 +162,23 @@ class LaravelLogViewer
             array_shift($this->log_data);
         }
 
+        $log = $this->getLog($headings);
+
+        if (empty($log)) {
+
+            $lines = explode(PHP_EOL, $file);
+            $log = [];
+
+            foreach ($lines as $key => $line) {
+                $log[] = $this->getArrayLog('', '', '', $key, $line);
+            }
+        }
+
+        return array_reverse($log);
+    }
+
+    private function getLog($headings){
+        $log=[];
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($this->level->all() as $key => $level) {
@@ -177,18 +194,7 @@ class LaravelLogViewer
                 }
             }
         }
-
-        if (empty($log)) {
-
-            $lines = explode(PHP_EOL, $file);
-            $log = [];
-
-            foreach ($lines as $key => $line) {
-                $log[] = $this->getArrayLog('', '', '', $key, $line);
-            }
-        }
-
-        return array_reverse($log);
+        return $log;
     }
 
     /**
