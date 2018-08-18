@@ -34,7 +34,7 @@ class LaravelLogViewer
     private $level;
 
     /**
-     * @var Level level
+     * @var Log Data log_data
      */
     private $log_data;
 
@@ -172,7 +172,13 @@ class LaravelLogViewer
                         if (!isset($current[4])) {
                             continue;
                         }
-                        $log[] = $this->getArrayLog($i, $current, $level, $key, '');
+                        $log[] = $this->getArrayLog([
+                            'index' => $i,
+                            'current' => $current,
+                            'level' => $level,
+                            'key' => $key,
+                            'line' => ''
+                        ]);
                     }
                 }
             }
@@ -184,7 +190,13 @@ class LaravelLogViewer
             $log = [];
 
             foreach ($lines as $key => $line) {
-                $log[] = $this->getArrayLog('', '', '', $key, $line);
+                $log[] = $this->getArrayLog([
+                    'index' => '',
+                    'current' => [],
+                    'level' => '',
+                    'key' => $key,
+                    'line' => $line
+                ]);
             }
         }
 
@@ -193,15 +205,16 @@ class LaravelLogViewer
 
     /**
      * Create array data from log
-     * @param $index
-     * @param $current
-     * @param $level
-     * @param $key
-     * @param $line
+     * @param $data
      * @return array
      */
-    protected function getArrayLog($index, $current, $level, $key, $line)
+    protected function getArrayLog($data)
     {
+        $index = $data['index'];
+        $current = $data['current'];
+        $level = $data['level'];
+        $key = $data['key'];
+        $line = $data['line'];
         return array(
             'context' => isset($current[3]) ? $current[3] : '',
             'level' => isset($level) ? $level : '',
@@ -245,8 +258,10 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob($this->storage_path . '/' . $folder . '/' . $pattern,
-            preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0);
+        $files = glob(
+            $this->storage_path . '/' . $folder . '/' . $pattern,
+            preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+        );
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
