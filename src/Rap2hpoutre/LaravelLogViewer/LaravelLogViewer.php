@@ -36,7 +36,7 @@ class LaravelLogViewer
     /**
      * @var Log Data log_data
      */
-    private $log_data;
+    private $log_data = [];
 
     /**
      * @var Pattern pattern
