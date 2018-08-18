@@ -246,7 +246,7 @@ class LaravelLogViewer
     {
         $folders = [];
         if (is_array($this->storage_path)) {
-            foreach ($this->storage_path as $key => $value) {
+            foreach ($this->storage_path as $value) {
                 $folders = array_merge(
                     $folders,
                     glob($value . '/*', GLOB_ONLYDIR)
@@ -284,7 +284,7 @@ class LaravelLogViewer
         $files = [];
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
         if (is_array($this->storage_path)) {
-            foreach ($this->storage_path as $key => $value) {
+            foreach ($this->storage_path as $value) {
                 $files = array_merge(
                     $files,
                     glob(
