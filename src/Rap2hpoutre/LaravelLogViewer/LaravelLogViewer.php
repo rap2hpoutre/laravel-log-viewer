@@ -252,10 +252,11 @@ class LaravelLogViewer
                     glob($value . '/*', GLOB_ONLYDIR)
                 );
             }
-        } else {
-            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
         }
 
+        if (!is_array($this->storage_path)) {
+            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
+        }
 
         if (is_array($folders)) {
             foreach ($folders as $k => $folder) {
@@ -293,12 +294,15 @@ class LaravelLogViewer
                     )
                 );
             }
-        } else {
+        }
+
+        if (!is_array($this->storage_path)) {
             $files = glob(
                 $this->storage_path . '/' . $folder . '/' . $pattern,
                 preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
             );
         }
+
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
