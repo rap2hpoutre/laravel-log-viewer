@@ -162,27 +162,7 @@ class LaravelLogViewer
             array_shift($this->log_data);
         }
 
-        foreach ($headings as $h) {
-            for ($i = 0, $j = count($h); $i < $j; $i++) {
-                foreach ($this->level->all() as $key => $level) {
-                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
-                        preg_match($this->pattern->getPattern('current_log',
-                                0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
-                        if (!isset($current[4])) {
-                            continue;
-                        }
-                        $log[] = $this->getArrayLog([
-                            'index' => $i,
-                            'current' => $current,
-                            'level' => $level,
-                            'key' => $key,
-                            'line' => ''
-                        ]);
-                    }
-                }
-            }
-        }
+        $log = $this->getLogData($headings);
 
         if (empty($log)) {
 
@@ -201,6 +181,38 @@ class LaravelLogViewer
         }
 
         return array_reverse($log);
+    }
+
+    /**
+     * @param $headings
+     * @return array
+     */
+    protected function getLogData($headings)
+    {
+        $log = [];
+        foreach ($headings as $h) {
+            for ($i = 0, $j = count($h); $i < $j; $i++) {
+                foreach ($this->level->all() as $key => $level) {
+                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
+
+                        preg_match($this->pattern->getPattern('current_log',
+                                0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i],
+                            $current);
+                        if (!isset($current[4])) {
+                            continue;
+                        }
+                        $log[] = $this->getArrayLog([
+                            'index' => $i,
+                            'current' => $current,
+                            'level' => $level,
+                            'key' => $key,
+                            'line' => ''
+                        ]);
+                    }
+                }
+            }
+        }
+        return $log;
     }
 
     /**
@@ -232,7 +244,19 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
+        $folders = [];
+        if (is_array($this->storage_path)) {
+            foreach ($this->storage_path as $key => $value) {
+                $folders = array_merge(
+                    $folders,
+                    glob($value . '/*', GLOB_ONLYDIR)
+                );
+            }
+        } else {
+            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
+        }
+
+
         if (is_array($folders)) {
             foreach ($folders as $k => $folder) {
                 $folders[$k] = basename($folder);
@@ -257,11 +281,24 @@ class LaravelLogViewer
      */
     public function getFiles($basename = false, $folder = '')
     {
+        $files = [];
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(
-            $this->storage_path . '/' . $folder . '/' . $pattern,
-            preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
-        );
+        if (is_array($this->storage_path)) {
+            foreach ($this->storage_path as $key => $value) {
+                $files = array_merge(
+                    $files,
+                    glob(
+                        $value . '/' . $folder . '/' . $pattern,
+                        preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+                    )
+                );
+            }
+        } else {
+            $files = glob(
+                $this->storage_path . '/' . $folder . '/' . $pattern,
+                preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+            );
+        }
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
