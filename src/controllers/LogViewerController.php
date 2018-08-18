@@ -67,9 +67,11 @@ class LogViewerController extends BaseController
             return $data;
         }
 
-        $firstLog = reset($data['logs']);
-        if (!$firstLog['context'] && !$firstLog['level']) {
-            $data['standardFormat'] = false;
+        if (is_array($data['logs'])) {
+            $firstLog = reset($data['logs']);
+            if (!$firstLog['context'] && !$firstLog['level']) {
+                $data['standardFormat'] = false;
+            }
         }
 
         return app('view')->make('laravel-log-viewer::log', $data);
