@@ -57,6 +57,12 @@
     .folder {
       padding-top: 15px;
     }
+
+    .div-scroll {
+      height: 80vh;
+      overflow: hidden auto;
+    }
+
   </style>
 </head>
 <body>
@@ -65,7 +71,7 @@
     <div class="col sidebar mb-3">
       <h1><i class="fa fa-calendar" aria-hidden="true"></i> Laravel Log Viewer</h1>
       <p class="text-muted"><i>by Rap2h</i></p>
-      <div class="list-group">
+      <div class="list-group div-scroll">
         @foreach($folders as $folder)
           <div class="list-group-item">
             <a href="?f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}">
