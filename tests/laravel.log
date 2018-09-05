@@ -1,4 +1,4 @@
-[2018-09-05 20:20:51] local.ERROR: The "--versio" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--versio\" option does not exist. at /Users/raphael/web/valets/testgithub/vendor/symfony/console/Input/ArgvInput.php:217)
+[2018-09-05 20:20:51] local.ERROR: The "--versio" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--versio\" option does not exist. at /x/y/z/vendor/symfony/console/Input/ArgvInput.php:217)
 [stacktrace]
 #0 /x/y/z/vendor/symfony/console/Input/ArgvInput.php(153): Symfony\\Component\\Console\\Input\\ArgvInput->addLongOption('versio', NULL)
 #1 /x/y/z/vendor/symfony/console/Input/ArgvInput.php(82): Symfony\\Component\\Console\\Input\\ArgvInput->parseLongOption('--versio')
