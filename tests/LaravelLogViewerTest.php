@@ -2,15 +2,13 @@
 
 namespace Rap2hpoutre\LaravelLogViewer;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 /**
- * Class TestLaravelLogViewer
+ * Class LaravelLogViewerTest
  * @package Rap2hpoutre\LaravelLogViewer
  */
-class TestLaravelLogViewer extends OrchestraTestCase
+class LaravelLogViewerTest extends OrchestraTestCase
 {
 
     public function setUp()
