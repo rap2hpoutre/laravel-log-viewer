@@ -12,7 +12,7 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
  */
 class TestLaravelLogViewer extends OrchestraTestCase
 {
-    
+
     public function setUp()
     {
         parent::setUp();
