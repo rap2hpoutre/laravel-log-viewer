@@ -1,16 +1,22 @@
 <?php
+
 namespace Rap2hpoutre\LaravelLogViewer;
 
 require __DIR__ . '/../vendor/autoload.php';
+
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
-class testLaravelLogViewer extends OrchestraTestCase
+/**
+ * Class TestLaravelLogViewer
+ * @package Rap2hpoutre\LaravelLogViewer
+ */
+class TestLaravelLogViewer extends OrchestraTestCase
 {
-
+    
     public function setUp()
     {
         parent::setUp();
-        // Copy Test laravel.log file to the orchestra package emulating laravel environment
+        // Copy "laravel.log" file to the orchestra package.
         if (!file_exists(storage_path() . '/logs/laravel.log')) {
             copy(__DIR__ . '/laravel.log', storage_path() . '/logs/laravel.log');
         }
