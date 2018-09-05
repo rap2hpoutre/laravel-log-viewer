@@ -14,12 +14,21 @@
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*|5.*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "orchestra/testbench": "^3.6"
+    },
     "autoload": {
         "classmap": [
             "src/controllers"
         ],
         "psr-0": {
             "Rap2hpoutre\\LaravelLogViewer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rap2hpoutre\\LaravelLogViewer\\Test\\": "tests/"
         }
     },
     "extra": {
