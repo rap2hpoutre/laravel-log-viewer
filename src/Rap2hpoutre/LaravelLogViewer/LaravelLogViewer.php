@@ -81,20 +81,26 @@ class LaravelLogViewer
      */
     public function pathToLogFile($file)
     {
-        $logsPath = $this->storage_path;
-        $logsPath .= ($this->folder) ? '/' . $this->folder : '';
-
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
-
-        $file = $logsPath . '/' . $file;
-
-        // check if requested file is really in the logs directory
-        if (dirname($file) !== $logsPath) {
-            throw new \Exception('No such log file');
+        if (is_array($this->storage_path)) {
+            foreach ($this->storage_path as $value) {
+                if (app('files')->exists($value . '/' . $file)) { // try the absolute path
+                    $file = $value . '/' . $file;
+                    break;
+                }
+            }
         }
-
+        if (!is_array($this->storage_path)) {
+            $logsPath = $this->storage_path;
+            $logsPath .= ($this->folder) ? '/' . $this->folder : '';
+            $file = $logsPath . '/' . $file;
+            // check if requested file is really in the logs directory
+            if (dirname($file) !== $logsPath) {
+                throw new \Exception('No such log file');
+            }
+        }
         return $file;
     }
 
@@ -129,7 +135,9 @@ class LaravelLogViewer
             $this->file = $log_file[0];
         }
 
-        if (app('files')->size($this->file) > self::MAX_FILE_SIZE) return null;
+        if (app('files')->size($this->file) > self::MAX_FILE_SIZE) {
+            return null;
+        }
 
         $file = app('files')->get($this->file);
 
@@ -150,8 +158,10 @@ class LaravelLogViewer
                 foreach ($this->level->all() as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match($this->pattern->getPattern('current_log',0) . $level . $this->pattern->getPattern('current_log',1), $h[$i], $current);
-                        if (!isset($current[4])) continue;
+                        preg_match($this->pattern->getPattern('current_log', 0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
+                        if (!isset($current[4])) {
+                            continue;
+                        }
 
                         $log[] = array(
                             'context' => $current[3],
@@ -195,7 +205,20 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = glob($this->storage_path.'/*', GLOB_ONLYDIR);
+        $folders = [];
+        if (is_array($this->storage_path)) {
+            foreach ($this->storage_path as $value) {
+                $folders = array_merge(
+                    $folders,
+                    glob($value . '/*', GLOB_ONLYDIR)
+                );
+            }
+        }
+
+        if (!is_array($this->storage_path)) {
+            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
+        }
+
         if (is_array($folders)) {
             foreach ($folders as $k => $folder) {
                 $folders[$k] = basename($folder);
@@ -220,8 +243,27 @@ class LaravelLogViewer
      */
     public function getFiles($basename = false, $folder = '')
     {
+        $files = [];
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob($this->storage_path.'/' . $folder . '/' . $pattern, preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0);
+        if (is_array($this->storage_path)) {
+            foreach ($this->storage_path as $value) {
+                $files = array_merge(
+                    $files,
+                    glob(
+                        $value . '/' . $folder . '/' . $pattern,
+                        preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+                    )
+                );
+            }
+        }
+
+        if (!is_array($this->storage_path)) {
+            $files = glob(
+                $this->storage_path . '/' . $folder . '/' . $pattern,
+                preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+            );
+        }
+
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
