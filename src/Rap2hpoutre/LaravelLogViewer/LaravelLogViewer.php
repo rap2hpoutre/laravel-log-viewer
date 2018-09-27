@@ -54,10 +54,20 @@ class LaravelLogViewer
      */
     public function setFolder($folder)
     {
-        $logsPath = $this->storage_path . '/' . $folder;
-
-        if (app('files')->exists($logsPath)) {
-            $this->folder = $folder;
+        //fix multi level folder
+        if(is_array($this->storage_path)){
+          foreach ($this->storage_path as $value) {
+            $logsPath = $value . '/' . $folder;
+                if (app('files')->exists($logsPath)) {
+                     
+                    $this->folder = $folder;
+                    break;
+                }
+          }  
+        } else {
+            if (app('files')->exists($logsPath)) {
+                $this->folder = $folder;
+            }
         }
     }
 
@@ -166,6 +176,7 @@ class LaravelLogViewer
                         $log[] = array(
                             'context' => $current[3],
                             'level' => $level,
+                            'folder' => $this->folder,
                             'level_class' => $this->level->cssClass($level),
                             'level_img' => $this->level->img($level),
                             'date' => $current[1],
@@ -187,6 +198,7 @@ class LaravelLogViewer
                 $log[] = [
                     'context' => '',
                     'level' => '',
+                    'folder' => '',
                     'level_class' => '',
                     'level_img' => '',
                     'date' => $key + 1,
@@ -213,9 +225,7 @@ class LaravelLogViewer
                     glob($value . '/*', GLOB_ONLYDIR)
                 );
             }
-        }
-
-        if (!is_array($this->storage_path)) {
+        } else {
             $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
         }
 
@@ -255,9 +265,7 @@ class LaravelLogViewer
                     )
                 );
             }
-        }
-
-        if (!is_array($this->storage_path)) {
+        } else {
             $files = glob(
                 $this->storage_path . '/' . $folder . '/' . $pattern,
                 preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
@@ -268,7 +276,8 @@ class LaravelLogViewer
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
             foreach ($files as $k => $file) {
-                $files[$k] = basename($file);
+                $files[$k] = $file;
+                $files_folders[$k] = $file;
             }
         }
         return array_values($files);
