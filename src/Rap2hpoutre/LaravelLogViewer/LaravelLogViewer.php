@@ -45,8 +45,7 @@ class LaravelLogViewer
     {
         $this->level = new Level();
         $this->pattern = new Pattern();
-        $this->storage_path = function_exists('config') ? config('logviewer.storage_path',
-            storage_path('logs')) : storage_path('logs');
+        $this->storage_path = function_exists('config') ? config('logviewer.storage_path', storage_path('logs')) : storage_path('logs');
 
     }
 
@@ -159,8 +158,7 @@ class LaravelLogViewer
                 foreach ($this->level->all() as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
 
-                        preg_match($this->pattern->getPattern('current_log',
-                                0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
+                        preg_match($this->pattern->getPattern('current_log', 0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
                         if (!isset($current[4])) {
                             continue;
                         }
