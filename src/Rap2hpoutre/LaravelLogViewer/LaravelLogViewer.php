@@ -276,8 +276,7 @@ class LaravelLogViewer
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
             foreach ($files as $k => $file) {
-                $files[$k] = $file;
-                $files_folders[$k] = $file;
+                $files[$k] = basename($file);
             }
         }
         return array_values($files);
