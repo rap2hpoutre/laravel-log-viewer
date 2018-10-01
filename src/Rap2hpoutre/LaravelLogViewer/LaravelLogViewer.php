@@ -65,7 +65,7 @@ class LaravelLogViewer
                 }
           }  
         } else {
-            if (app('files')->exists($logsPath)) {
+            if (app('files')->exists($folder)) {
                 $this->folder = $folder;
             }
         }
@@ -95,9 +95,9 @@ class LaravelLogViewer
             return $file;
         }
         if (is_array($this->storage_path)) {
-            foreach ($this->storage_path as $value) {
-                if (app('files')->exists($value . '/' . $file)) { // try the absolute path
-                    $file = $value . '/' . $file;
+            foreach ($this->storage_path as $folder) {
+                if (app('files')->exists($folder . '/' . $file)) { // try the absolute path
+                    $file = $folder . '/' . $file;
                     break;
                 }
             }
