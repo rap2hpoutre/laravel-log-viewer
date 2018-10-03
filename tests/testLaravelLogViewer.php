@@ -21,6 +21,8 @@ class testLaravelLogViewer extends OrchestraTestCase
         //Copy Test laravel.log file to the orchestra package emulating laravel environment
         if (!file_exists(storage_path() . '/logs/laravel.log')) {
             copy(__DIR__ . '/laravel.log', storage_path() . '/logs/laravel.log');
+            copy(__DIR__ . '/laravel.log', storage_path() . '/logs2/laravel.log');
+
         }
     }
 
@@ -49,7 +51,7 @@ class testLaravelLogViewer extends OrchestraTestCase
         $this->assertEquals('error', $data[0]['level']);
         $this->assertEquals('danger', $data[0]['level_class']);
         $this->assertEquals('exclamation-triangle', $data[0]['level_img']);
-        $this->assertEquals('2018-06-12 03:26:14', $data[0]['date']);
+        $this->assertEquals('2018-08-03 17:40:23', $data[0]['date']);
     }
 
     public function testLaravelLogViewGetFolderFiles()
