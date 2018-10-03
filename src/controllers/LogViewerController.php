@@ -61,6 +61,7 @@ class LogViewerController extends BaseController
             'files' => $this->log_viewer->getFiles(true),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
+            'levels' => $this->log_viewer->getLevel()->all(),
         ];
 
         if ($this->request->wantsJson()) {
