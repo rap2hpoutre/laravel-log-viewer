@@ -17,6 +17,10 @@
         "phpunit/phpunit": "^7",
         "orchestra/testbench": "^3.6"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "orchestra/testbench": "^3.6"
+    },
     "autoload": {
         "classmap": [
             "src/controllers"

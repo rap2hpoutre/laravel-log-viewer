@@ -62,6 +62,9 @@
       height: 80vh;
       overflow: hidden auto;
     }
+    .nowrap {
+      white-space: nowrap;
+    }
 
   </style>
 </head>
@@ -121,7 +124,7 @@
           @foreach($logs as $key => $log)
             <tr data-display="stack{{{$key}}}">
               @if ($standardFormat)
-                <td class="text-{{{$log['level_class']}}}">
+                <td class="nowrap text-{{{$log['level_class']}}}">
                   <span class="fa fa-{{{$log['level_img']}}}" aria-hidden="true"></span>&nbsp;&nbsp;{{$log['level']}}
                 </td>
                 <td class="text">{{$log['context']}}</td>
