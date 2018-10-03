@@ -101,14 +101,15 @@ class LaravelLogViewer
                     break;
                 }
             }
-        } else {
-            $logsPath = $this->storage_path;
-            $logsPath .= ($this->folder) ? '/' . $this->folder : '';
-            $file = $logsPath . '/' . $file;
-            // check if requested file is really in the logs directory
-            if (dirname($file) !== $logsPath) {
-                throw new \Exception('No such log file');
-            }
+            return $file;
+        }
+
+        $logsPath = $this->storage_path;
+        $logsPath .= ($this->folder) ? '/' . $this->folder : '';
+        $file = $logsPath . '/' . $file;
+        // check if requested file is really in the logs directory
+        if (dirname($file) !== $logsPath) {
+            throw new \Exception('No such log file');
         }
         return $file;
     }
