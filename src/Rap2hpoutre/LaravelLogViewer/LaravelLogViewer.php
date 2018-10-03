@@ -249,8 +249,11 @@ class LaravelLogViewer
      */
     public function getFiles($basename = false, $folder = '')
     {
-        $files = [];
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
+        $files = glob(
+          $this->storage_path . '/' . $folder . '/' . $pattern,
+          preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+        );
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $files = array_merge(
@@ -261,11 +264,6 @@ class LaravelLogViewer
                   )
                 );
             }
-        } else {
-            $files = glob(
-              $this->storage_path . '/' . $folder . '/' . $pattern,
-              preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
-            );
         }
 
         $files = array_reverse($files);
