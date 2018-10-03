@@ -55,18 +55,16 @@ class LaravelLogViewer
     public function setFolder($folder)
     {
         //fix multi level folder
+        if (app('files')->exists($folder)) {
+            $this->folder = $folder;
+        }
         if(is_array($this->storage_path)){
             foreach ($this->storage_path as $value) {
                 $logsPath = $value . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
-
                     $this->folder = $folder;
                     break;
                 }
-            }
-        } else {
-            if (app('files')->exists($folder)) {
-                $this->folder = $folder;
             }
         }
     }
