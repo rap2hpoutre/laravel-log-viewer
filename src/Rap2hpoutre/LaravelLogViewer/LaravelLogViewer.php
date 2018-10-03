@@ -215,7 +215,7 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = [];
+        $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $folders = array_merge(
@@ -223,8 +223,6 @@ class LaravelLogViewer
                   glob($value . '/*', GLOB_ONLYDIR)
                 );
             }
-        } else {
-            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
         }
 
         if (is_array($folders)) {
