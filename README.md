@@ -62,8 +62,8 @@ $app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::cl
 
 Explicitly set the namespace in `app/Http/routes.php`:
 ```php
-$app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($app) {
-    $app->get('logs', 'LogViewerController@index');
+$router->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($router) {
+    $router->get('logs', 'LogViewerController@index');
 });
 ```
 
