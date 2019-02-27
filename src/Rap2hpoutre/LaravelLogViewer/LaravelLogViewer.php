@@ -172,15 +172,15 @@ class LaravelLogViewer
                         }
 
                         $log[] = array(
-                          'context' => $current[3],
-                          'level' => $level,
-                          'folder' => $this->folder,
-                          'level_class' => $this->level->cssClass($level),
-                          'level_img' => $this->level->img($level),
-                          'date' => $current[1],
-                          'text' => $current[4],
-                          'in_file' => isset($current[5]) ? $current[5] : null,
-                          'stack' => preg_replace("/^\n*/", '', $log_data[$i])
+                            'context' => $current[3],
+                            'level' => $level,
+                            'folder' => $this->folder,
+                            'level_class' => $this->level->cssClass($level),
+                            'level_img' => $this->level->img($level),
+                            'date' => $current[1],
+                            'text' => $current[4],
+                            'in_file' => isset($current[5]) ? $current[5] : null,
+                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                         );
                     }
                 }
@@ -194,15 +194,15 @@ class LaravelLogViewer
 
             foreach ($lines as $key => $line) {
                 $log[] = [
-                  'context' => '',
-                  'level' => '',
-                  'folder' => '',
-                  'level_class' => '',
-                  'level_img' => '',
-                  'date' => $key + 1,
-                  'text' => $line,
-                  'in_file' => null,
-                  'stack' => '',
+                    'context' => '',
+                    'level' => '',
+                    'folder' => '',
+                    'level_class' => '',
+                    'level_img' => '',
+                    'date' => $key + 1,
+                    'text' => $line,
+                    'in_file' => null,
+                    'stack' => '',
                 ];
             }
         }
@@ -219,8 +219,8 @@ class LaravelLogViewer
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $folders = array_merge(
-                  $folders,
-                  glob($value . '/*', GLOB_ONLYDIR)
+                    $folders,
+                    glob($value . '/*', GLOB_ONLYDIR)
                 );
             }
         }
@@ -251,16 +251,16 @@ class LaravelLogViewer
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
         $files = glob(
-          $this->storage_path . '/' . $folder . '/' . $pattern,
-          preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+            $this->storage_path . '/' . $folder . '/' . $pattern,
+            preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
         );
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $files = array_merge(
                   $files,
                   glob(
-                    $value . '/' . $folder . '/' . $pattern,
-                    preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+                      $value . '/' . $folder . '/' . $pattern,
+                      preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
                   )
                 );
             }
