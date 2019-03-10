@@ -212,7 +212,7 @@ class LaravelLogViewer
      */
     public function getFolders()
     {
-        $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
+        $folders = [];
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $folders = array_merge(
@@ -220,6 +220,8 @@ class LaravelLogViewer
                     glob($value . '/*', GLOB_ONLYDIR)
                 );
             }
+        } else {
+            $folders = glob($this->storage_path . '/*', GLOB_ONLYDIR);
         }
 
         if (is_array($folders)) {
@@ -247,10 +249,7 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-        $files = glob(
-            $this->storage_path . '/' . $folder . '/' . $pattern,
-            preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
-        );
+        $files = [];
         if (is_array($this->storage_path)) {
             foreach ($this->storage_path as $value) {
                 $files = array_merge(
@@ -261,6 +260,11 @@ class LaravelLogViewer
                   )
                 );
             }
+        } else {
+            $files = glob(
+              $this->storage_path . '/' . $folder . '/' . $pattern,
+              preg_match($this->pattern->getPattern('files'), $pattern) ? GLOB_BRACE : 0
+            );
         }
 
         $files = array_reverse($files);
@@ -271,5 +275,21 @@ class LaravelLogViewer
             }
         }
         return array_values($files);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getFilesWithPath()
+    {
+        $files = $this->getFiles(true);
+        $filesWithPath = [];
+        foreach ($files as $file){
+            $path = $this->pathToLogFile($file);
+            $filesWithPath['fullpath'][] = $path;
+            $filesWithPath['path'][] = dirname($path);
+            $filesWithPath['file'][] = $file;
+        }
+        return $filesWithPath;
     }
 }

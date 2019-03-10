@@ -67,6 +67,95 @@
       white-space: nowrap;
     }
 
+    [tooltip]{
+        position:relative;
+        display:inline-block;
+    }
+
+    [tooltip]::before {
+        content: "";
+        position: absolute;
+        margin-top: 8px;
+        margin-left: 10px;
+        left:0px;
+        transform: translateX(-50%);
+        border-width: 4px 6px 0 6px;
+        border-style: solid;
+        border-color: rgba(0,0,0,0.7) transparent transparent     transparent;
+        z-index: 1000;
+        opacity:0;
+    }
+
+    [tooltip-position='left']::before{
+        left:0%;
+        top:50%;
+        margin-left:-12px;
+        transform:translatey(-50%) rotate(-90deg)
+    }
+
+    [tooltip-position='top']::before{
+        left:50%;
+    }
+
+    [tooltip-position='buttom']::before{
+        top:100%;
+        margin-top:8px;
+        transform: translateX(-50%) translatey(-100%) rotate(-180deg)
+    }
+
+    [tooltip-position='right']::before{
+        margin-left:1px;
+        transform:translatey(-50%) rotate(90deg)
+    }
+
+    [tooltip]::after {
+        content: attr(tooltip);
+        position: fixed;
+        transform: translateX(-50%)   translateY(-100%);
+        background: rgba(0,0,0,0.7);
+        text-align: center;
+        color: #fff;
+        padding:4px 2px;
+        font-size: 12px;
+        min-width: 80px;
+        border-radius: 5px;
+        pointer-events: none;
+        padding: 4px 4px;
+        z-index:99;
+        opacity:0;
+    }
+
+    [tooltip-position='left']::after{
+        left:0%;
+        top:50%;
+        margin-left:-8px;
+        transform: translateX(-100%)   translateY(-50%);
+    }
+
+    [tooltip-position='top']::after{
+        left:50%;
+    }
+
+    [tooltip-position='buttom']::after{
+        top:100%;
+        margin-top:8px;
+        transform: translateX(-50%) translateY(0%);
+    }
+
+    [tooltip-position='right']::after{
+        margin-top: 5px;
+        margin-left:8px;
+        transform: translateX(0%)   translateY(-50%);
+    }
+
+    [tooltip]:hover::after,
+    [tooltip]:hover::before,
+    [tooltip]:focus::after,
+    [tooltip]:focus::before {
+        opacity:1;
+        transition-delay: 0.5s;
+    }
+
   </style>
 </head>
 <body>
@@ -93,12 +182,15 @@
             @endif
           </div>
         @endforeach
-        @foreach($files as $file)
-          <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
-             class="list-group-item @if ($current_file == $file) llv-active @endif">
-            {{$file}}
-          </a>
-        @endforeach
+        @php ($index = 0)
+        @foreach($folder_files['file'] as $file)
+            <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
+               tooltip="Fullpath: {{$folder_files['path'][$index]}}" tooltip-position="right"
+               class="list-group-item @if ($current_file == $folder_files['file'][$index]) llv-active @endif">
+                <span class="fa fa-folder" aria-hidden="true"></span>&nbsp;&nbsp;{{$folder_files['file'][$index]}}
+            </a>
+         @php ($index++)
+         @endforeach
       </div>
     </div>
     <div class="col-10 table-container">

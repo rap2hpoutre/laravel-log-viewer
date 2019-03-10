@@ -40,10 +40,8 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
-        $folderFiles = [];
         if ($this->request->input('f')) {
             $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
-            $folderFiles = $this->log_viewer->getFolderFiles(true);
         }
         if ($this->request->input('l')) {
             $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
@@ -57,7 +55,7 @@ class LogViewerController extends BaseController
             'logs' => $this->log_viewer->all(),
             'folders' => $this->log_viewer->getFolders(),
             'current_folder' => $this->log_viewer->getFolderName(),
-            'folder_files' => $folderFiles,
+            'folder_files' => $this->log_viewer->getFilesWithPath(),
             'files' => $this->log_viewer->getFiles(true),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
