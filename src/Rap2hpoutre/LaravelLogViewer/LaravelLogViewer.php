@@ -61,7 +61,7 @@ class LaravelLogViewer
             foreach ($this->storage_path as $value) {
                 $logsPath = $value . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
-                    $this->folder = $logsPath;
+                    $this->folder = $folder;
                     break;
                 }
             }
@@ -69,7 +69,7 @@ class LaravelLogViewer
             if ($this->storage_path) {
                 $logsPath = $this->storage_path . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
-                    $this->folder = $logsPath;
+                    $this->folder = $folder;
                 }
             }
         }
