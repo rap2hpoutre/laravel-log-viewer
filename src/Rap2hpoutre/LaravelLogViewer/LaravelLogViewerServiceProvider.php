@@ -34,6 +34,7 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
                 __DIR__.'/../../config/logviewer.php' => $this->config_path('logviewer.php'),
             ]);
 
+            \Route::get(config('logviewer.uri', 'logs'), '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
         }
     }
 
