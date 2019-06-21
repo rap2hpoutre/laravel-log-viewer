@@ -25,6 +25,11 @@ class LogViewerController extends BaseController
      */
     private $log_viewer;
 
+	/**
+	 * @var string
+	 */
+	protected $view_log = 'laravel-log-viewer::log';
+	
     /**
      * LogViewerController constructor.
      */
@@ -74,7 +79,7 @@ class LogViewerController extends BaseController
             }
         }
 
-        return app('view')->make('laravel-log-viewer::log', $data);
+        return app('view')->make($view_log, $data);
     }
 
     /**
