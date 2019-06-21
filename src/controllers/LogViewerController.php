@@ -79,7 +79,7 @@ class LogViewerController extends BaseController
             }
         }
 
-        return app('view')->make($view_log, $data);
+        return app('view')->make($this->view_log, $data);
     }
 
     /**
