@@ -47,6 +47,13 @@ php artisan vendor:publish \
   --tag=views
 ``` 
 
+**Optionally** publish `logviewer.php` configuration file into `/config/` directory of your app for configuration customization:
+
+```
+php artisan vendor:publish \
+  --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider"
+``` 
+
 Install (Lumen)
 ---------------
 
