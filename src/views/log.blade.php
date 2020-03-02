@@ -132,21 +132,26 @@
               @endif
               <td class="date">{{{$log['date']}}}</td>
               <td class="text">
-                @if ($log['stack'])
+                @if (isset($log['trace']) && $log['trace'])
                   <button type="button"
                           class="float-right expand btn btn-outline-dark btn-sm mb-2 ml-2"
                           data-display="stack{{{$key}}}">
                     <span class="fa fa-search"></span>
                   </button>
                 @endif
-                {{{$log['text']}}}
-                @if (isset($log['in_file']))
-                  <br/>{{{$log['in_file']}}}
+                {{$log['message']}}
+                @if (isset($log['exception']))
+                  <br/>{{$log['exception']}}
                 @endif
-                @if ($log['stack'])
-                  <div class="stack" id="stack{{{$key}}}"
-                       style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
-                  </div>
+                @if (isset($log['file']))
+                  <br/>{{{$log['file']}}}:{{{$log['line']}}}
+                @endif
+                @if (isset($log['trace']) && $log['trace'])
+                  @if (is_array($log['trace']))
+                    <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ \Rap2hpoutre\LaravelLogViewer\LaravelLogViewer::convertArrayExceptionStacArrayToString($log['trace']) }}}</div>
+                  @else
+                    <div class="stack" id="stack{{{$key}}}" style="display: none; white-space: pre-wrap;">{{{ $log['trace'] }}}</div>
+                  @endif
                 @endif
               </td>
             </tr>
