@@ -2,6 +2,11 @@
 
 namespace Rap2hpoutre\LaravelLogViewer;
 
+use Rap2hpoutre\LaravelLogViewer\Level;
+use Rap2hpoutre\LaravelLogViewer\Pattern;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 /**
  * Class LaravelLogViewer
  * @package Rap2hpoutre\LaravelLogViewer
@@ -138,7 +143,7 @@ class LaravelLogViewer
     /**
      * @return array
      */
-    public function all()
+    public function all($parseStack = false)
     {
         $log = array();
 
@@ -150,72 +155,16 @@ class LaravelLogViewer
             $this->file = $log_file[0];
         }
 
-        $max_file_size = function_exists('config') ? config('logviewer.max_file_size', self::MAX_FILE_SIZE) : self::MAX_FILE_SIZE;
+        $max_file_size = function_exists('config') ? config('logviewer.max_file_size', LaravelLogViewer::MAX_FILE_SIZE) : LaravelLogViewer::MAX_FILE_SIZE;
         if (app('files')->size($this->file) > $max_file_size) {
             return null;
         }
 
         $file = app('files')->get($this->file);
 
-        preg_match_all($this->pattern->getPattern('logs'), $file, $headings);
 
-        if (!is_array($headings)) {
-            return $log;
-        }
+        return [];
 
-        $log_data = preg_split($this->pattern->getPattern('logs'), $file);
-
-        if ($log_data[0] < 1) {
-            array_shift($log_data);
-        }
-
-        foreach ($headings as $h) {
-            for ($i = 0, $j = count($h); $i < $j; $i++) {
-                foreach ($this->level->all() as $level) {
-                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
-                        preg_match($this->pattern->getPattern('current_log', 0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
-                        if (!isset($current[4])) {
-                            continue;
-                        }
-
-                        $log[] = array(
-                            'context' => $current[3],
-                            'level' => $level,
-                            'folder' => $this->folder,
-                            'level_class' => $this->level->cssClass($level),
-                            'level_img' => $this->level->img($level),
-                            'date' => $current[1],
-                            'text' => $current[4],
-                            'in_file' => isset($current[5]) ? $current[5] : null,
-                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
-                        );
-                    }
-                }
-            }
-        }
-
-        if (empty($log)) {
-
-            $lines = explode(PHP_EOL, $file);
-            $log = [];
-
-            foreach ($lines as $key => $line) {
-                $log[] = [
-                    'context' => '',
-                    'level' => '',
-                    'folder' => '',
-                    'level_class' => '',
-                    'level_img' => '',
-                    'date' => $key + 1,
-                    'text' => $line,
-                    'in_file' => null,
-                    'stack' => '',
-                ];
-            }
-        }
-
-        return array_reverse($log);
     }
 
     /**

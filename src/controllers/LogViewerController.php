@@ -29,7 +29,7 @@ class LogViewerController extends BaseController
      * @var string
      */
     protected $view_log = 'laravel-log-viewer::log';
-	
+
     /**
      * LogViewerController constructor.
      */
@@ -58,8 +58,13 @@ class LogViewerController extends BaseController
             return $early_return;
         }
 
+        $parseStack = false;
+        if ($this->request->wantsJson()) {
+            $parseStack = true;
+        }
+
         $data = [
-            'logs' => $this->log_viewer->all(),
+            'logs' => $this->log_viewer->all($parseStack),
             'folders' => $this->log_viewer->getFolders(),
             'current_folder' => $this->log_viewer->getFolderName(),
             'folder_files' => $folderFiles,
@@ -73,9 +78,11 @@ class LogViewerController extends BaseController
         }
 
         if (is_array($data['logs']) && count($data['logs']) > 0) {
-            $firstLog = reset($data['logs']);
-            if (!$firstLog['context'] && !$firstLog['level']) {
+            foreach ($data['logs'] as $log) {
                 $data['standardFormat'] = false;
+                if ($log['context'] || $log['level']) {
+                    $data['standardFormat'] = true;
+                }
             }
         }
 
