@@ -283,4 +283,12 @@ class LaravelLogViewer
         }
         return array_values($files);
     }
+
+    /**
+     * @return Level
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
 }

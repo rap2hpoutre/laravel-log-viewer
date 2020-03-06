@@ -21,16 +21,16 @@
     }
 
     #table-log {
-        font-size: 0.85rem;
+      font-size: 0.85rem;
     }
 
     .sidebar {
-        font-size: 0.85rem;
-        line-height: 1;
+      font-size: 0.85rem;
+      line-height: 1;
     }
 
     .btn {
-        font-size: 0.7rem;
+      font-size: 0.7rem;
     }
 
     .stack {
@@ -63,8 +63,19 @@
       height: 80vh;
       overflow: hidden auto;
     }
+
     .nowrap {
       white-space: nowrap;
+    }
+
+    .level svg {
+      margin-right: 5px;
+    }
+
+    .level-select select {
+      display: inline-block;
+      margin-left: 5px;
+      width: auto;
     }
 
   </style>
@@ -126,7 +137,7 @@
             <tr data-display="stack{{{$key}}}">
               @if ($standardFormat)
                 <td class="nowrap text-{{{$log['level_class']}}}">
-                  <span class="fa fa-{{{$log['level_img']}}}" aria-hidden="true"></span>&nbsp;&nbsp;{{$log['level']}}
+                  <span class="fa fa-{{{$log['level_img']}}}" aria-hidden="true"></span>{{$log['level']}}
                 </td>
                 <td class="text">{{$log['context']}}</td>
               @endif
@@ -196,8 +207,9 @@
     $('.table-container tr').on('click', function () {
       $('#' + $(this).data('display')).toggle();
     });
-    $('#table-log').DataTable({
-      "order": [$('#table-log').data('orderingIndex'), 'desc'],
+
+    var options = {
+      "order": [$("#table-log").data("orderingIndex"), "desc"],
       "stateSave": true,
       "stateSaveCallback": function (settings, data) {
         window.localStorage.setItem("datatable", JSON.stringify(data));
@@ -206,11 +218,48 @@
         var data = JSON.parse(window.localStorage.getItem("datatable"));
         if (data) data.start = 0;
         return data;
+      },
+    };
+
+    @if ($standardFormat)
+      options.dom = "<'row'<'col-sm-4'l><'level-select col-sm-4'><'col-sm-4'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>";
+    @endif
+
+    var table = $("#table-log").DataTable(options);
+
+    $("#delete-log, #clean-log, #delete-all-log").click(function () {
+      return confirm("Are you sure?");
+    });
+
+    {{-- Add a level select filter --}}
+    @if ($standardFormat)
+      var levels = @json($levels);
+
+      var logSelect = "<label>Level " +
+        "<select id=\"level\" class=\"form-control form-control-sm\">" +
+        "<option value=\"\">all</option>";
+
+      for (var i = 0; i < levels.length; i++) {
+        logSelect += "<option value=\"" + levels[i] + "\">" + levels[i] + "</option>";
       }
-    });
-    $('#delete-log, #clean-log, #delete-all-log').click(function () {
-      return confirm('Are you sure?');
-    });
+
+      logSelect += "</select></label>";
+
+      $("div.level-select").html(logSelect);
+
+      // Redraw the table whenever the level select changes
+      $("#level").change(function () {
+        table.draw();
+      });
+
+      $.fn.dataTable.ext.search.push(
+        function (settings, data) {
+          var level = $("#level").val();
+
+          return !level || data[0] === level;
+        },
+      );
+    @endif
   });
 </script>
 </body>
