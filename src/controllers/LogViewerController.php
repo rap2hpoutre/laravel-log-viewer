@@ -1,13 +1,13 @@
 <?php
 
-namespace Rap2hpoutre\LaravelLogViewer;
+namespace Rap2hpoutre\Controllers;
 
 use Illuminate\Support\Facades\Crypt;
 
 if (class_exists("\\Illuminate\\Routing\\Controller")) {
-    class BaseController extends \Illuminate\Routing\Controller {}
+    use \Illuminate\Routing\Controller as BaseController;
 } elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
-    class BaseController extends \Laravel\Lumen\Routing\Controller {}
+    use \Laravel\Lumen\Routing\Controller as BaseController;
 }
 
 /**
