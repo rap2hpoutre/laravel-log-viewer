@@ -1,5 +1,5 @@
 {
-    "name": "rap2hpoutre/laravel-log-viewer",
+    "name": "aglipanci/laravel-log-viewer",
     "description": "A Laravel log reader",
     "license": "MIT",
     "keywords": ["log", "log-reader", "log-viewer", "logging", "laravel", "lumen"],
