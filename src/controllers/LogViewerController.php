@@ -3,6 +3,7 @@
 namespace Rap2hpoutre\Controllers;
 
 use Illuminate\Support\Facades\Crypt;
+use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 
 /**
  * Class LogViewerController
