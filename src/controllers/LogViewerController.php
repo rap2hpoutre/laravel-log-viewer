@@ -4,12 +4,6 @@ namespace Rap2hpoutre\Controllers;
 
 use Illuminate\Support\Facades\Crypt;
 
-if (class_exists("\\Illuminate\\Routing\\Controller")) {
-    use \Illuminate\Routing\Controller as BaseController;
-} elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
-    use \Laravel\Lumen\Routing\Controller as BaseController;
-}
-
 /**
  * Class LogViewerController
  * @package Rap2hpoutre\LaravelLogViewer
