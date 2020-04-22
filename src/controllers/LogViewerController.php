@@ -12,9 +12,10 @@ use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 class LogViewerController extends BaseController
 {
     /**
-     * @var
+     * @var \Illuminate\Http\Request
      */
     protected $request;
+
     /**
      * @var LaravelLogViewer
      */
@@ -24,7 +25,7 @@ class LogViewerController extends BaseController
      * @var string
      */
     protected $view_log = 'laravel-log-viewer::log';
-	
+
     /**
      * LogViewerController constructor.
      */
@@ -91,7 +92,7 @@ class LogViewerController extends BaseController
             return $this->download($this->pathFromInput('dl'));
         } elseif ($this->request->has('clean')) {
             app('files')->put($this->pathFromInput('clean'), '');
-            return $this->redirect($this->request->url());
+            return $this->redirect(url()->previous());
         } elseif ($this->request->has('del')) {
             app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
