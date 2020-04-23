@@ -49,7 +49,7 @@ $app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::cl
 
 Explicitly set the namespace in `app/Http/routes.php`:
 ```php
-$router->group(['namespace' => '\Rap2hpoutre\Controllers'], function() use ($router) {
+$router->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($router) {
     $router->get('logs', 'LogViewerController@index');
 });
 ```
