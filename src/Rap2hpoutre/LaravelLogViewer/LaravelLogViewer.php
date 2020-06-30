@@ -46,7 +46,6 @@ class LaravelLogViewer
         $this->level = new Level();
         $this->pattern = new Pattern();
         $this->storage_path = function_exists('config') ? config('logviewer.storage_path', storage_path('logs')) : storage_path('logs');
-
     }
 
     /**

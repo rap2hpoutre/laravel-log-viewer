@@ -27,6 +27,11 @@ class LogViewerController extends BaseController
     private $log_viewer;
 
     /**
+     * @var Level
+     */
+    private $log_level;
+
+    /**
      * @var string
      */
     protected $view_log = 'laravel-log-viewer::log';
@@ -37,7 +42,22 @@ class LogViewerController extends BaseController
     public function __construct()
     {
         $this->log_viewer = new LaravelLogViewer();
+        $this->log_level = new Level();
         $this->request = app('request');
+    }
+
+    public function filterByLevel(array $logs, string $filter)
+    {
+        $c = count($logs);
+        for ($i = 0; $i < $c; $i++) {
+            if ($logs[$i]['level'] === $filter) {
+                continue;
+            }
+
+            unset($logs[$i]);
+        }
+
+        return $logs;
     }
 
     /**
@@ -46,7 +66,10 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
+        $logs = $this->log_viewer->all();
+        $levels_counts = $this->log_level->getLevelsCounts($logs);
         $folderFiles = [];
+
         if ($this->request->input('f')) {
             $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
             $folderFiles = $this->log_viewer->getFolderFiles(true);
@@ -54,19 +77,26 @@ class LogViewerController extends BaseController
         if ($this->request->input('l')) {
             $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
         }
+        if ($filter = $this->request->input('filter')) {
+            if (array_key_exists('level', $filter)) {
+                $logs = $this->filterByLevel($logs, $filter['level']);
+            }
+        }
 
         if ($early_return = $this->earlyReturn()) {
             return $early_return;
         }
 
         $data = [
-            'logs' => $this->log_viewer->all(),
+            'logs' => $logs,
             'folders' => $this->log_viewer->getFolders(),
             'current_folder' => $this->log_viewer->getFolderName(),
             'folder_files' => $folderFiles,
             'files' => $this->log_viewer->getFiles(true),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
+            'levels_classes' => $this->log_level->getLevelsClasses(),
+            'levels_counts' => $levels_counts
         ];
 
         if ($this->request->wantsJson()) {

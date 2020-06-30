@@ -65,4 +65,24 @@ class Level
     {
         return $this->levels_classes[$level];
     }
+
+    public function getLevelsClasses()
+    {
+       return $this->levels_classes;
+    }
+
+    public function getLevelsCounts($logs)
+    {
+        $counts = [];
+
+        foreach ($this->all() as $level) {
+            $counts[$level] = 0;
+        }
+
+        foreach ($logs as $log) {
+            $counts[$log['level']]++;
+        }
+        
+        return $counts;
+    }
 }
