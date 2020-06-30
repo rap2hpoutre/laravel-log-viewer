@@ -21,7 +21,7 @@ Small log viewer for laravel. Looks like this:
 ## Install (Laravel)
 Install via composer
 ```bash
-composer require rap2hpoutre/laravel-log-viewer
+composer require sn0rk64/laravel-log-viewer
 ```
 
 Add Service Provider to `config/app.php` in `providers` section
@@ -39,7 +39,7 @@ Go to `http://myapp/logs` or some other route
 ### Install (Lumen)
 Install via composer
 ```bash
-composer require rap2hpoutre/laravel-log-viewer
+composer require sn0rk64/laravel-log-viewer
 ```
 
 Add the following in `bootstrap/app.php`:
