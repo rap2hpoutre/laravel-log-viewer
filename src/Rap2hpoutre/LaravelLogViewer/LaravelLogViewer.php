@@ -155,6 +155,16 @@ class LaravelLogViewer
             return null;
         }
 
+        if (!is_readable($this->file)) {
+            return [[
+                'context' => '',
+                'level' => '',
+                'date' => null,
+                'text' => 'Log file "' . $this->file . '" not readable',
+                'stack' => '',
+            ]];
+        }
+
         $file = app('files')->get($this->file);
 
         preg_match_all($this->pattern->getPattern('logs'), $file, $headings);
