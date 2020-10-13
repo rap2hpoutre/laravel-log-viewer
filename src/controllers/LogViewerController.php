@@ -69,7 +69,7 @@ class LogViewerController extends BaseController
             'standardFormat' => true,
         ];
 
-        if ($this->request->wantsJson()) {
+        if ($this->request->ajax()) {
             return $data;
         }
 
