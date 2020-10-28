@@ -24,17 +24,27 @@ Install via composer
 composer require rap2hpoutre/laravel-log-viewer
 ```
 
-Add Service Provider to `config/app.php` in `providers` section
+Laravel uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
+
+### Laravel without auto-discovery:
+
+If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
+
 ```php
 Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 ```
 
-Add a route in your web routes file:
+### Adding route
+
+If `LOGVIEWER_REGISTER_ROUTE` is `true` configured route (default `/logs`) is automatically registered.
+You can change it in `logviewer` config.
+
+You can also add the route manually in your web routes file:
 ```php 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 ```
 
-Go to `http://myapp/logs` or some other route
+Go to `http://myapp/logs` or as configured.
 
 ### Install (Lumen)
 Install via composer
