@@ -74,13 +74,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->app = null;
         parent::setUp();
 
-        app('\Illuminate\Foundation\Console\Kernel')
-            ->call('route:list', [], $buffer = new BufferedOutput);
-
-        $this->assertStringNotContainsString(
-            'Rap2hpoutre\\LaravelLogViewer\\LogViewerController@index',
-            $buffer->fetch()
-        );
+        $this->assertSame(0, app()->router->getRoutes()->count());
     }
 
     /** @test */
@@ -90,12 +84,14 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->app = null;
         parent::setUp();
 
-        app('\Illuminate\Foundation\Console\Kernel')
-            ->call('route:list', [], $buffer = new BufferedOutput);
-
-        $this->assertStringContainsString(
-            'Rap2hpoutre\\LaravelLogViewer\\LogViewerController@index',
-            $buffer->fetch()
+        $this->assertSame(1, app()->router->getRoutes()->count());
+        $this->assertArrayHasKey('logs', app()->router->getRoutes()->get('GET'));
+        $this->assertSame(
+            [
+                "uses" => "\Rap2hpoutre\LaravelLogViewer\LogViewerController@index",
+                "controller" => "\Rap2hpoutre\LaravelLogViewer\LogViewerController@index",
+            ],
+            app()->router->getRoutes()->get('GET')['logs']->action
         );
     }
 }
