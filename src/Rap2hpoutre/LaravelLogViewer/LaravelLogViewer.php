@@ -55,9 +55,11 @@ class LaravelLogViewer
     public function setFolder($folder)
     {
         if (app('files')->exists($folder)) {
+          
             $this->folder = $folder;
         }
-        if(is_array($this->storage_path)) {
+        else if(is_array($this->storage_path)) {
+           
             foreach ($this->storage_path as $value) {
                 $logsPath = $value . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
@@ -66,12 +68,12 @@ class LaravelLogViewer
                 }
             }
         } else {
-            if ($this->storage_path) {
+            
                 $logsPath = $this->storage_path . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
                     $this->folder = $folder;
                 }
-            }
+        
         }
     }
 
@@ -97,9 +99,11 @@ class LaravelLogViewer
     {
 
         if (app('files')->exists($file)) { // try the absolute path
+      
             return $file;
         }
         if (is_array($this->storage_path)) {
+     
             foreach ($this->storage_path as $folder) {
                 if (app('files')->exists($folder . '/' . $file)) { // try the absolute path
                     $file = $folder . '/' . $file;
@@ -116,6 +120,7 @@ class LaravelLogViewer
         if (dirname($file) !== $logsPath) {
             throw new \Exception('No such log file: '.$file);
         }
+        
         return $file;
     }
 
@@ -351,6 +356,8 @@ class LaravelLogViewer
 
 		    }
 	    }
+
+        return;
     }
 
 
