@@ -61,7 +61,9 @@ class LaravelLogViewer
         else if(is_array($this->storage_path)) {
            
             foreach ($this->storage_path as $value) {
+                
                 $logsPath = $value . '/' . $folder;
+               
                 if (app('files')->exists($logsPath)) {
                     $this->folder = $folder;
                     break;
