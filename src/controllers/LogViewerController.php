@@ -29,7 +29,7 @@ class LogViewerController extends BaseController
      * @var string
      */
     protected $view_log = 'laravel-log-viewer::log';
-	
+
     /**
      * LogViewerController constructor.
      */
@@ -66,6 +66,9 @@ class LogViewerController extends BaseController
             'files' => $this->log_viewer->getFiles(true),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
+            'structure' => $this->log_viewer->foldersAndFiles(),
+            'storage_path' => $this->log_viewer->getStoragePath(),
+
         ];
 
         if ($this->request->wantsJson()) {

@@ -37,9 +37,41 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertEquals("laravel.log", $laravel_log_viewer->getFileName());
     }
 
+    /**
+	 * @throws \Exception
+	 */
+	public function testSetFolder()
+	{
+		parent::setUp();
+
+		$laravel_log_viewer = new LaravelLogViewer();
+		try {
+			$laravel_log_viewer->setFolder(basename(__DIR__));
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage());
+		}
+
+		$this->assertEquals("tests", $laravel_log_viewer->getFolderName());
+	}
+
+	public function testSetStoragePath()
+	{
+		parent::setUp();
+
+		$laravel_log_viewer = new LaravelLogViewer();
+		try {
+			$laravel_log_viewer->setStoragePath(basename(__DIR__));
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage());
+		}
+
+		$this->assertEquals("tests", $laravel_log_viewer->getStoragePath());
+	}
+
     public function testAll()
     {
         $laravel_log_viewer = new LaravelLogViewer();
+        $laravel_log_viewer->setStoragePath(__DIR__);
         $data = $laravel_log_viewer->all();
         $this->assertEquals('local', $data[0]['context']);
         $this->assertEquals('error', $data[0]['level']);
@@ -51,6 +83,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
     public function testGetFolderFiles()
     {
         $laravel_log_viewer = new LaravelLogViewer();
+        $laravel_log_viewer->setStoragePath(__DIR__);
         $data = $laravel_log_viewer->getFolderFiles();
         $this->assertNotEmpty($data[0], "Folder files is null");
     }
