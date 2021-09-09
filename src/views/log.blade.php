@@ -187,7 +187,7 @@
               <div class="list-group folder">
                 @foreach($folder_files as $file)
                   <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}&f={{ \Illuminate\Support\Facades\Crypt::encrypt($folder) }}"
-                    class="list-group-item @if ($current_file == $file) llv-active @endif">
+                    class="list-group-item @if ($current_file == $file && !$current_folder) llv-active @endif">
                     {{$file}}
                   </a>
                 @endforeach
