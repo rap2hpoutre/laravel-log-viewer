@@ -75,8 +75,9 @@ class LogViewerController extends BaseController
 
         if (is_array($data['logs']) && count($data['logs']) > 0) {
             $firstLog = reset($data['logs']);
-            if (!$firstLog['context'] && !$firstLog['level']) {
-                $data['standardFormat'] = false;
+            if ($firstLog['context'] ??= 'default value' && 
+                $firstLog['level'] ??= 'default value') {
+                    $data['standardFormat'] = false;
             }
         }
 
