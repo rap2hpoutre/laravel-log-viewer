@@ -31,10 +31,6 @@ Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 
 Add a route in your web routes file:
 ```php 
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
-or 
-// Laravel 8+
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 ```
 
