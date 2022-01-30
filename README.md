@@ -36,6 +36,9 @@ Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'i
 
 Go to `http://myapp/logs` or some other route
 
+## Video Tutorial 
+ [<img src="https://img.youtube.com/vi/Iy73YNomnkw/0.jpg" width="350" >](https://youtu.be/Iy73YNomnkw)
+ 
 ### Install (Lumen)
 Install via composer
 ```bash
