@@ -55,27 +55,27 @@ class LaravelLogViewer
     public function setFolder($folder)
     {
         if (app('files')->exists($folder)) {
-          
+
             $this->folder = $folder;
         }
         else if(is_array($this->storage_path)) {
-           
+
             foreach ($this->storage_path as $value) {
-                
+
                 $logsPath = $value . '/' . $folder;
-               
+
                 if (app('files')->exists($logsPath)) {
                     $this->folder = $folder;
                     break;
                 }
             }
         } else {
-            
+
                 $logsPath = $this->storage_path . '/' . $folder;
                 if (app('files')->exists($logsPath)) {
                     $this->folder = $folder;
                 }
-        
+
         }
     }
 
@@ -101,11 +101,11 @@ class LaravelLogViewer
     {
 
         if (app('files')->exists($file)) { // try the absolute path
-      
+
             return $file;
         }
         if (is_array($this->storage_path)) {
-     
+
             foreach ($this->storage_path as $folder) {
                 if (app('files')->exists($folder . '/' . $file)) { // try the absolute path
                     $file = $folder . '/' . $file;
@@ -122,7 +122,7 @@ class LaravelLogViewer
         if (dirname($file) !== $logsPath) {
             throw new \Exception('No such log file: '.$file);
         }
-        
+
         return $file;
     }
 
@@ -244,18 +244,22 @@ class LaravelLogViewer
 	 */
     public function foldersAndFiles($path = null)
     {
-	    $contents = array();
-	    $dir = $path ? $path : $this->storage_path;
+	    $contents = [];
+	    $dir = $path  ? $this->storage_path.'/'.$path : $this->storage_path;
 	    foreach (scandir($dir) as $node) {
-		    if ($node == '.' || $node == '..') continue;
-		    $path = $dir . '\\' . $node;
-		    if (is_dir($path)) {
-			    $contents[$path] = $this->foldersAndFiles($path);
-		    } else {
-			    $contents[] = $path;
-		    }
-	    }
+		    if ($node == '.' || $node == '..' || $node == 'laravel.log') continue;
+		    $path = $dir . '/' . $node;
 
+            $filename =  explode('.',$node);
+		    if (is_dir($path)) {
+                $contents[$path] = '';
+
+		    } elseif( end($filename) == 'log' ) {
+                $contents[] = $path;
+
+		    }
+
+	    }
 	    return $contents;
     }
 
@@ -300,14 +304,11 @@ class LaravelLogViewer
 	    $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
 	    $fullPath = $this->storage_path.'/'.$folder;
 
-	    $listObject = new \RecursiveIteratorIterator(
-		    new \RecursiveDirectoryIterator($fullPath, \RecursiveDirectoryIterator::SKIP_DOTS),
-		    \RecursiveIteratorIterator::CHILD_FIRST
-	    );
-
+        $listObject = new \DirectoryIterator(dirname($fullPath."/logs"));
 	    foreach ($listObject as $fileinfo) {
-		    if(!$fileinfo->isDir() && strtolower(pathinfo($fileinfo->getRealPath(), PATHINFO_EXTENSION)) == explode('.', $pattern)[1])
-			    $files[] = $basename ? basename($fileinfo->getRealPath()) : $fileinfo->getRealPath();
+            if( !$fileinfo->isDir() && strtolower(pathinfo($fileinfo->getRealPath(), PATHINFO_EXTENSION)) == explode('.', $pattern)[1] ){
+                $files[] = $basename ? basename($fileinfo->getRealPath()) : $fileinfo->getRealPath();
+            }
 	    }
 	    return $files;
 
@@ -335,13 +336,12 @@ class LaravelLogViewer
     {
 	    foreach ($array as $k => $v) {
 		    if(is_dir( $k )) {
-
-			    $exploded = explode( "\\", $k );
+			    $exploded = explode( "/", $k );
 			    $show = last( $exploded );
 
 			    echo '<div class="list-group folder">
-				    <a href="?f='. \Illuminate\Support\Facades\Crypt::encrypt($k).'">
-					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+				    <a href="?f='. \Illuminate\Support\Facades\Crypt::encrypt($show).'">
+					   <span
 						    class="fa fa-folder"></span> '.$show.'
 				    </a>
 			    </div>';
@@ -352,17 +352,16 @@ class LaravelLogViewer
 
 		    }
 		    else {
-
-			    $exploded = explode( "\\", $v );
+			    $exploded = explode( "/", $v );
 			    $show2 = last( $exploded );
-			    $folder = str_replace( $storage_path, "", rtrim( str_replace( $show2, "", $v ), "\\" ) );
+			    $folder = explode( "/",str_replace( $storage_path.'/', "", $v ));
+                $folder =  $folder[0];
+
 			    $file = $v;
-
-
 			   echo '<div class="list-group">
 				    <a href="?l='.\Illuminate\Support\Facades\Crypt::encrypt($file).'&f='.\Illuminate\Support\Facades\Crypt::encrypt($folder).'">
-					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-						    class="fa fa-file"></span> '.$show2.'
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
+                    class="fa fa-file"></span> '.$show2.'
 				    </a>
 			    </div>';
 

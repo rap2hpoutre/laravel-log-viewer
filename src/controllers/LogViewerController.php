@@ -4,10 +4,10 @@ namespace Rap2hpoutre\LaravelLogViewer;
 
 use Illuminate\Support\Facades\Crypt;
 
-if (class_exists("\\Illuminate\\Routing\\Controller")) {	
-    class BaseController extends \Illuminate\Routing\Controller {}	
-} elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {	
-    class BaseController extends \Laravel\Lumen\Routing\Controller {}	
+if (class_exists("\\Illuminate\\Routing\\Controller")) {
+    class BaseController extends \Illuminate\Routing\Controller {}
+} elseif (class_exists("Laravel\\Lumen\\Routing\\Controller")) {
+    class BaseController extends \Laravel\Lumen\Routing\Controller {}
 }
 
 /**
@@ -47,9 +47,13 @@ class LogViewerController extends BaseController
     public function index()
     {
         $folderFiles = [];
+        $folderName = null;
+        $structure = $this->log_viewer->foldersAndFiles($folderName);
         if ($this->request->input('f')) {
             $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
+            $folderName = Crypt::decrypt($this->request->input('f'));
             $folderFiles = $this->log_viewer->getFolderFiles(true);
+            $structure[env('LOGVIEWER_STORAGE_PATH', storage_path('logs')).'/'.$folderName] = $this->log_viewer->foldersAndFiles($folderName);
         }
         if ($this->request->input('l')) {
             $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
@@ -58,7 +62,6 @@ class LogViewerController extends BaseController
         if ($early_return = $this->earlyReturn()) {
             return $early_return;
         }
-
         $data = [
             'logs' => $this->log_viewer->all(),
             'folders' => $this->log_viewer->getFolders(),
@@ -67,11 +70,10 @@ class LogViewerController extends BaseController
             'files' => $this->log_viewer->getFiles(true),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
-            'structure' => $this->log_viewer->foldersAndFiles(),
+            'structure' => $structure,
             'storage_path' => $this->log_viewer->getStoragePath(),
 
         ];
-
         if ($this->request->wantsJson()) {
             return $data;
         }
