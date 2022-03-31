@@ -57,8 +57,7 @@ class LaravelLogViewer
         if (app('files')->exists($folder)) {
 
             $this->folder = $folder;
-        }
-        else if(is_array($this->storage_path)) {
+        } else if (is_array($this->storage_path)) {
 
             foreach ($this->storage_path as $value) {
 
@@ -71,10 +70,10 @@ class LaravelLogViewer
             }
         } else {
 
-                $logsPath = $this->storage_path . '/' . $folder;
-                if (app('files')->exists($logsPath)) {
-                    $this->folder = $folder;
-                }
+            $logsPath = $this->storage_path . '/' . $folder;
+            if (app('files')->exists($logsPath)) {
+                $this->folder = $folder;
+            }
 
         }
     }
@@ -120,7 +119,7 @@ class LaravelLogViewer
         $file = $logsPath . '/' . $file;
         // check if requested file is really in the logs directory
         if (dirname($file) !== $logsPath) {
-            throw new \Exception('No such log file: '.$file);
+            throw new \Exception('No such log file: ' . $file);
         }
 
         return $file;
@@ -236,47 +235,47 @@ class LaravelLogViewer
     }
 
     /**Creates a multidimensional array
-	 * of subdirectories and files
-	 *
-	 * @param null $path
-	 *
-	 * @return array
-	 */
+     * of subdirectories and files
+     *
+     * @param null $path
+     *
+     * @return array
+     */
     public function foldersAndFiles($path = null)
     {
-	    $contents = array();
-	    $dir = $path ? $path : $this->storage_path;
-	    foreach (scandir($dir) as $node) {
-		    if ($node == '.' || $node == '..') continue;
-		    $path = $dir . '\\' . $node;
-		    if (is_dir($path)) {
-			    $contents[$path] = $this->foldersAndFiles($path);
-		    } else {
-			    $contents[] = $path;
-		    }
-	    }
+        $contents = array();
+        $dir = $path ? $path : $this->storage_path;
+        foreach (scandir($dir) as $node) {
+            if ($node == '.' || $node == '..') continue;
+            $path = $dir . '\\' . $node;
+            if (is_dir($path)) {
+                $contents[$path] = $this->foldersAndFiles($path);
+            } else {
+                $contents[] = $path;
+            }
+        }
 
-	    return $contents;
+        return $contents;
     }
 
-   /**Returns an array of
-	 * all subdirectories of specified directory
-	 *
-	 * @param string $folder
-	 *
-	 * @return array
-	 */
+    /**Returns an array of
+     * all subdirectories of specified directory
+     *
+     * @param string $folder
+     *
+     * @return array
+     */
     public function getFolders($folder = '')
     {
-	    $folders = [];
-	    $listObject = new \RecursiveIteratorIterator(
-		    new \RecursiveDirectoryIterator($this->storage_path.'/'.$folder, \RecursiveDirectoryIterator::SKIP_DOTS),
-		    \RecursiveIteratorIterator::CHILD_FIRST
-	    );
-	    foreach ($listObject as $fileinfo) {
-		    if($fileinfo->isDir()) $folders[] = $fileinfo->getRealPath();
-	    }
-	    return $folders;
+        $folders = [];
+        $listObject = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->storage_path . '/' . $folder, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($listObject as $fileinfo) {
+            if ($fileinfo->isDir()) $folders[] = $fileinfo->getRealPath();
+        }
+        return $folders;
     }
 
 
@@ -297,80 +296,79 @@ class LaravelLogViewer
     public function getFiles($basename = false, $folder = '')
     {
         $files = [];
-	    $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
-	    $fullPath = $this->storage_path.'/'.$folder;
+        $pattern = function_exists('config') ? config('logviewer.pattern', '*.log') : '*.log';
+        $fullPath = $this->storage_path . '/' . $folder;
 
-	    $listObject = new \RecursiveIteratorIterator(
-		    new \RecursiveDirectoryIterator($fullPath, \RecursiveDirectoryIterator::SKIP_DOTS),
-		    \RecursiveIteratorIterator::CHILD_FIRST
-	    );
+        $listObject = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($fullPath, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
 
-	    foreach ($listObject as $fileinfo) {
-		    if(!$fileinfo->isDir() && strtolower(pathinfo($fileinfo->getRealPath(), PATHINFO_EXTENSION)) == explode('.', $pattern)[1])
-			    $files[] = $basename ? basename($fileinfo->getRealPath()) : $fileinfo->getRealPath();
-	    }
+        foreach ($listObject as $fileinfo) {
+            if (!$fileinfo->isDir() && strtolower(pathinfo($fileinfo->getRealPath(), PATHINFO_EXTENSION)) == explode('.', $pattern)[1])
+                $files[] = $basename ? basename($fileinfo->getRealPath()) : $fileinfo->getRealPath();
+        }
 
         arsort($files);
 
-	    return $files;
+        return $files;
 
     }
 
     /**
-	 * @return string
-	 */
+     * @return string
+     */
     public function getStoragePath()
     {
-    	return $this->storage_path;
+        return $this->storage_path;
     }
 
-	/**
-	 * @param $path
-	 *
-	 * @return void
-	 */
-	public function setStoragePath($path)
-	{
-		$this->storage_path = $path;
-	}
+    /**
+     * @param $path
+     *
+     * @return void
+     */
+    public function setStoragePath($path)
+    {
+        $this->storage_path = $path;
+    }
 
     public static function directoryTreeStructure($storage_path, array $array)
     {
-	    foreach ($array as $k => $v) {
-		    if(is_dir( $k )) {
+        foreach ($array as $k => $v) {
+            if (is_dir($k)) {
 
-			    $exploded = explode( "\\", $k );
-			    $show = last( $exploded );
+                $exploded = explode("\\", $k);
+                $show = last($exploded);
 
-			    echo '<div class="list-group folder">
-				    <a href="?f='. \Illuminate\Support\Facades\Crypt::encrypt($k).'">
+                echo '<div class="list-group folder">
+				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encrypt($k) . '">
 					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
-						    class="fa fa-folder"></span> '.$show.'
+						    class="fa fa-folder"></span> ' . $show . '
 				    </a>
 			    </div>';
 
-			    if ( is_array( $v ) ) {
-				    self::directoryTreeStructure( $storage_path, $v );
-			    }
+                if (is_array($v)) {
+                    self::directoryTreeStructure($storage_path, $v);
+                }
 
-		    }
-		    else {
+            } else {
 
-			    $exploded = explode( "\\", $v );
-			    $show2 = last( $exploded );
-			    $folder = str_replace( $storage_path, "", rtrim( str_replace( $show2, "", $v ), "\\" ) );
-			    $file = $v;
+                $exploded = explode("\\", $v);
+                $show2 = last($exploded);
+                $folder = str_replace($storage_path, "", rtrim(str_replace($show2, "", $v), "\\"));
+                $file = $v;
 
 
-			   echo '<div class="list-group">
-				    <a href="?l='.\Illuminate\Support\Facades\Crypt::encrypt($file).'&f='.\Illuminate\Support\Facades\Crypt::encrypt($folder).'">
+                echo '<div class="list-group">
+				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
 					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-						    class="fa fa-file"></span> '.$show2.'
+						    class="fa fa-file"></span> ' . $show2 . '
 				    </a>
 			    </div>';
 
-		    }
-	    }
+            }
+        }
 
         return;
     }
