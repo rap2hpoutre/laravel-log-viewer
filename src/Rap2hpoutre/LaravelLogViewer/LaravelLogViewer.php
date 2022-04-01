@@ -311,8 +311,7 @@ class LaravelLogViewer
 
         arsort($files);
 
-        return $files;
-
+        return array_values($files);
     }
 
     /**
