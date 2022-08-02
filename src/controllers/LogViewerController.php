@@ -49,7 +49,7 @@ class LogViewerController extends BaseController
         $folderFiles = [];
         if ($this->request->input('f')) {
             $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
-            $folderFiles = $this->log_viewer->getFolderFiles(true);
+            $folderFiles = $this->log_viewer->getFolderFiles(false);
         }
         if ($this->request->input('l')) {
             $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
@@ -62,9 +62,9 @@ class LogViewerController extends BaseController
         $data = [
             'logs' => $this->log_viewer->all(),
             'folders' => $this->log_viewer->getFolders(),
-            'current_folder' => $this->log_viewer->getFolderName(),
+            'current_folder' => $this->log_viewer->getFolderName() ?? $this->log_viewer->getStoragePath(),
             'folder_files' => $folderFiles,
-            'files' => $this->log_viewer->getFiles(true),
+            'files' => $this->log_viewer->getFiles(false),
             'current_file' => $this->log_viewer->getFileName(),
             'standardFormat' => true,
             'structure' => $this->log_viewer->foldersAndFiles(),
@@ -84,6 +84,8 @@ class LogViewerController extends BaseController
                 }
             }
         }
+
+        $data['show_files'] = (!empty($data['folder_files']) ? $data['folder_files'] : $data['files']);
 
         return app('view')->make($this->view_log, $data);
     }

@@ -44,7 +44,7 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(realpath(__DIR__ . '/../../config/logviewer.php'), 'logviewer');
     }
 
     /**
