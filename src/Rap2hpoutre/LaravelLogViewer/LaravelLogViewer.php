@@ -133,6 +133,11 @@ class LaravelLogViewer
         return $this->folder;
     }
 
+    public function getCurrentFolder()
+    {
+        return str_replace($this->storage_path, '', $this->folder);
+    }
+
     /**
      * @return string
      */
@@ -299,7 +304,7 @@ class LaravelLogViewer
      */
     public function getFolderFiles($basename = false, $fullPath = false)
     {
-        $folder = $fullPath ? $this->folder : str_replace($this->storage_path, '', $this->folder);
+        $folder = $fullPath ? $this->folder : $this->getCurrentFolder();
 
         return $this->getFiles($basename, $folder);
     }
@@ -375,12 +380,12 @@ class LaravelLogViewer
                 $file = $v;
 
 
-                echo '<div class="list-group">
-				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
-					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-						    class="fa fa-file"></span> ' . $show2 . '
-				    </a>
-			    </div>';
+//                echo '<div class="list-group">
+//				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
+//					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
+//						    class="fa fa-file"></span> ' . basename($show2) . '
+//				    </a>
+//			    </div>';
 
             }
         }
