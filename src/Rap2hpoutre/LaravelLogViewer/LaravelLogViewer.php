@@ -146,7 +146,7 @@ class LaravelLogViewer
      */
     public function all()
     {
-        $log = array();
+        $log = [];
 
         if (!$this->file) {
             $log_file = (!$this->folder) ? $this->getFiles() : $this->getFolderFiles();
@@ -173,42 +173,33 @@ class LaravelLogViewer
 
         $file = app('files')->get($this->file);
 
-        preg_match_all($this->pattern->getPattern('logs'), $file, $headings);
+        // Divide log file into an array of logs.
+        preg_match_all($this->pattern->getPattern('logs'), $file, $parts);
 
-        if (!is_array($headings)) {
-            return $log;
-        }
+        foreach($parts[0] ?: [] as $part) {
+            // Divide the log part into a heading and a stack trace.
+            preg_match('/([^\n]*)(.*)/s', $part, $divide);
+            $heading = $divide[1];
+            $stack = $divide[2];
 
-        $log_data = preg_split($this->pattern->getPattern('logs'), $file);
+            preg_match($this->pattern->getPattern('heading', ['loglevels' => join('|', $this->level->all())]), $heading, $current);
 
-        if ($log_data[0] < 1) {
-            array_shift($log_data);
-        }
-
-        foreach ($headings as $h) {
-            for ($i = 0, $j = count($h); $i < $j; $i++) {
-                foreach ($this->level->all() as $level) {
-                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
-                        preg_match($this->pattern->getPattern('current_log', 0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
-                        if (!isset($current[4])) {
-                            continue;
-                        }
-
-                        $log[] = array(
-                            'context' => $current[3],
-                            'level' => $level,
-                            'folder' => $this->folder,
-                            'level_class' => $this->level->cssClass($level),
-                            'level_img' => $this->level->img($level),
-                            'date' => $current[1],
-                            'text' => $current[4],
-                            'in_file' => isset($current[5]) ? $current[5] : null,
-                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
-                        );
-                    }
-                }
+            $level = strtolower($current[3]);
+            if(empty($level)) {
+                continue;
             }
+
+            $log[] = [
+                'context' => $current[2],
+                'level' => $level,
+                'folder' => $this->folder,
+                'level_class' => $this->level->cssClass($level),
+                'level_img' => $this->level->img($level),
+                'date' => $current[1],
+                'text' => $current[4],
+                'in_file' => isset($current[5]) ? $current[5] : null,
+                'stack' => $stack,
+            ];
         }
 
         if (empty($log)) {
