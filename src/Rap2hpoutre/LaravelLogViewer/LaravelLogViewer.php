@@ -138,6 +138,10 @@ class LaravelLogViewer
      */
     public function getFileName()
     {
+        if(!$this->file) {
+            return null;
+        }
+
         return basename($this->file);
     }
 
