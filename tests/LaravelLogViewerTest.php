@@ -12,7 +12,7 @@ use File;
 class LaravelLogViewerTest extends OrchestraTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         config()->set('app.key', 'XP0aw2Dkrk22p0JoAOzulOl8XkUxlvkO');
