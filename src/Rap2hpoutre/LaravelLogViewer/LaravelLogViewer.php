@@ -2,21 +2,17 @@
 
 namespace Rap2hpoutre\LaravelLogViewer;
 
-/**
- * Class LaravelLogViewer
- * @package Rap2hpoutre\LaravelLogViewer
- */
 class LaravelLogViewer
 {
     /**
      * @var string file
      */
-    private $file;
+    private $file = '';
 
     /**
      * @var string folder
      */
-    private $folder;
+    private $folder = '';
 
     /**
      * @var string storage_path
