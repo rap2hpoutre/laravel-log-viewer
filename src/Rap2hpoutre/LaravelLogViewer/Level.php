@@ -9,9 +9,9 @@ namespace Rap2hpoutre\LaravelLogViewer;
 class Level
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
-    private $levels_classes = [
+    private $levelsClasses = [
         'debug' => 'info',
         'info' => 'info',
         'notice' => 'info',
@@ -25,9 +25,9 @@ class Level
     ];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
-    private $levels_imgs = [
+    private $icons = [
         'debug' => 'info-circle',
         'info' => 'info-circle',
         'notice' => 'info-circle',
@@ -41,28 +41,28 @@ class Level
     ];
 
     /**
-     * @return array
+     * @return string[]
      */
     public function all()
     {
-        return array_keys($this->levels_imgs);
+        return array_keys($this->icons);
     }
 
     /**
-     * @param $level
+     * @param  string  $level
      * @return string
      */
     public function img($level)
     {
-        return $this->levels_imgs[$level];
+        return $this->icons[$level];
     }
 
     /**
-     * @param $level
+     * @param  string  $level
      * @return string
      */
     public function cssClass($level)
     {
-        return $this->levels_classes[$level];
+        return $this->levelsClasses[$level];
     }
 }

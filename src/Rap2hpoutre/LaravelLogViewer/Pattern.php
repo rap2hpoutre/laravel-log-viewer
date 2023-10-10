@@ -2,17 +2,10 @@
 
 namespace Rap2hpoutre\LaravelLogViewer;
 
-/**
- * Class Pattern
- * @property array patterns
- * @package Rap2hpoutre\LaravelLogViewer
- */
-
 class Pattern
 {
-
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $patterns = [
         'logs' => '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/',
@@ -24,7 +17,7 @@ class Pattern
     ];
 
     /**
-     * @return array
+     * @return string[]
      */
     public function all()
     {
@@ -32,8 +25,8 @@ class Pattern
     }
 
     /**
-     * @param $pattern
-     * @param null $position
+     * @param  string  $pattern
+     * @param  null|string  $position
      * @return string pattern
      */
     public function getPattern($pattern, $position = null)
@@ -41,7 +34,7 @@ class Pattern
         if ($position !== null) {
             return $this->patterns[$pattern][$position];
         }
+
         return $this->patterns[$pattern];
-        
     }
 }
