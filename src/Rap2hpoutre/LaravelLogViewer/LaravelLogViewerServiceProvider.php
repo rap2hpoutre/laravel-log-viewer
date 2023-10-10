@@ -3,14 +3,6 @@
 use Illuminate\Support\ServiceProvider;
 
 class LaravelLogViewerServiceProvider extends ServiceProvider {
-
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
     /**
      * Bootstrap the application events.
      *
@@ -47,16 +39,6 @@ class LaravelLogViewerServiceProvider extends ServiceProvider {
         //
     }
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array();
-    }
-    
     /**
      * Get the configuration path.
      *
