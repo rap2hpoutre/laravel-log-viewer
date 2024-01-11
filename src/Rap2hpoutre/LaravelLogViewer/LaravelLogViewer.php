@@ -129,6 +129,11 @@ class LaravelLogViewer
         return $this->folder;
     }
 
+    public function getCurrentFolder()
+    {
+        return str_replace($this->storage_path, '', $this->folder);
+    }
+
     /**
      * @return string
      */
@@ -166,7 +171,16 @@ class LaravelLogViewer
                 'stack' => '',
             ]];
         }
-
+        if (is_dir($this->file))
+        {
+            return [[
+                'context' => '',
+                'level' => '',
+                'date' => null,
+                'text' => 'Log file "' . $this->file . '" is DIR',
+                'stack' => '',
+            ]];
+        }
         $file = app('files')->get($this->file);
 
         preg_match_all($this->pattern->getPattern('logs'), $file, $headings);
@@ -241,13 +255,18 @@ class LaravelLogViewer
     {
         $contents = array();
         $dir = $path ? $path : $this->storage_path;
+        $ignoreFiles = function_exists('config') ? config('logviewer.ignore_files', []) : [];
+
         foreach (scandir($dir) as $node) {
             if ($node == '.' || $node == '..') continue;
             $path = $dir . '\\' . $node;
+            $fpath = $dir . '/' . $node;
             if (is_dir($path)) {
                 $contents[$path] = $this->foldersAndFiles($path);
             } else {
-                $contents[] = $path;
+                if (!empty($ignoreFiles) && in_array($node, $ignoreFiles)) continue;
+
+                $contents[] = $fpath;
             }
         }
 
@@ -279,9 +298,11 @@ class LaravelLogViewer
      * @param bool $basename
      * @return array
      */
-    public function getFolderFiles($basename = false)
+    public function getFolderFiles($basename = false, $fullPath = false)
     {
-        return $this->getFiles($basename, $this->folder);
+        $folder = $fullPath ? $this->folder : $this->getCurrentFolder();
+
+        return $this->getFiles($basename, $folder);
     }
 
     /**
@@ -331,15 +352,15 @@ class LaravelLogViewer
     public static function directoryTreeStructure($storage_path, array $array)
     {
         foreach ($array as $k => $v) {
-            if (is_dir($k)) {
+            if (is_dir($v)) {
 
                 $exploded = explode("\\", $k);
                 $show = last($exploded);
 
                 echo '<div class="list-group folder">
-				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encrypt($k) . '">
+				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encrypt($v) . '">
 					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
-						    class="fa fa-folder"></span> ' . $show . '
+						    class="fa fa-folder"></span> ' . basename($v) . '
 				    </a>
 			    </div>';
 
@@ -355,12 +376,12 @@ class LaravelLogViewer
                 $file = $v;
 
 
-                echo '<div class="list-group">
-				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
-					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-						    class="fa fa-file"></span> ' . $show2 . '
-				    </a>
-			    </div>';
+//                echo '<div class="list-group">
+//				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
+//					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
+//						    class="fa fa-file"></span> ' . basename($show2) . '
+//				    </a>
+//			    </div>';
 
             }
         }

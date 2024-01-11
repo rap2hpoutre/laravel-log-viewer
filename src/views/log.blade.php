@@ -185,15 +185,22 @@
         @foreach($folders as $folder)
           <div class="list-group-item">
             <?php
+              echo '<div class="list-group folder">
+				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encrypt($storage_path) . '">
+					    <span></span><span
+						    class="fa fa-folder"></span> ' . basename($storage_path) . '
+				    </a>
+			    </div>';
+
             \Rap2hpoutre\LaravelLogViewer\LaravelLogViewer::DirectoryTreeStructure( $storage_path, $structure );
             ?>
 
           </div>
         @endforeach
-        @foreach($files as $file)
-          <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
+        @foreach($show_files as $file)
+          <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}&f={{ \Illuminate\Support\Facades\Crypt::encrypt($current_folder) }}"
              class="list-group-item @if ($current_file == $file) llv-active @endif">
-            {{$file}}
+            {{basename($file)}}
           </a>
         @endforeach
       </div>
@@ -204,6 +211,9 @@
           Log file >50M, please download it.
         </div>
       @else
+
+         <h1> {{ str_replace($storage_path, '', $current_folder)}}</h1>
+       <br/>
         <table id="table-log" class="table table-striped" data-ordering-index="{{ $standardFormat ? 2 : 0 }}">
           <thead>
           <tr>
