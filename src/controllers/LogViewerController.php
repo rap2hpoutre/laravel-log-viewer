@@ -37,7 +37,6 @@ class LogViewerController extends BaseController
     public function __construct()
     {
         $this->log_viewer = new LaravelLogViewer();
-        $this->request = app('request');
     }
 
     /**
@@ -46,6 +45,7 @@ class LogViewerController extends BaseController
      */
     public function index()
     {
+        $this->request = app('request');
         $folderFiles = [];
         if ($this->request->input('f')) {
             $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
