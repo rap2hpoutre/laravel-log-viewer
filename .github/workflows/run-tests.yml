@@ -76,4 +76,4 @@ jobs:
         run: "composer dump-autoload --optimize --strict-psr"
 
       - name: "Execute unit tests"
-        run: "vendor/bin/phpunit --coverage-clover=coverage.xml --log-junit=test-report.xml --testdox"
+        run: "vendor/bin/phpunit"
