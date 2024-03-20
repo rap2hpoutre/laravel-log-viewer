@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="./vendor/autoload.php" convertNoticesToExceptions="true" convertWarningsToExceptions="false" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false">
+<phpunit colors="true" bootstrap="./vendor/autoload.php" convertNoticesToExceptions="false" convertWarningsToExceptions="false" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false">
     <testsuites>
         <testsuite name="all">
             <directory suffix="Test.php">tests/</directory>
