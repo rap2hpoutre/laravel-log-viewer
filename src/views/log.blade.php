@@ -235,6 +235,10 @@
                           data-display="stack{{{$key}}}">
                     <span class="fa fa-search"></span>
                   </button>
+                   <!-- Button trigger modal -->
+                  <button type="button" class="float-right expand btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#modal-{{$key }}">
+                    <i class="far fa-file-alt"></i>
+                  </button>
                 @endif
                 {{{$log['text']}}}
                 @if (isset($log['in_file']))
@@ -245,6 +249,30 @@
                        style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
                   </div>
                 @endif
+
+                <div class="modal fade bd-example-modal-lg" id="modal-{{$key }}" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div>
+                          <h5 class="modal-title" id="exampleModalLabel">{{{$log['text']}}}</h5>
+                          @if (isset($log['in_file']))
+                            <h6>{{{$log['in_file']}}}</h6>  
+                          @endif
+                          <a class="btn btn-outline-dark btn-sm" href="https://www.google.com/search?q={{{$log['text']}}}" target="_blank"><i class="fab fa-google"></i> google</a>
+                          <a class="btn btn-outline-dark btn-sm" href="https://stackoverflow.com/search?q={{{$log['text']}}}" target="_blank"><i class="fab fa-stack-overflow"></i> stack overflow</a>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body bg-secondary text-light">
+                        <p class="" style="white-space: pre-wrap;">{{{ trim($log['stack']) }}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </td>
             </tr>
           @endforeach
