@@ -1,9 +1,10 @@
 <?php
 
-namespace Rap2hpoutre\LaravelLogViewer;
+namespace Rap2hpoutre\LaravelLogViewer\Tests;
 
+use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use File;
+use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 
 /**
  * Class LaravelLogViewerTest
@@ -50,7 +51,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         
 		$laravel_log_viewer = new LaravelLogViewer();
         $laravel_log_viewer->setStoragePath([$path]);
-        if(!\File::exists("$path/samuel")) \File::makeDirectory("$path/samuel");
+        if(!File::exists("$path/samuel")) File::makeDirectory("$path/samuel");
         $laravel_log_viewer->setFolder('samuel');
         
 		$this->assertEquals("samuel", $laravel_log_viewer->getFolderName());
