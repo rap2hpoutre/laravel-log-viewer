@@ -184,8 +184,9 @@ class LaravelLogViewer
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($this->level->all() as $level) {
-                    if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
+                    // Check if level appears in correct position (after context or right after timestamp)
+                    $levelPattern = '/\]\s*(?:\w+\.)?' . preg_quote($level, '/') . ':/i';
+                    if (preg_match($levelPattern, $h[$i])) {
                         preg_match($this->pattern->getPattern('current_log', 0) . $level . $this->pattern->getPattern('current_log', 1), $h[$i], $current);
                         if (!isset($current[4])) {
                             continue;
