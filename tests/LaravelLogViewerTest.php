@@ -4,6 +4,7 @@ namespace Rap2hpoutre\LaravelLogViewer\Tests;
 
 use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 
 /**
@@ -26,6 +27,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
     /**
      * @throws \Exception
      */
+    #[Test]
     public function testSetFile()
     {
 
@@ -35,7 +37,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertEquals("laravel.log", $laravel_log_viewer->getFileName());
     }
 
-
+    #[Test]
 	public function testSetFolderWithCorrectPath()
 	{
 
@@ -44,7 +46,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
 		$this->assertEquals("tests", $laravel_log_viewer->getFolderName());
 	}
 
-
+    #[Test]
 	public function testSetFolderWithArrayStoragePath()
 	{
         $path = __DIR__;
@@ -58,6 +60,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
 
 	}
 
+    #[Test]
     public function testSetFolderWithDefaultStoragePath()
 	{
       
@@ -70,6 +73,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
 
 	}
 
+    #[Test]
 	public function testSetStoragePath()
 	{
 
@@ -79,6 +83,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
 		$this->assertEquals("tests", $laravel_log_viewer->getStoragePath());
 	}
 
+    #[Test]
     public function testPathToLogFile()
 	{
 
@@ -88,6 +93,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertEquals($pathToLogFile, storage_path('logs/laravel.log'));
 	}
 
+    #[Test]
     public function testPathToLogFileWithArrayStoragePath()
 	{
 
@@ -98,6 +104,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
 		$this->assertEquals($pathToLogFile, 'laravel.log');
 	}
 
+    #[Test]
     public function testFailOnBadPathToLogFile()
 	{
 
@@ -109,6 +116,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $laravel_log_viewer->pathToLogFile('newlogs/nolaravel.txt');
 	}
 
+    #[Test]
     public function testAll()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -122,6 +130,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertEquals('2018-09-05 20:20:51', $data[0]['date']);
     }
 
+    #[Test]
     public function testAllWithEmptyFileName()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -135,6 +144,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertEquals('2018-09-05 20:20:51', $data[0]['date']);
     }
 
+    #[Test]
     public function testFolderFiles()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -148,6 +158,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertStringContainsString('tests',  $data[count(explode($data[0], '/')) - 1]);
     }
 
+    #[Test]
     public function testGetFolderFiles()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -158,6 +169,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertNotEmpty($data, "Folder files is null");
     }
 
+    #[Test]
     public function testGetFiles()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -168,6 +180,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertNotEmpty($data, "Folder files is null");
     }
 
+    #[Test]
     public function testGetFolders()
     {
         $laravel_log_viewer = new LaravelLogViewer();
@@ -178,6 +191,7 @@ class LaravelLogViewerTest extends OrchestraTestCase
         $this->assertNotEmpty($data, "files is null");
     }
 
+    #[Test]
     public function testDirectoryStructure()
     {
         $log_viewer = new LaravelLogViewer();
