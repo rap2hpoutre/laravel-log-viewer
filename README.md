@@ -24,35 +24,12 @@ Install via composer
 composer require rap2hpoutre/laravel-log-viewer
 ```
 
-Add Service Provider to `config/app.php` in `providers` section
-```php
-Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-```
-
 Add a route in your web routes file:
 ```php 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 ```
 
 Go to `http://myapp/logs` or some other route
-
-### Install (Lumen)
-Install via composer
-```bash
-composer require rap2hpoutre/laravel-log-viewer
-```
-
-Add the following in `bootstrap/app.php`:
-```php
-$app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
-```
-
-Explicitly set the namespace in `app/Http/routes.php`:
-```php
-$router->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($router) {
-    $router->get('logs', 'LogViewerController@index');
-});
-```
 
 ## Advanced usage
 ### Customize view
