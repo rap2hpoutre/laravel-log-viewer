@@ -337,7 +337,7 @@ class LaravelLogViewer
                 $show = last($exploded);
 
                 echo '<div class="list-group folder">
-				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encrypt($k) . '">
+				    <a href="?f=' . \Illuminate\Support\Facades\Crypt::encryptString($k) . '">
 					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
 						    class="fa fa-folder"></span> ' . $show . '
 				    </a>
@@ -356,7 +356,7 @@ class LaravelLogViewer
 
 
                 echo '<div class="list-group">
-				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encrypt($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($folder) . '">
+				    <a href="?l=' . \Illuminate\Support\Facades\Crypt::encryptString($file) . '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($folder) . '">
 					    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
 						    class="fa fa-file"></span> ' . $show2 . '
 				    </a>

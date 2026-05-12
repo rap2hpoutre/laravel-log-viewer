@@ -48,11 +48,11 @@ class LogViewerController extends BaseController
     {
         $folderFiles = [];
         if ($this->request->input('f')) {
-            $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
+            $this->log_viewer->setFolder(basename(Crypt::decryptString($this->request->input('f'))));
             $folderFiles = $this->log_viewer->getFolderFiles(true);
         }
         if ($this->request->input('l')) {
-            $this->log_viewer->setFile(Crypt::decrypt($this->request->input('l')));
+            $this->log_viewer->setFile(basename(Crypt::decryptString($this->request->input('l'))));
         }
 
         if ($early_return = $this->earlyReturn()) {
@@ -95,7 +95,7 @@ class LogViewerController extends BaseController
     private function earlyReturn()
     {
         if ($this->request->input('f')) {
-            $this->log_viewer->setFolder(Crypt::decrypt($this->request->input('f')));
+            $this->log_viewer->setFolder(basename(Crypt::decryptString($this->request->input('f'))));
         }
 
         if ($this->request->input('dl')) {
@@ -125,7 +125,7 @@ class LogViewerController extends BaseController
      */
     private function pathFromInput($input_string)
     {
-        return $this->log_viewer->pathToLogFile(Crypt::decrypt($this->request->input($input_string)));
+        return $this->log_viewer->pathToLogFile(basename(Crypt::decryptString($this->request->input($input_string))));
     }
 
     /**
