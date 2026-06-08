@@ -98,15 +98,15 @@ class LogViewerController extends BaseController
             $this->log_viewer->setFolder(basename(Crypt::decryptString($this->request->input('f'))));
         }
 
-        if ($this->request->input('dl')) {
+        if ($this->request->input('dl') && config('logviewer.buttons.download', true)) {
             return $this->download($this->pathFromInput('dl'));
-        } elseif ($this->request->has('clean')) {
+        } elseif ($this->request->has('clean') && config('logviewer.buttons.clean', true)) {
             app('files')->put($this->pathFromInput('clean'), '');
             return $this->redirect(url()->previous());
-        } elseif ($this->request->has('del')) {
+        } elseif ($this->request->has('del') && config('logviewer.buttons.delete', true)) {
             app('files')->delete($this->pathFromInput('del'));
             return $this->redirect($this->request->url());
-        } elseif ($this->request->has('delall')) {
+        } elseif ($this->request->has('delall') && config('logviewer.buttons.delete_all', true)) {
             $files = ($this->log_viewer->getFolderName())
                         ? $this->log_viewer->getFolderFiles(true)
                         : $this->log_viewer->getFiles(true);
