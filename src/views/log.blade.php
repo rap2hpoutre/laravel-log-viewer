@@ -254,19 +254,32 @@
       @endif
       <div class="p-3">
         @if($current_file)
-          <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-            <span class="fa fa-download"></span> Download file
-          </a>
-          -
-          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-            <span class="fa fa-sync"></span> Clean file
-          </a>
-          -
-          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-            <span class="fa fa-trash"></span> Delete file
-          </a>
-          @if(count($files) > 1)
-            -
+          @php $sep = ''; @endphp
+          @if(config('logviewer.buttons.download', true))
+            <a href="?dl={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+              <span class="fa fa-download"></span> Download file
+            </a>
+            @php $sep = '-'; @endphp
+          @endif
+
+          @if(config('logviewer.buttons.clean', true))
+            {{ $sep }}
+            <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+              <span class="fa fa-sync"></span> Clean file
+            </a>
+            @php $sep = '-'; @endphp
+          @endif
+
+          @if(config('logviewer.buttons.delete', true))
+            {{ $sep }}
+            <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+              <span class="fa fa-trash"></span> Delete file
+            </a>
+            @php $sep = '-'; @endphp
+          @endif
+
+          @if(count($files) > 1 && config('logviewer.buttons.delete_all', true))
+            {{ $sep }}
             <a id="delete-all-log" href="?delall=true{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
               <span class="fa fa-trash-alt"></span> Delete all files
             </a>

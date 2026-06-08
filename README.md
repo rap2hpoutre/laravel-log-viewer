@@ -49,6 +49,18 @@ php artisan vendor:publish \
   --provider="Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider"
 ``` 
 
+### Button visibility
+Show/hide buttons via the `buttons` array in the published config, or the matching env vars (all default to `true`):
+
+```php
+'buttons' => [
+    'download'   => true, // LOGVIEWER_BTN_DOWNLOAD
+    'clean'      => true, // LOGVIEWER_BTN_CLEAN
+    'delete'     => true, // LOGVIEWER_BTN_DELETE
+    'delete_all' => true, // LOGVIEWER_BTN_DELETE_ALL
+],
+```
+
 ### Troubleshooting
 If you got a `InvalidArgumentException in FileViewFinder.php` error, it may be a problem with config caching. Double check installation, then run `php artisan config:clear`.
 
