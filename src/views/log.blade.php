@@ -295,7 +295,7 @@
   const darkSwitch = document.getElementById('darkSwitch');
 
   // this is here so we can get the body dark mode before the page displays
-  // otherwise the page will be white for a second... 
+  // otherwise the page will be white for a second...
   initTheme();
 
   window.addEventListener('load', () => {
@@ -308,10 +308,23 @@
   });
 
   // end darkmode js
-        
+
   $(document).ready(function () {
-    $('.table-container tr').on('click', function () {
-      $('#' + $(this).data('display')).toggle();
+    var toggleTimer;
+    $('.table-container tr').on('click', function (e) {
+      clearTimeout(toggleTimer);
+
+      // Clicks inside an expanded stack trace never collapse it, and a
+      // double/triple click (selecting a word/line to copy) is not a toggle.
+      if (e.detail > 1 || $(e.target).closest('.stack').length) return;
+
+      // Wait to see whether this click turns into a double/triple click or
+      // ends a text selection before toggling.
+      var $stack = $('#' + $(this).data('display'));
+      toggleTimer = setTimeout(function () {
+        if (window.getSelection().toString().length === 0) $stack.toggle();
+      }, 250);
+
     });
     $('#table-log').DataTable({
       "order": [$('#table-log').data('orderingIndex'), 'desc'],
